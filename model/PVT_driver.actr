@@ -1,4 +1,4 @@
-(set-task "actr.tasks.test.fatigue.PVTdriver")
+(set-task "actr.tasks.drivingPVT.DrivingPVT")
 (set-schedule (8.0 22.0)(32.0 39.0)(44.0 58.0)(68.0 82.0)(92.0 106.0)(116.0 130.0)(140.0 154.0))
 
 (add-dm

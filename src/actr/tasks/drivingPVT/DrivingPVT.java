@@ -1,4 +1,4 @@
-package Driving.task;
+package actr.tasks.drivingPVT;
 
 import java.util.*;
 import java.io.File;
@@ -19,7 +19,7 @@ import actr.task.*;
  * @author Ehsan Khosroshahi
  */
 
-public class PVTdriver extends Task {
+public class DrivingPVT extends Task {
 	private TaskLabel label;
 	private double lastTime = 0;
 	private String stimulus = "\u2588";
@@ -59,7 +59,7 @@ public class PVTdriver extends Task {
 		double responseTotalTime = 0;
 	}
 
-	public PVTdriver() {
+	public DrivingPVT() {
 		super();
 		label = new TaskLabel("", 200, 150, 40, 20);
 		add(label);
@@ -237,7 +237,7 @@ public class PVTdriver extends Task {
 		}
 		
 		for (Task taskCast : tasks) {
-			PVTdriver task = (PVTdriver) taskCast;
+			DrivingPVT task = (DrivingPVT) taskCast;
 			for (int i = 0; i < numberOfSessions; i++) {
 				totallFalseAlerts[i].add(task.sessions.elementAt(i).falseStarts);
 				totallLapsesValues[i].add(task.sessions.get(i).lapses);
