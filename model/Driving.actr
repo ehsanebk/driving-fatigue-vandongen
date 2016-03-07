@@ -5,11 +5,11 @@
     ; :fatigue t :iu 1.0 :ut 0.9 :egs .5
     :v t
     
-    :fatigue nil  
-    :iu 2.7
+    :fatigue t
+    :iu 2.9
     :ut 2.2
     
-    ;;:microlapses nil
+    :microlapses nil
     :fpbmc .019
     :fpmc -.001
     
