@@ -36,10 +36,13 @@ public class Sample {
 		time = env.getTime();
 		simcarP = simcar.getP().myclone();
 		simcarH = simcar.getH().myclone();
-		simcarLanePos = env.getRoad().vehicleLanePosition(env.getSimcar());
+		simcarLanePos = env.getRoad().vehicleLanePosition(env.getSimcar()); // == X.5 for the center of lane;
+		// .0 means exactly over the lane line
+		// lane is 12 feet wide
+		
 		simcarIndex = simcar.getIndex();
 		simcarSpeed = simcar.getSpeed();
-		steerAngle = simcar.getSteerAngle();
+		steerAngle = simcar.getSteerAngle(); // steering angle, in radians (I think)
 		accelerator = simcar.getAccelerator();
 		brake = simcar.getBrake();
 		autocarPos = autocar.getP().myclone();
