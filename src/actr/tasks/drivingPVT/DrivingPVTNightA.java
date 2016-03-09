@@ -19,7 +19,7 @@ import actr.task.*;
  * @author Ehsan Khosroshahi
  */
 
-public class DrivingPVT extends Task {
+public class DrivingPVTNightA extends Task {
 	private TaskLabel label;
 	private double lastTime = 0;
 	private String stimulus = "\u2588";
@@ -32,11 +32,18 @@ public class DrivingPVT extends Task {
 
 	private double [] timesOfPVT = {
 			//	
-			45.0, 48.0, 51.0, 54.0, //day1 
-			69.0, 72.0, 75.0, 78.0, //day2
-			93.0, 96.0, 99.0, 102.0,//day3
-			117.0,120.0,123.0,126.0,//day4
-			141.0,144.0,147.0,150.0 //day5
+			45.0 , 48.0 , 51.0 , 54.0  , //day2 
+			69.0 , 72.0 , 75.0 , 78.0  , //day3
+			93.0 , 96.0 , 99.0 , 102.0 , //day4
+			117.0, 120.0, 123.0, 126.0 , //day5
+			141.0, 144.0, 147.0, 150.0 , //day6
+			                             
+			189.0, 192.0, 195.0, 198.0 , //day9
+			213.0, 216.0, 219.0, 222.0 , //day10
+			237.0, 240.0, 243.0, 246.0 , //day11
+			261.0, 264.0, 267.0, 270.0 , //day12
+			285.0, 288.0, 291.0, 294.0   //day13
+			
 	};
 	int sessionNumber = 0;  // starts from 0
 	private Session currentSession;
@@ -59,7 +66,7 @@ public class DrivingPVT extends Task {
 		double responseTotalTime = 0;
 	}
 
-	public DrivingPVT() {
+	public DrivingPVTNightA() {
 		super();
 		label = new TaskLabel("", 200, 150, 40, 20);
 		add(label);
@@ -146,6 +153,7 @@ public class DrivingPVT extends Task {
 						sleepAttackIndex = 0;
 						currentSession.startTime = getModel().getTime();
 						getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
+						//System.out.println(sessionNumber +" : "+ getModel().getFatigue().computeBioMathValueForHour());
 						getModel().getFatigue().startFatigueSession();
 						addUpdate(1.0);
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("wait"));
@@ -237,7 +245,7 @@ public class DrivingPVT extends Task {
 		}
 		
 		for (Task taskCast : tasks) {
-			DrivingPVT task = (DrivingPVT) taskCast;
+			DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
 			for (int i = 0; i < numberOfSessions; i++) {
 				totallFalseAlerts[i].add(task.sessions.elementAt(i).falseStarts);
 				totallLapsesValues[i].add(task.sessions.get(i).lapses);
@@ -289,9 +297,14 @@ public class DrivingPVT extends Task {
 		getModel().output("\nAverage Number of lapses in the time points \n" );
 		getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 		for (int i = 0; i < 5; i++) {	
-			getModel().output((i+1)+"\t"+totallLapsesValues[i*4].mean()+"\t"+totallLapsesValues[i*4+1].mean()+"\t"
+			getModel().output((i+2)+"\t"+totallLapsesValues[i*4].mean()+"\t"+totallLapsesValues[i*4+1].mean()+"\t"
 					+totallLapsesValues[i*4+2].mean()+"\t"+totallLapsesValues[i*4+3].mean());
-		}	
+		}
+		getModel().output("* 34 h break *");
+		for (int i = 5; i < 10; i++) {	
+			getModel().output((i+4)+"\t"+totallLapsesValues[i*4].mean()+"\t"+totallLapsesValues[i*4+1].mean()+"\t"
+					+totallLapsesValues[i*4+2].mean()+"\t"+totallLapsesValues[i*4+3].mean());
+		}
 		getModel().output("\n*******************************************\n");
 
 		Result result = new Result();
