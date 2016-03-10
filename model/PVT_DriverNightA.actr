@@ -1,3 +1,6 @@
+;;
+;; Driver PVT model : Night A
+;; 
 (set-task "actr.tasks.drivingPVT.DrivingPVTNightA")
 
 (set-schedule 
@@ -16,13 +19,13 @@
     :ut 2.2
     
     ;;:microlapses nil
-    :fpbmc .019
+    :fpbmc .02
     :fpmc -.001
     
     :utbmc .01  
     :utmc -.00012
     
-    :fp-dec 0.005
+    :fp-dec 0.008
     
     :egs .25
     ;:cst t

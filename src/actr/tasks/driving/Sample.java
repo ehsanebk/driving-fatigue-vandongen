@@ -8,7 +8,7 @@ import actr.model.Model;
  * @author Dario Salvucci
  */
 public class Sample {
-	private double time;
+	public double time;
 	private Position simcarP;
 	private Position simcarH;
 	private double simcarLanePos;
@@ -20,16 +20,16 @@ public class Sample {
 	private Position autocarPos;
 	private Position autocarHeading;
 	private double autocarSpeed;
-	// private boolean autocarBraking;
-	// private LocationChunk eyeLocation;
-	// private boolean lookingAwayFromRoad;
-	// private LocationChunk handLocation;
-	// private boolean handMoving;
-	// private boolean listening;
-	// private boolean inDriveGoal;
-	// private int event;
+	private boolean autocarBraking;
+//	 private LocationChunk eyeLocation;
+//	 private boolean lookingAwayFromRoad;
+//	 private LocationChunk handLocation;
+//	 private boolean handMoving;
+//	 private boolean listening;
+//	 private boolean inDriveGoal;
+//	 private int event;
 
-	Sample(Environment env, Model model) {
+	Sample(Environment env) {
 		Simcar simcar = env.getSimcar();
 		Autocar autocar = env.getAutocar();
 
@@ -48,7 +48,7 @@ public class Sample {
 		autocarPos = autocar.getP().myclone();
 		autocarHeading = autocar.getH().myclone();
 		autocarSpeed = autocar.getSpeed();
-		// autocarBraking = autocar.isBraking();
+		autocarBraking = autocar.isBraking();
 
 		// eyeLocation = model.getVision().getEyeLocation();
 		// if (eyeLocation != null)
@@ -120,10 +120,10 @@ public class Sample {
 		return autocarSpeed;
 	}
 
-	// public boolean getAutocarBraking() {
-	// return autocarBraking;
-	// }
-	//
+	 public boolean getAutocarBraking() {
+		 return autocarBraking;
+	 }
+	
 	// public LocationChunk getEyeLocation() {
 	// return eyeLocation;
 	// }
@@ -166,7 +166,7 @@ public class Sample {
 		s += separator + "brake";
 		s += separator + "autocarX";
 		s += separator + "autocarSpeed";
-		// s += separator + "autocarBraking";
+		s += separator + "autocarBraking";
 		// s += separator + LocationChunk.headerString("eyeLocation",
 		// separator);
 		// s += separator + "lookingAwayFromRoad";
@@ -193,7 +193,7 @@ public class Sample {
 		s += separator + Utilities.format(brake, 3);
 		s += separator + Utilities.format(autocarPos.getX(), 3);
 		s += separator + Utilities.format(autocarSpeed, 3);
-		// s += separator + (autocarBraking ? 1 : 0);
+		s += separator + (autocarBraking ? 1 : 0);
 		// s += separator + (eyeLocation != null ?
 		// eyeLocation.toString(separator) :
 		// LocationChunk.nullString(separator));
@@ -222,7 +222,7 @@ public class Sample {
 		s += separator + Position.headerString("autocarHeading", separator);
 		s += separator + "autocarRoadIndex";
 		s += separator + "autocarSpeed";
-		// s += separator + "autocarBraking";
+		s += separator + "autocarBraking";
 		// s += separator + LocationChunk.headerString("eyeLocation",
 		// separator);
 		// s += separator + "lookingAwayFromRoad";
@@ -248,7 +248,7 @@ public class Sample {
 		s += separator + autocarPos.toString(separator);
 		s += separator + autocarHeading.toString(separator);
 		s += separator + autocarSpeed;
-		// s += separator + (autocarBraking ? 1 : 0);
+		s += separator + (autocarBraking ? 1 : 0);
 		// s += separator + (eyeLocation != null ?
 		// eyeLocation.toString(separator) :
 		// LocationChunk.nullString(separator));

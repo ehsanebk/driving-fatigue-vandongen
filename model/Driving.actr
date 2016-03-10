@@ -5,8 +5,8 @@
 )
 (sgp
     :emma t
-    ; :fatigue t :iu 1.0 :ut 0.9 :egs .5
-    :v t
+    
+    :v nil
     
     :fatigue t
     :iu 2.9

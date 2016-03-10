@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 
 import actr.task.Result;
 import actr.task.Task;
+import actr.tasks.drivingPVT.DrivingPVTNightB;
 
 /**
  * The main Driving task class that sets up the simulation and starts periodic
@@ -32,7 +33,7 @@ public class Driving extends Task {
 	private final double steerNaMax = .07;
 	private final double thwFollow = 1.0; // 1.0 orig
 
-	private double endTime = 60;
+	private double endTime = 30; // the driving sessions are 30 min 
 	private double accelBrake = 0, speed = 0;
 
 	private static final int minX = 174, maxX = (238 + 24), minY = 94, maxY = (262 + 32);
@@ -236,6 +237,17 @@ public class Driving extends Task {
 
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
-		return null;
+		Driving task = (Driving) tasks[0];
+		
+		//System.out.println(simulation.samples.get(3).toString("-"));
+		//task.simulation.analyze();
+		try {
+		getModel().output(task.simulation.analyze().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Result result = new Result();
+		return result;
+		
 	}
 }

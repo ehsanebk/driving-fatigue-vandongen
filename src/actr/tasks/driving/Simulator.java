@@ -51,8 +51,8 @@ public class Simulator extends JPanel implements GLEventListener {
 	private void setViewport(GL2 gl) {
 		int x = 0;
 		int y = 0;
-		int w = 2 * getWidth();
-		int h = 2 * getHeight();
+		int w = 1 * getWidth();
+		int h = 1 * getHeight();
 		if ((1.0 * w) / Environment.CANVAS_WIDTH < (1.0 * h) / Environment.CANVAS_HEIGHT) {
 			int h2 = (w * Environment.CANVAS_HEIGHT) / Environment.CANVAS_WIDTH;
 			y = (h - h2) / 2;
