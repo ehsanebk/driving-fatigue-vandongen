@@ -95,7 +95,7 @@ class Textures {
 
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureIndex);
 
-		Image image = Driving.getImage(filename);
+		Image image = DrivingNightA.getImage(filename);
 
 		// wait until image is fully loaded!
 		while (image.getWidth(null) == -1 || image.getHeight(null) == -1)

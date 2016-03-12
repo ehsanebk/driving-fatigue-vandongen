@@ -18,6 +18,7 @@ public class Simulation {
 	private Environment env = null;
 	Vector<Sample> samples = new Vector<Sample>();
 	private Results results = null;
+	
 
 	Simulation() {
 		scenario = new Scenario();
@@ -43,10 +44,14 @@ public class Simulation {
 		return env;
 	}
 
-//	Results getResults() {
-//		results = analyze();
-//		return results;
-//	}
+	Results getResults() {
+		try {
+			results =analyze();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
 
 	int numSamples() {
 		return samples.size();
@@ -75,7 +80,7 @@ public class Simulation {
 		// return (s != null && s.eyeLocation != null && s.eyeLocation.x < 350);
 	}
 
-	Results analyze() throws Exception{
+	private Results analyze() throws Exception{
 		
 		//return null;
 		double startTime = 0;
@@ -87,77 +92,93 @@ public class Simulation {
 		@SuppressWarnings("unused")
 		double sumTime = 0;
 		double sumLatDev = 0;
+		double sumSteeringDev = 0;
 		double sumLatVel = 0;
 		double sumSpeedDev = 0;
+	
+		double numSTEX3 = 0 ; // number of samples with steering angel exceeding 3˚ 
 		double numTaskDetects = 0, numTaskDetectsCount = 0;
 		double sumBrakeRTs = 0, numBrakeRTs = 0, lastBrakeTime = 0;
 		boolean brakeEvent = false;
 		double[] headingErrors = new double[samples.size()];
 		int laneViolations = 0;
 		boolean lvDetected = false;
+		
+		double meanSteering = 0;
+		for (int i = 0; i < samples.size(); i++){
+			meanSteering += Utilities.rad2deg(samples.elementAt(i).getSteerAngle());
+		}
+		meanSteering = meanSteering/ samples.size();
 
 		for (int i = 1; i < samples.size(); i++) {
 			Sample s = samples.elementAt(i);
-				Sample sprev = samples.elementAt(i - 1);
+			Sample sprev = samples.elementAt(i - 1);
 
-				//if ((s.event > 0) || (s.getTime() < stopTime + 5.0)) {
-				if (s.getTime() < stopTime + 5.0) {
-					numTaskSamples++;
-					double latdev = 3.66 * (s.getSimcarLanePosition() - 2.5);
-					sumLatDev += (latdev * latdev);
-					sumLatVel += Math.abs((3.66 * (s.getSimcarLanePosition() -
-							sprev.getSimcarLanePosition())) / Environment.SAMPLE_TIME);
-					sumSpeedDev += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getAutocarSpeed() -
-							s.getAutocarSpeed());
-
-					//if ((s.event > 0) || (s.time < stopTime)) {
-					if (s.time < stopTime) {
-						numTaskDetectsCount++;
-						if (lookingAhead(s)) {
-							numTaskDetects += 1;
-							// if (s.listening) numTaskDetects -= .1;
-						}
-						// if (s.inDriveGoal) numTaskDetects ++;
-					}
-
-					// if ((s.event > 0) || (s.time < stopTime))
-					// {
-					//if (((s.event > 0) || (s.time < stopTime)) && !brakeEvent
-					if ((s.time < stopTime) && !brakeEvent
-							&& (s.getAutocarBraking() && !sprev.getAutocarBraking())) {
-						brakeEvent = true;
-						lastBrakeTime = s.time;
-					}
-					if (brakeEvent && !s.getAutocarBraking()) {
-						brakeEvent = false;
-					}
-					if (brakeEvent && (s.getBrake() > 0)) {
-						// System.out.println ("BrakeRT: " + (s.time -
-						// lastBrakeTime));
-						sumBrakeRTs += (s.time - lastBrakeTime);
-						numBrakeRTs++;
-						brakeEvent = false;
-					}
-					// }
-
-					headingErrors[numTaskSamples - 1] = headingError(s);
-					if (!lvDetected && (Math.abs(latdev) > (1.83 - 1.0))) {
-						laneViolations++;
-						lvDetected = true;
-					}
-				}
-
-				//			if ((s.event == 1) && (sprev.event == 0)) {
-				//				startTime = s.time;
-				//				lvDetected = false;
-				//				brakeEvent = false;
-				//			} else if ((s.event == 0) && (sprev.event == 1)) {
-				//				numTasks++;
-				//				stopTime = s.time;
-				//				sumTime += (stopTime - startTime);
-				//			}
 			
+			//if ((s.event > 0) || (s.getTime() < stopTime + 5.0)) {
+
+			numTaskSamples++;
+			if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
+				numSTEX3++;
+			
+			double latdev = 3.66 * (s.getSimcarLanePosition() - 2.5);
+			sumLatDev += (latdev * latdev);
+			
+			sumSteeringDev = Math.abs(Math.pow((Utilities.rad2deg(s.getSteerAngle())-meanSteering),2)); 
+			
+			sumLatVel += Math.abs((3.66 * (s.getSimcarLanePosition() -
+					sprev.getSimcarLanePosition())) / Environment.SAMPLE_TIME);
+			sumSpeedDev += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getAutocarSpeed() -
+					s.getAutocarSpeed());
+
+//			if ((s.event > 0) || (s.time < stopTime)) {
+//			
+//				numTaskDetectsCount++;
+//				if (lookingAhead(s)) {
+//					numTaskDetects += 1;
+//					// if (s.listening) numTaskDetects -= .1;
+//				}
+//				// if (s.inDriveGoal) numTaskDetects ++;
+//			}
+
+			// if ((s.event > 0) || (s.time < stopTime))
+			// {
+			//if (((s.event > 0) || (s.time < stopTime)) && !brakeEvent
+			if (!brakeEvent
+					&& (s.getAutocarBraking() && !sprev.getAutocarBraking())) {
+				brakeEvent = true;
+				lastBrakeTime = s.time;
+			}
+			if (brakeEvent && !s.getAutocarBraking()) {
+				brakeEvent = false;
+			}
+			if (brakeEvent && (s.getBrake() > 0)) {
+				// System.out.println ("BrakeRT: " + (s.time -
+				// lastBrakeTime));
+				sumBrakeRTs += (s.time - lastBrakeTime);
+				numBrakeRTs++;
+				brakeEvent = false;
+			}
+			// }
+
+			headingErrors[numTaskSamples - 1] = headingError(s);
+			if (!lvDetected && (Math.abs(latdev) > (1.83 - 1.0))) {
+				laneViolations++;
+				lvDetected = true;
+			}
 		}
+
+		//			if ((s.event == 1) && (sprev.event == 0)) {
+		//				startTime = s.time;
+		//				lvDetected = false;
+		//				brakeEvent = false;
+		//			} else if ((s.event == 0) && (sprev.event == 1)) {
+		//				numTasks++;
+		//				stopTime = s.time;
+		//				sumTime += (stopTime - startTime);
+		//			}
+
+		//}
 
 		Results r = new Results();
 		// r.ifc = ifc;
@@ -179,8 +200,8 @@ public class Simulation {
 		r.headingError = headingErrors[heIndex];
 
 		r.laneViolations = laneViolations;
-
-		
+		r.STEX3 = numSTEX3/numTaskSamples * 100;
+		r.taskSteeringDev = Math.sqrt(sumSteeringDev / numTaskSamples);
 		
 		return r;
 	}
