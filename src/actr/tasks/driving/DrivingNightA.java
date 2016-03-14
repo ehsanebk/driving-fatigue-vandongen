@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 
 import actr.task.Result;
 import actr.task.Task;
-import actr.tasks.drivingPVT.DrivingPVTNightA;
 import actr.tasks.drivingPVT.Values;
 
 
