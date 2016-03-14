@@ -12,7 +12,7 @@
     :iu 2.9
     :ut 2.2
     
-    :microlapses nil
+    :microlapses t
     :fpbmc .019
     :fpmc -.001
     

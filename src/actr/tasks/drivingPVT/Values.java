@@ -60,6 +60,16 @@ public class Values {
 			sum += v.elementAt(i);
 		return sum / (1.0 * v.size());
 	}
+	
+	public String meanDF3() {
+		if (v.size() == 0)
+			return "0";
+		double sum = 0;
+		for (int i = 0; i < v.size(); i++)
+			sum += v.elementAt(i);
+		DecimalFormat df3 = new DecimalFormat("#.000");
+		return df3.format(sum / (1.0 * v.size()));
+	}
 
 	public double average() {
 		return mean();
