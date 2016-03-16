@@ -36,7 +36,7 @@ public class DrivingNightA extends Task {
 	private final double steerNaMax = .07;
 	private final double thwFollow = 1.0; // 1.0 orig
 
-	private double simulationDurarion = 60*20; // the driving sessions are 30 min (30 * 60sec)
+	private double simulationDurarion = 60*30; // the driving sessions are 30 min (30 * 60sec)
 	private double accelBrake = 0, speed = 0;
 
 	private static final int minX = 174, maxX = (238 + 24), minY = 94, maxY = (262 + 32);
@@ -339,7 +339,7 @@ public class DrivingNightA extends Task {
 			DecimalFormat df2 = new DecimalFormat("#.00");
 			DecimalFormat df3 = new DecimalFormat("#.000");
 
-			getModel().output("/n******* Average LatDev for time points **********");
+			getModel().output("\n******* Average LatDev for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
 				getModel().output((i+2)+"\t"+totalLatDev[i*4].meanDF3()+"\t"+totalLatDev[i*4+1].meanDF3()+"\t"
@@ -351,7 +351,7 @@ public class DrivingNightA extends Task {
 						+totalLatDev[i*4+2].meanDF3()+"\t"+totalLatDev[i*4+3].meanDF3());
 			}
 
-			getModel().output("/n******* Average STEX3 for time points **********");
+			getModel().output("\n******* Average STEX3 for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
 				getModel().output((i+2)+"\t"+totalSTEX3[i*4].meanDF3()+"\t"+totalSTEX3[i*4+1].meanDF3()+"\t"
