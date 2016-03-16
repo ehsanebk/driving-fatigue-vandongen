@@ -36,14 +36,14 @@ public class DrivingNightA extends Task {
 	private final double steerNaMax = .07;
 	private final double thwFollow = 1.0; // 1.0 orig
 
-	private double simulationDurarion = 60*30; // the driving sessions are 30 min (30 * 60sec)
+	private double simulationDurarion = 60*20; // the driving sessions are 30 min (30 * 60sec)
 	private double accelBrake = 0, speed = 0;
 
 	private static final int minX = 174, maxX = (238 + 24), minY = 94, maxY = (262 + 32);
 	static final int centerX = (minX + maxX) / 2, centerY = (minY + maxY) / 2;
 
 	private static Simulator simulator = null;
-	
+
 	private double [] timesOfPVT = {
 			//	
 			45.0 , 48.0 , 51.0 , 54.0  , //day2 
@@ -51,30 +51,19 @@ public class DrivingNightA extends Task {
 			93.0 , 96.0 , 99.0 , 102.0 , //day4
 			117.0, 120.0, 123.0, 126.0 , //day5
 			141.0, 144.0, 147.0, 150.0 , //day6
-			                             
+
 			189.0, 192.0, 195.0, 198.0 , //day9
 			213.0, 216.0, 219.0, 222.0 , //day10
 			237.0, 240.0, 243.0, 246.0 , //day11
 			261.0, 264.0, 267.0, 270.0 , //day12
 			285.0, 288.0, 291.0, 294.0   //day13
-			
+
 	};
-	
+
 	int simulationNumber = 0;
 	double simulationStartTime =0;
 	private Vector<Results> resluts  = new Vector<Results>();
-	
-	class results{
-		double simulations;
-		double taskLatDev;
-		double taskLatVel;
-		double brakeRT;
-		double headingError;
-		double taskSpeedDev;
-		double STEX3;
-		double taskSteeringDev;
-	}
-	
+
 	public DrivingNightA() {
 		super();
 		nearLabel = new JLabel(".");
@@ -85,32 +74,32 @@ public class DrivingNightA extends Task {
 	@Override
 	public void start() {
 		currentSimulation = new Simulation();
-		
+
 		getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
 		getModel().getFatigue().startFatigueSession();
 
-//		if (getModel().getRealTime()) {
-//			if (simulator == null)
-//				simulator = new Simulator();
-//			simulator.useSimulation(simulation);
-//			setLayout(new BorderLayout());
-//			add(simulator, BorderLayout.CENTER);
-//			setVisible(false); // trigger OpenGL init
-//			setVisible(true);
-//		} else{
-		
-		add(nearLabel);
-		nearLabel.setSize(20, 20);
-		nearLabel.setLocation(250, 250);
-		add(carLabel);
-		carLabel.setSize(20, 20);
-		carLabel.setLocation(250, 250);
-		add(keypad);
-		keypad.setSize(20, 20);
-		int keypadX = 250 + (int) (actr.model.Utilities.angle2pixels(10.0));
-		keypad.setLocation(keypadX, 250);
-		
-//	}
+		if (getModel().getRealTime()) {
+			if (simulator == null)
+				simulator = new Simulator();
+			simulator.useSimulation(currentSimulation);
+			setLayout(new BorderLayout());
+			add(simulator, BorderLayout.CENTER);
+			setVisible(false); // trigger OpenGL init
+			setVisible(true);
+		} else{
+
+			add(nearLabel);
+			nearLabel.setSize(20, 20);
+			nearLabel.setLocation(250, 250);
+			add(carLabel);
+			carLabel.setSize(20, 20);
+			carLabel.setLocation(250, 250);
+			add(keypad);
+			keypad.setSize(20, 20);
+			int keypadX = 250 + (int) (actr.model.Utilities.angle2pixels(10.0));
+			keypad.setLocation(keypadX, 250);
+
+		}
 
 		getModel().runCommand("(set-visual-frequency near .1)");
 		getModel().runCommand("(set-visual-frequency far .1)");
@@ -136,9 +125,9 @@ public class DrivingNightA extends Task {
 			getModel().getFatigue().fatigueResetPercentages();
 			if(simulator != null)
 				simulator.repaint();
-			
+
 		} else{
-			
+
 			resluts.add(currentSimulation.getResults());
 			simulationNumber++;
 			System.out.println(simulationNumber);
@@ -148,10 +137,10 @@ public class DrivingNightA extends Task {
 				simulationStartTime = time;
 				getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
 				getModel().getFatigue().startFatigueSession();
-				
+
 				removeAll();
-				
-				
+
+
 				add(nearLabel);
 				nearLabel.setSize(20, 20);
 				nearLabel.setLocation(250, 250);
@@ -299,10 +288,10 @@ public class DrivingNightA extends Task {
 		simcar.setBrake((accelBrake < 0) ? -accelBrake : 0);
 	}
 
-//	@Override
-//	public void finish() {
-//		simulator.stop();
-//	}
+	//	@Override
+	//	public void finish() {
+	//		simulator.stop();
+	//	}
 
 	public static Image getImage(final String name) {
 		URL url = DrivingNightA.class.getResource("images/" + name);
@@ -311,7 +300,7 @@ public class DrivingNightA extends Task {
 
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
-		getModel().output("******** Resluts **********\n");
+		getModel().output("******** Results of Night A **********");
 		try {
 			int numberOfSimulations = timesOfPVT.length;
 			Values[] totalLatDev = new Values[numberOfSimulations];
@@ -350,7 +339,7 @@ public class DrivingNightA extends Task {
 			DecimalFormat df2 = new DecimalFormat("#.00");
 			DecimalFormat df3 = new DecimalFormat("#.000");
 
-			getModel().output("\n******* Average LatDev for time points **********\n");
+			getModel().output("/n******* Average LatDev for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
 				getModel().output((i+2)+"\t"+totalLatDev[i*4].meanDF3()+"\t"+totalLatDev[i*4+1].meanDF3()+"\t"
@@ -362,7 +351,7 @@ public class DrivingNightA extends Task {
 						+totalLatDev[i*4+2].meanDF3()+"\t"+totalLatDev[i*4+3].meanDF3());
 			}
 
-			getModel().output("\n******* Average STEX3 for time points **********\n");
+			getModel().output("/n******* Average STEX3 for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
 				getModel().output((i+2)+"\t"+totalSTEX3[i*4].meanDF3()+"\t"+totalSTEX3[i*4+1].meanDF3()+"\t"
@@ -374,7 +363,7 @@ public class DrivingNightA extends Task {
 						+totalSTEX3[i*4+2].meanDF3()+"\t"+totalSTEX3[i*4+3].meanDF3());
 			}
 
-			getModel().output("\n******* Average SteeringDev for time points **********\n");
+			getModel().output("\n******* Average SteeringDev for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
 				getModel().output((i+2)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
@@ -386,7 +375,7 @@ public class DrivingNightA extends Task {
 						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());
 			}
 
-			getModel().output("\n******* Average LatVel for time points **********\n");
+			getModel().output("\n******* Average LatVel for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
 				getModel().output((i+2)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
@@ -398,11 +387,11 @@ public class DrivingNightA extends Task {
 						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
 			}
 
-			getModel().output("\n******* Average brakeRT for time points **********\n");
+			getModel().output("\n******* Average brakeRT for time points **********");
 
-			getModel().output("\n******* Average headingError for time points **********\n");
+			getModel().output("\n******* Average headingError for time points **********");
 
-			getModel().output("\n******* Average SpeedDev for time points **********\n");
+			getModel().output("\n******* Average SpeedDev for time points **********");
 
 
 

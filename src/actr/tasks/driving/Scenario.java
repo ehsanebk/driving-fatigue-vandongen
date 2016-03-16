@@ -18,11 +18,11 @@ public class Scenario {
 
 	Scenario() {
 		curvedRoad = false;
-		simcarConstantSpeed = false;
+		simcarConstantSpeed = true;
 		simcarMPH = 55;
 		leadCarConstantSpeed = true;
 		leadCarMPH = 55;
-		leadCarBrakes = true;
+		leadCarBrakes = false;
 		drivingMinutes = 15;
 		timeBetweenTrials = 240;
 	}
