@@ -13,6 +13,8 @@ import com.sun.javafx.geom.transform.GeneralTransform3D;
  * @author Dario Salvucci
  */
 public class Simulation {
+	private final double LANE_CENTER = 4.5;
+	
 	private Scenario scenario;
 	private Driver driver;
 	private Environment env = null;
@@ -121,7 +123,7 @@ public class Simulation {
 			if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
 				numSTEX3++;
 			
-			double latdev = 3.66 * (s.getSimcarLanePosition() - 2.5);
+			double latdev = 3.66 * (s.getSimcarLanePosition() - LANE_CENTER);
 			sumLatDev += (latdev * latdev);
 			
 			sumSteeringDev = Math.abs(Math.pow((Utilities.rad2deg(s.getSteerAngle())-meanSteering),2)); 

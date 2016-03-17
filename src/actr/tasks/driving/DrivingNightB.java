@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 
+import actr.model.Utilities;
 import actr.task.Result;
 import actr.task.Task;
 import actr.tasks.drivingPVT.Values;
@@ -65,7 +66,7 @@ public class DrivingNightB extends Task {
 
 	int simulationNumber = 0;
 	double simulationStartTime =0;
-	private Vector<Results> resluts  = new Vector<Results>();
+	private Vector<Results> results = new Vector<Results>();
 
 	public DrivingNightB() {
 		super();
@@ -131,7 +132,7 @@ public class DrivingNightB extends Task {
 
 		} else{
 
-			resluts.add(currentSimulation.getResults());
+			results.add(currentSimulation.getResults());
 			simulationNumber++;
 			System.out.println(simulationNumber);
 			// go to the next simulation or stop the model
@@ -328,7 +329,7 @@ public class DrivingNightB extends Task {
 			for (Task taskCast : tasks) {
 				DrivingNightB task = (DrivingNightB) taskCast;
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results results =  task.resluts.elementAt(i);
+					Results results =  task.results.elementAt(i);
 					totalLatDev[i].add(results.taskLatDev);
 					totalLatVel[i].add(results.taskLatVel);
 					totalbrakeRT[i].add(results.brakeRT);
@@ -397,9 +398,18 @@ public class DrivingNightB extends Task {
 			getModel().output("\n******* Average SpeedDev for time points **********");
 
 
-
-
-
+			// outputting the values for BioMath
+			double [] hours = new double[timesOfPVT.length];
+			double [] bioMath = new double[timesOfPVT.length];
+			for (int h = 0; h < timesOfPVT.length; h++) {
+				hours[h] = timesOfPVT[h];
+			}
+			for (int h = 0; h < timesOfPVT.length; h++) {
+				bioMath[h] = getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[h]);
+			}
+			getModel().output("\n" + Utilities.toString(hours));
+			getModel().output(Utilities.toString(bioMath));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

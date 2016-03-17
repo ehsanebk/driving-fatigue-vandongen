@@ -3,9 +3,6 @@ package actr.tasks.driving;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Iterator;
@@ -13,7 +10,6 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 
-import actr.model.Utilities;
 import actr.task.Result;
 import actr.task.Task;
 import actr.tasks.drivingPVT.Values;
@@ -25,7 +21,7 @@ import actr.tasks.drivingPVT.Values;
  * 
  * @author Dario Salvucci
  */
-public class DrivingNightA extends Task {
+public class DrivingDayA extends Task {
 	// --- Task Code ---//
 
 	private Simulation currentSimulation;
@@ -68,7 +64,7 @@ public class DrivingNightA extends Task {
 	double simulationStartTime =0;
 	private Vector<Results> results  = new Vector<Results>();
 
-	public DrivingNightA() {
+	public DrivingDayA() {
 		super();
 		nearLabel = new JLabel(".");
 		carLabel = new JLabel("X");
@@ -302,7 +298,7 @@ public class DrivingNightA extends Task {
 	//	}
 
 	public static Image getImage(final String name) {
-		URL url = DrivingNightA.class.getResource("images/" + name);
+		URL url = DrivingDayA.class.getResource("images/" + name);
 		return Toolkit.getDefaultToolkit().getImage(url);
 	}
 
@@ -331,7 +327,7 @@ public class DrivingNightA extends Task {
 
 
 			for (Task taskCast : tasks) {
-				DrivingNightA task = (DrivingNightA) taskCast;
+				DrivingDayA task = (DrivingDayA) taskCast;
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results results =  task.results.elementAt(i);
 					totalLatDev[i].add(results.taskLatDev);
@@ -395,39 +391,14 @@ public class DrivingNightA extends Task {
 						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
 			}
 
-//			getModel().output("\n******* Average brakeRT for time points **********");
-//
-//			getModel().output("\n******* Average headingError for time points **********");
-//
-//			getModel().output("\n******* Average SpeedDev for time points **********");
+			getModel().output("\n******* Average brakeRT for time points **********");
 
-			
-			getModel().output("\n******* Fatigue BioMath for time points **********");
-			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
-			for (int i = 0; i < 5; i++) {	
-				getModel().output((i+2)+"\t"+getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4])+"\t"+
-						getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+1])+"\t"+
-						getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+2])+"\t"+
-						getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+3]));	
-			}
-			getModel().output("* 34 h break *");
-			for (int i = 5; i < 10; i++) {	
-				getModel().output((i+4)+"\t"+timesOfPVT[i*4]+"\t"+timesOfPVT[i*4+1]+"\t"
-						+timesOfPVT[i*4+2]+"\t"+timesOfPVT[i*4+3]);
-			}
-			
-			// outputting the values for BioMath
-			double [] hours = new double[timesOfPVT.length];
-			double [] bioMath = new double[timesOfPVT.length];
-			for (int h = 0; h < timesOfPVT.length; h++) {
-				hours[h] = timesOfPVT[h];
-			}
-			for (int h = 0; h < timesOfPVT.length; h++) {
-				bioMath[h] = getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[h]);
-			}
-			getModel().output("\n" + toString(hours));
-			getModel().output(toString(bioMath));
-			
+			getModel().output("\n******* Average headingError for time points **********");
+
+			getModel().output("\n******* Average SpeedDev for time points **********");
+
+
+
 
 
 		} catch (Exception e) {
@@ -435,12 +406,5 @@ public class DrivingNightA extends Task {
 		}
 		Result result = new Result();
 		return result;
-	}
-	
-	public static String toString(double a[]) {
-		String s = "";
-		for (int i = 0; i < a.length; i++)
-			s += String.format("%.2f", a[i]) + (i < a.length - 1 ? "\t" : "");
-		return s;
 	}
 }
