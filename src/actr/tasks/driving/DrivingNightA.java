@@ -376,29 +376,29 @@ public class DrivingNightA extends Task {
 						+totalSTEX3[i*4+2].meanDF3()+"\t"+totalSTEX3[i*4+3].meanDF3());
 			}
 
-			getModel().output("\n******* Average SteeringDev for time points **********");
-			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
-			for (int i = 0; i < 5; i++) {	
-				getModel().output((i+2)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
-						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());	
-			}
-			getModel().output("* 34 h break *");
-			for (int i = 5; i < 10; i++) {	
-				getModel().output((i+4)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
-						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());
-			}
-
-			getModel().output("\n******* Average LatVel for time points **********");
-			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
-			for (int i = 0; i < 5; i++) {	
-				getModel().output((i+2)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
-						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());	
-			}
-			getModel().output("* 34 h break *");
-			for (int i = 5; i < 10; i++) {	
-				getModel().output((i+4)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
-						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
-			}
+//			getModel().output("\n******* Average SteeringDev for time points **********");
+//			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
+//			for (int i = 0; i < 5; i++) {	
+//				getModel().output((i+2)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
+//						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());	
+//			}
+//			getModel().output("* 34 h break *");
+//			for (int i = 5; i < 10; i++) {	
+//				getModel().output((i+4)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
+//						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());
+//			}
+//
+//			getModel().output("\n******* Average LatVel for time points **********");
+//			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
+//			for (int i = 0; i < 5; i++) {	
+//				getModel().output((i+2)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
+//						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());	
+//			}
+//			getModel().output("* 34 h break *");
+//			for (int i = 5; i < 10; i++) {	
+//				getModel().output((i+4)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
+//						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
+//			}
 
 //			getModel().output("\n******* Average brakeRT for time points **********");
 //
@@ -407,7 +407,7 @@ public class DrivingNightA extends Task {
 //			getModel().output("\n******* Average SpeedDev for time points **********");
 
 			
-			getModel().output("\n******* Fatigue BioMath for time points **********");
+			getModel().output("\n******* Fatigue BioMath values for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
 				getModel().output((i+2)+"\t"+
@@ -425,20 +425,6 @@ public class DrivingNightA extends Task {
 						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+3])));
 			}
 			
-			// outputting the values for BioMath
-			double [] hours = new double[timesOfPVT.length];
-			double [] bioMath = new double[timesOfPVT.length];
-			for (int h = 0; h < timesOfPVT.length; h++) {
-				hours[h] = timesOfPVT[h];
-			}
-			for (int h = 0; h < timesOfPVT.length; h++) {
-				bioMath[h] = getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[h]);
-			}
-			getModel().output("\n" + toString(hours));
-			getModel().output(toString(bioMath));
-			
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

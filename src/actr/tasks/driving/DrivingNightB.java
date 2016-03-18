@@ -3,6 +3,9 @@ package actr.tasks.driving;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Iterator;
@@ -66,7 +69,7 @@ public class DrivingNightB extends Task {
 
 	int simulationNumber = 0;
 	double simulationStartTime =0;
-	private Vector<Results> results = new Vector<Results>();
+	private Vector<Results> results  = new Vector<Results>();
 
 	public DrivingNightB() {
 		super();
@@ -121,12 +124,12 @@ public class DrivingNightB extends Task {
 
 	@Override
 	public void update(double time) {
+		try {
 		if (time-simulationStartTime <= simulationDurarion) {
 			currentSimulation.getEnvironment().setTime(time-simulationStartTime);
 			currentSimulation.update();
 			updateVisuals();
-			// calling percentage reset after any new task presentation (audio or visual)
-			getModel().getFatigue().fatigueResetPercentages();
+			
 			if(simulator != null)
 				simulator.repaint();
 
@@ -167,6 +170,13 @@ public class DrivingNightB extends Task {
 				getModel().stop();
 			}
 		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	// calling percentage reset after any new task presentation (audio or visual)
+	void fatigueResetPercentage(){
+				getModel().getFatigue().fatigueResetPercentages();
 	}
 
 	void updateVisuals() {
@@ -222,6 +232,8 @@ public class DrivingNightB extends Task {
 			double dthw = Double.valueOf(it.next());
 			double dt = Double.valueOf(it.next());
 			doAccelerate(fthw, dthw, dt);
+		} else if (cmd.equals("fatigue-reset-percentage")) {
+			fatigueResetPercentage();
 		}
 	}
 
@@ -367,53 +379,66 @@ public class DrivingNightB extends Task {
 						+totalSTEX3[i*4+2].meanDF3()+"\t"+totalSTEX3[i*4+3].meanDF3());
 			}
 
-			getModel().output("\n******* Average SteeringDev for time points **********");
+//			getModel().output("\n******* Average SteeringDev for time points **********");
+//			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
+//			for (int i = 0; i < 5; i++) {	
+//				getModel().output((i+2)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
+//						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());	
+//			}
+//			getModel().output("* 34 h break *");
+//			for (int i = 5; i < 10; i++) {	
+//				getModel().output((i+4)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
+//						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());
+//			}
+//
+//			getModel().output("\n******* Average LatVel for time points **********");
+//			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
+//			for (int i = 0; i < 5; i++) {	
+//				getModel().output((i+2)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
+//						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());	
+//			}
+//			getModel().output("* 34 h break *");
+//			for (int i = 5; i < 10; i++) {	
+//				getModel().output((i+4)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
+//						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
+//			}
+
+//			getModel().output("\n******* Average brakeRT for time points **********");
+//
+//			getModel().output("\n******* Average headingError for time points **********");
+//
+//			getModel().output("\n******* Average SpeedDev for time points **********");
+
+			
+			getModel().output("\n******* Fatigue BioMath values for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
-				getModel().output((i+2)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
-						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());	
+				getModel().output((i+2)+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+1]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+2]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+3])));	
 			}
 			getModel().output("* 34 h break *");
 			for (int i = 5; i < 10; i++) {	
-				getModel().output((i+4)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
-						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());
+				getModel().output((i+2)+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+1]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+2]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+3])));
 			}
-
-			getModel().output("\n******* Average LatVel for time points **********");
-			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
-			for (int i = 0; i < 5; i++) {	
-				getModel().output((i+2)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
-						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());	
-			}
-			getModel().output("* 34 h break *");
-			for (int i = 5; i < 10; i++) {	
-				getModel().output((i+4)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
-						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
-			}
-
-			getModel().output("\n******* Average brakeRT for time points **********");
-
-			getModel().output("\n******* Average headingError for time points **********");
-
-			getModel().output("\n******* Average SpeedDev for time points **********");
-
-
-			// outputting the values for BioMath
-			double [] hours = new double[timesOfPVT.length];
-			double [] bioMath = new double[timesOfPVT.length];
-			for (int h = 0; h < timesOfPVT.length; h++) {
-				hours[h] = timesOfPVT[h];
-			}
-			for (int h = 0; h < timesOfPVT.length; h++) {
-				bioMath[h] = getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[h]);
-			}
-			getModel().output("\n" + Utilities.toString(hours));
-			getModel().output(Utilities.toString(bioMath));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Result result = new Result();
 		return result;
+	}
+	
+	public static String toString(double a[]) {
+		String s = "";
+		for (int i = 0; i < a.length; i++)
+			s += String.format("%.2f", a[i]) + (i < a.length - 1 ? "\t" : "");
+		return s;
 	}
 }

@@ -15,17 +15,17 @@
 (sgp 
     :v nil
     :fatigue t   
-    :iu 2.7
-    :ut 2.2
+    :iu 2.8
+    :ut 2.3
     
     ;;:microlapses nil
     :fpbmc .02
-    :fpmc -.001
+    :fpmc -.005
     
     :utbmc .01  
-    :utmc -.00012
+    :utmc -.0012
     
-    :fp-dec 0.008
+    :fp-dec 0.01
     
     :egs .25
     ;:cst t
