@@ -112,61 +112,65 @@ public class DrivingDayA extends Task {
 		getModel().getVision().addVisual("car", "car", "car", carLabel.getX(), carLabel.getY(), 1, 1, 100);
 		getModel().getVision().addVisual("keypad", "keypad", "keypad", keypad.getX(), keypad.getY(), 1, 1);
 
-		addPeriodicUpdate(Environment.SAMPLE_TIME);
+		addPeriodicUpdate(0.1);
 	}
 
 	@Override
 	public void update(double time) {
 		try {
-		if (time-simulationStartTime <= simulationDurarion) {
-			currentSimulation.getEnvironment().setTime(time-simulationStartTime);
-			currentSimulation.update();
-			updateVisuals();
-			// calling percentage reset after any new task presentation (audio or visual)
-			getModel().getFatigue().fatigueResetPercentages();
-			if(simulator != null)
-				simulator.repaint();
+			if (time-simulationStartTime <= simulationDurarion) {
+				fatigueResetPercentage();
+				currentSimulation.getEnvironment().setTime(time-simulationStartTime);
+				currentSimulation.update();
+				updateVisuals();
+				if(simulator != null)
+					simulator.repaint();
 
-		} else{
+			} else{
 
-			results.add(currentSimulation.getResults());
-			simulationNumber++;
-			System.out.println(simulationNumber);
-			// go to the next simulation or stop the model
-			if (simulationNumber< timesOfPVT.length){
-				currentSimulation = new Simulation();
-				simulationStartTime = time;
-				getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
-				getModel().getFatigue().startFatigueSession();
+				results.add(currentSimulation.getResults());
+				simulationNumber++;
+				System.out.println(simulationNumber);
+				// go to the next simulation or stop the model
+				if (simulationNumber< timesOfPVT.length){
+					currentSimulation = new Simulation();
+					simulationStartTime = time;
+					getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
+					getModel().getFatigue().startFatigueSession();
 
-				removeAll();
+					removeAll();
 
 
-				add(nearLabel);
-				nearLabel.setSize(20, 20);
-				nearLabel.setLocation(250, 250);
-				add(carLabel);
-				carLabel.setSize(20, 20);
-				carLabel.setLocation(250, 250);
-				add(keypad);
-				keypad.setSize(20, 20);
-				int keypadX = 250 + (int) (actr.model.Utilities.angle2pixels(10.0));
-				keypad.setLocation(keypadX, 250);
+					add(nearLabel);
+					nearLabel.setSize(20, 20);
+					nearLabel.setLocation(250, 250);
+					add(carLabel);
+					carLabel.setSize(20, 20);
+					carLabel.setLocation(250, 250);
+					add(keypad);
+					keypad.setSize(20, 20);
+					int keypadX = 250 + (int) (actr.model.Utilities.angle2pixels(10.0));
+					keypad.setLocation(keypadX, 250);
 
-				accelBrake = 0;
-				speed = 0;
+					accelBrake = 0;
+					speed = 0;
 
-				getModel().getVision().addVisual("near", "near", "near", nearLabel.getX(), nearLabel.getY(), 1, 1, 10);
-				getModel().getVision().addVisual("car", "car", "car", carLabel.getX(), carLabel.getY(), 1, 1, 100);
-				getModel().getVision().addVisual("keypad", "keypad", "keypad", keypad.getX(), keypad.getY(), 1, 1);
+					getModel().getVision().addVisual("near", "near", "near", nearLabel.getX(), nearLabel.getY(), 1, 1, 10);
+					getModel().getVision().addVisual("car", "car", "car", carLabel.getX(), carLabel.getY(), 1, 1, 100);
+					getModel().getVision().addVisual("keypad", "keypad", "keypad", keypad.getX(), keypad.getY(), 1, 1);
 
-			}else{
-				getModel().stop();
+				}else{
+					getModel().stop();
+				}
 			}
-		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	// calling percentage reset after any new task presentation (audio or visual)
+	void fatigueResetPercentage(){
+		getModel().getFatigue().fatigueResetPercentages();
 	}
 
 	void updateVisuals() {

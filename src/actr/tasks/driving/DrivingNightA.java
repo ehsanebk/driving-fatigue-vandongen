@@ -126,8 +126,7 @@ public class DrivingNightA extends Task {
 			currentSimulation.getEnvironment().setTime(time-simulationStartTime);
 			currentSimulation.update();
 			updateVisuals();
-			// calling percentage reset after any new task presentation (audio or visual)
-			getModel().getFatigue().fatigueResetPercentages();
+			
 			if(simulator != null)
 				simulator.repaint();
 
@@ -171,6 +170,10 @@ public class DrivingNightA extends Task {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	// calling percentage reset after any new task presentation (audio or visual)
+	void fatigueResetPercentage(){
+				getModel().getFatigue().fatigueResetPercentages();
 	}
 
 	void updateVisuals() {
@@ -226,6 +229,8 @@ public class DrivingNightA extends Task {
 			double dthw = Double.valueOf(it.next());
 			double dt = Double.valueOf(it.next());
 			doAccelerate(fthw, dthw, dt);
+		} else if (cmd.equals("fatigue-reset-percentage")) {
+			fatigueResetPercentage();
 		}
 	}
 
@@ -405,15 +410,19 @@ public class DrivingNightA extends Task {
 			getModel().output("\n******* Fatigue BioMath for time points **********");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
 			for (int i = 0; i < 5; i++) {	
-				getModel().output((i+2)+"\t"+getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4])+"\t"+
-						getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+1])+"\t"+
-						getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+2])+"\t"+
-						getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+3]));	
+				getModel().output((i+2)+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+1]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+2]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+3])));	
 			}
 			getModel().output("* 34 h break *");
 			for (int i = 5; i < 10; i++) {	
-				getModel().output((i+4)+"\t"+timesOfPVT[i*4]+"\t"+timesOfPVT[i*4+1]+"\t"
-						+timesOfPVT[i*4+2]+"\t"+timesOfPVT[i*4+3]);
+				getModel().output((i+2)+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+1]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+2]))+"\t"+
+						df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i*4+3])));
 			}
 			
 			// outputting the values for BioMath

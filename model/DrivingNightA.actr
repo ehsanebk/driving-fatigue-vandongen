@@ -12,7 +12,7 @@
     :ut 2.2
     
     ;;:microlapses nil
-    :fpbmc .025
+    :fpbmc .02
     :fpmc -.001
     
     :utbmc .01  
@@ -27,7 +27,8 @@
     :randomize-time t
     :vpft t
     
-    :max-prep-time-diff 10.0)
+    :max-prep-time-diff 10.0
+)
 
 (add-dm (goal isa drive))
 (goal-focus goal)
@@ -47,6 +48,7 @@
         isa visual-location
         kind near
 )
+;;(spp :u 0)
 
 (p drive*process-near-attend-far
     =goal>
@@ -165,6 +167,7 @@
         isa car
     !eval! (is-car-stable =na =vna =vfa)
 ==>
+    !eval! (fatigue-reset-percentage)
     =goal>
         na nil
         fa nil
@@ -191,6 +194,7 @@
         isa car
     !eval! (is-car-not-stable =na =vna =vfa)
 ==>
+    !eval! (fatigue-reset-percentage)
     =goal>
         na nil
         fa nil
