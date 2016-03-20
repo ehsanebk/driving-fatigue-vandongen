@@ -376,29 +376,29 @@ public class DrivingNightA extends Task {
 						+totalSTEX3[i*4+2].meanDF3()+"\t"+totalSTEX3[i*4+3].meanDF3());
 			}
 
-//			getModel().output("\n******* Average SteeringDev for time points **********");
-//			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
-//			for (int i = 0; i < 5; i++) {	
-//				getModel().output((i+2)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
-//						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());	
-//			}
-//			getModel().output("* 34 h break *");
-//			for (int i = 5; i < 10; i++) {	
-//				getModel().output((i+4)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
-//						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());
-//			}
-//
-//			getModel().output("\n******* Average LatVel for time points **********");
-//			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
-//			for (int i = 0; i < 5; i++) {	
-//				getModel().output((i+2)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
-//						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());	
-//			}
-//			getModel().output("* 34 h break *");
-//			for (int i = 5; i < 10; i++) {	
-//				getModel().output((i+4)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
-//						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
-//			}
+			getModel().output("\n******* Average SteeringDev for time points **********");
+			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
+			for (int i = 0; i < 5; i++) {	
+				getModel().output((i+2)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
+						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());	
+			}
+			getModel().output("* 34 h break *");
+			for (int i = 5; i < 10; i++) {	
+				getModel().output((i+4)+"\t"+totalSteeringDev[i*4].meanDF3()+"\t"+totalSteeringDev[i*4+1].meanDF3()+"\t"
+						+totalSteeringDev[i*4+2].meanDF3()+"\t"+totalSteeringDev[i*4+3].meanDF3());
+			}
+
+			getModel().output("\n******* Average LatVel for time points **********");
+			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 " );
+			for (int i = 0; i < 5; i++) {	
+				getModel().output((i+2)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
+						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());	
+			}
+			getModel().output("* 34 h break *");
+			for (int i = 5; i < 10; i++) {	
+				getModel().output((i+4)+"\t"+totalLatVel[i*4].meanDF3()+"\t"+totalLatVel[i*4+1].meanDF3()+"\t"
+						+totalLatVel[i*4+2].meanDF3()+"\t"+totalLatVel[i*4+3].meanDF3());
+			}
 
 //			getModel().output("\n******* Average brakeRT for time points **********");
 //

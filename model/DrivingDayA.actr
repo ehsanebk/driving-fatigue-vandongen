@@ -1,24 +1,22 @@
-(set-task "actr.tasks.driving.DrivingNightB")
+(set-task "actr.tasks.driving.DrivingDayA")
 (set-schedule 
-    (8.0 22.0)(32.0 46.0)(56.0 63.0)(68.0 82.0)(92.0 106.0)(116.0 130.0)(140.0 154.0)(164.0 178)
-    (183.0 190.0)(200.0 214.0)(224.0 231.0)(236.0 250.0)(260.0 274.0)(284.0 298.0)(308.0 322.0)(332.0 346.0)
+    (8.0 22.0)(32.0 46.0)(56.0 70.0)(80.0 94.0)(104.0 118.0)(128.0 142.0)(152.0 166.0)
+    (176.0 190.0)(200.0 214.0)(224.0 238.0)(248.0 262.0)(272.0 286.0)(296.0 310.0)(320.0 334.0)
 )
 (sgp
-    :emma t
-    
     :v nil
     :fatigue t   
-    :iu 2.7
-    :ut 2.2
+    :iu 2.8
+    :ut 2.3
     
     ;;:microlapses nil
     :fpbmc .02
-    :fpmc -.001
+    :fpmc -.005
     
     :utbmc .01  
-    :utmc -.00012
+    :utmc -.0012
     
-    :fp-dec 0.008
+    :fp-dec 0.01
     
     :egs .25
     ;:cst t
@@ -27,7 +25,7 @@
     :randomize-time t
     :vpft t
     
-    :max-prep-time-diff 10.0  
+    :max-prep-time-diff 10.0
 )
 
 (add-dm (goal isa drive))
@@ -48,6 +46,7 @@
         isa visual-location
         kind near
 )
+;;(spp :u 0)
 
 (p drive*process-near-attend-far
     =goal>
@@ -166,6 +165,7 @@
         isa car
     !eval! (is-car-stable =na =vna =vfa)
 ==>
+    !eval! (fatigue-reset-percentage)
     =goal>
         na nil
         fa nil
@@ -192,6 +192,7 @@
         isa car
     !eval! (is-car-not-stable =na =vna =vfa)
 ==>
+    !eval! (fatigue-reset-percentage)
     =goal>
         na nil
         fa nil
