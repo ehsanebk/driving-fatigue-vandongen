@@ -34,7 +34,7 @@ public class Autocar extends Vehicle {
 		this.leadCar = leadCar;
 		this.type = type;
 		if (leadCar) {
-			timeBetweenBrake = 30.0;
+			timeBetweenBrake = 0.0;
 			nextBrakeTime = timeBetweenBrake;
 			braking = false;
 			setSpeed(0);
@@ -57,7 +57,7 @@ public class Autocar extends Vehicle {
 
 	void update(Environment env) {
 		if (leadCar) {
-			if (timeBetweenBrake != null) {
+			if (timeBetweenBrake > 0.0) {
 				if (!braking && env.getTime() > nextBrakeTime)
 					braking = true;
 				else if (braking && env.getTime() > nextBrakeTime + BRAKE_TIME) {
@@ -69,7 +69,7 @@ public class Autocar extends Vehicle {
 			if (env.getSimcar().getSpeed() >= 15.0)
 				accelerating = false;
 
-			if (scenario.isSimcarConstantSpeed() || accelerating) {
+			if ( accelerating) {
 				setSpeed(env.getSimcar().getSpeed() + 1.0);
 				setIndex(env.getSimcar().getIndex() + 20.0);
 			} else if (braking) {
@@ -77,7 +77,7 @@ public class Autocar extends Vehicle {
 				setIndex(getIndex() + getSpeed() * Environment.SAMPLE_TIME);
 			} else {
 				if (scenario.getLeadCarConstantSpeed()) {
-					double fullspeed = Utilities.mph2mps(45); // scenario.getLeadCarMPH());
+					double fullspeed = Utilities.mph2mps(scenario.getLeadCarMPH()); // scenario.getLeadCarMPH());
 					if (getSpeed() < fullspeed)
 						setSpeed(getSpeed() + .1);
 					else

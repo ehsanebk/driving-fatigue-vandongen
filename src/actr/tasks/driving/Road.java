@@ -131,7 +131,7 @@ public class Road {
 		double dascale = .02;
 		double d = N_LANES * 3.66 / 2.0;
 
-		for (int i = 1; i <= 40000; i++) {
+		for (int i = 1; i <= 100000; i++) {
 			if (segcount >= seglen) {
 				segcount = 0;
 				seglen = 100;

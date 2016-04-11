@@ -18,13 +18,13 @@ public class Scenario {
 
 	Scenario() {
 		curvedRoad = false;
-		simcarConstantSpeed = true;
-		simcarMPH = 55;
+		simcarConstantSpeed = false;
+		simcarMPH = 0;
 		leadCarConstantSpeed = true;
 		leadCarMPH = 55;
 		leadCarBrakes = false;
-		drivingMinutes = 15;
-		timeBetweenTrials = 240;
+		drivingMinutes = 0;
+		timeBetweenTrials = 0;
 	}
 
 	public boolean isCurvedRoad() {
@@ -35,6 +35,10 @@ public class Scenario {
 		return simcarConstantSpeed;
 	}
 
+	public boolean isLeadConstantSpeed() {
+		return leadCarConstantSpeed;
+	}
+	
 	public int getSimcarMPH() {
 		return simcarMPH;
 	}
