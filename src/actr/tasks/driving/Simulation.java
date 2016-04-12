@@ -130,8 +130,11 @@ public class Simulation {
 			
 			sumLatVel += Math.abs((3.66 * (s.getSimcarLanePosition() -
 					sprev.getSimcarLanePosition())) / Environment.SAMPLE_TIME);
-			sumSpeedDev += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getAutocarSpeed() -
-					s.getAutocarSpeed());
+			sumSpeedDev += Math.abs((3.66 * (s.getSimcarSpeed() -
+					sprev.getSimcarSpeed())) / Environment.SAMPLE_TIME);
+			
+//			sumSpeedDev += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getAutocarSpeed() -
+//					s.getAutocarSpeed());
 
 //			if ((s.event > 0) || (s.time < stopTime)) {
 //			
