@@ -2,9 +2,23 @@
 
 ### Summary ###
 
-* In this study, we integrate an existing model of driving (Salvucci, 2006) with a fatigue mechanism (Walsh, Gunzelmann, & Van Dongen, 2014), both implemented in ACT-R cognitive theory and architecture (Anderson, 2007). Then we evaluate the capacity of the integrated model to predict driving performance under moderate levels of fatigue. Based on the previous studies (Forsman et al., 2013; Van Dongen & Belenky, 2010; Van Dongen, Belenky, & Vila, 2011; Van Dongen, Jackson & Belenky 2010), we discuss which metrics or combination of metrics would be the most sensitive to driver drowsiness (moderate levels of fatigue) and how they change based on the time awake. We look at the same metrics in the model and examine fatigue- related effects as compared to behavior in a simple reaction- time task (PVT: Psychomotor Vigilance Test). This research expands on a previous integration (Gunzelmann et al., 2011) by modifying the mechanisms to reflect the current version of the ACT-R theory, and by exploring more detailed performance metrics to assess the model’s performance.
+In this study, we integrate an existing model of driving (Salvucci, 2006) with a fatigue mechanism (Walsh, Gunzelmann, & Van Dongen, 2014), both implemented in ACT-R cognitive theory and architecture (Anderson, 2007). Then we evaluate the capacity of the integrated model to predict driving performance under moderate levels of fatigue. Based on the previous studies (Forsman et al., 2013; Van Dongen & Belenky, 2010; Van Dongen, Belenky, & Vila, 2011; Van Dongen, Jackson & Belenky 2010), we discuss which metrics or combination of metrics would be the most sensitive to driver drowsiness (moderate levels of fatigue) and how they change based on the time awake. We look at the same metrics in the model and examine fatigue- related effects as compared to behavior in a simple reaction- time task (PVT: Psychomotor Vigilance Test). This research expands on a previous integration (Gunzelmann et al., 2011) by modifying the mechanisms to reflect the current version of the ACT-R theory, and by exploring more detailed performance metrics to assess the model’s performance.
 
-* 1.0
+* Version 1.0
+
+### Instructions ###
+
+The following steps are recommended for compiling and running the model:
+
+* use Eclipse as the Java development environment
+* start a new Eclipse project
+* add, as an external library, the ACT-R.jar and other jar files in lib directory
+* add the model source code
+* change the starter file based on the model that you want to run (night A, night B, and Day A)
+* compile and run the system
+* when the application launches, open the proper ACT-R model and run the model
+
+Note that the simple graphics simulation is used for real-time runs, whereas a scaled-down simulation is used for fast runs.
 
 ### Authors ###
 
