@@ -69,7 +69,7 @@ public class Autocar extends Vehicle {
 			if (env.getSimcar().getSpeed() >= 15.0)
 				accelerating = false;
 
-			if ( accelerating) {
+			if (accelerating) {
 				setSpeed(env.getSimcar().getSpeed() + 1.0);
 				setIndex(env.getSimcar().getIndex() + 20.0);
 			} else if (braking) {

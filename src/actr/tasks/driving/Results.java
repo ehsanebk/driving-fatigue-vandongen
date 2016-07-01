@@ -18,22 +18,19 @@ public class Results {
 	public double taskSpeedDev;
 	public double detectionError;
 	public double brakeRT;
-	public double STEX3; // percentage of samples with steering angel exceeding 3˚
+	public double STEX3; // percentage of samples with steering angel exceeding
+							// 3˚
 	public double taskSteeringDev;
 	DecimalFormat df3 = new DecimalFormat("#.000");
 
 	@Override
 	public String toString() {
-		return "taskTime     \t" + df3.format(taskTime) + "\n" +
-				"taskLatDev  \t" + df3.format(taskLatDev) + "\n" +
-				"taskLatVel  \t" + df3.format(taskLatVel) + "\n" +
-				"brakeRT     \t" + df3.format(brakeRT) + "\n" +
-				"headingError\t" + df3.format(headingError) + "\n" +
-				"taskSpeedDev\t" + df3.format(taskSpeedDev) + "\n" +
-				"STEX3       \t" + df3.format(STEX3) + "\n" +
-				"SteeringDev \t" + df3.format(taskSteeringDev) + "\n" ;
+		return "taskTime     \t" + df3.format(taskTime) + "\n" + "taskLatDev  \t" + df3.format(taskLatDev) + "\n"
+				+ "taskLatVel  \t" + df3.format(taskLatVel) + "\n" + "brakeRT     \t" + df3.format(brakeRT) + "\n"
+				+ "headingError\t" + df3.format(headingError) + "\n" + "taskSpeedDev\t" + df3.format(taskSpeedDev)
+				+ "\n" + "STEX3       \t" + df3.format(STEX3) + "\n" + "SteeringDev \t" + df3.format(taskSteeringDev)
+				+ "\n";
 
 	}
-	
-	
+
 }

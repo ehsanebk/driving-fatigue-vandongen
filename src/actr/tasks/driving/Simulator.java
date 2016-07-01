@@ -68,6 +68,7 @@ public class Simulator extends JPanel implements GLEventListener {
 
 	private static boolean texturesInitialized = false;
 
+	@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -94,6 +95,7 @@ public class Simulator extends JPanel implements GLEventListener {
 		}
 	}
 
+	@Override
 	public void display(GLAutoDrawable drawable) {
 		try {
 			final GL2 gl = drawable.getGL().getGL2();
@@ -112,11 +114,13 @@ public class Simulator extends JPanel implements GLEventListener {
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 
+	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL2 gl = drawable.getGL().getGL2();
 		setViewport(gl);
 	}
 
+	@Override
 	public void dispose(GLAutoDrawable drawable) {
 	}
 

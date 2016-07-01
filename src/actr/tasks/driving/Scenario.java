@@ -38,7 +38,7 @@ public class Scenario {
 	public boolean isLeadConstantSpeed() {
 		return leadCarConstantSpeed;
 	}
-	
+
 	public int getSimcarMPH() {
 		return simcarMPH;
 	}

@@ -1,7 +1,5 @@
 package actr.tasks.driving;
 
-import actr.model.Model;
-
 /**
  * The class that defines a collected data sample at a given point in time.
  * 
@@ -21,13 +19,13 @@ public class Sample {
 	private Position autocarHeading;
 	private double autocarSpeed;
 	private boolean autocarBraking;
-//	 private LocationChunk eyeLocation;
-//	 private boolean lookingAwayFromRoad;
-//	 private LocationChunk handLocation;
-//	 private boolean handMoving;
-//	 private boolean listening;
-//	 private boolean inDriveGoal;
-//	 private int event;
+	// private LocationChunk eyeLocation;
+	// private boolean lookingAwayFromRoad;
+	// private LocationChunk handLocation;
+	// private boolean handMoving;
+	// private boolean listening;
+	// private boolean inDriveGoal;
+	// private int event;
 
 	Sample(Environment env) {
 		Simcar simcar = env.getSimcar();
@@ -36,13 +34,20 @@ public class Sample {
 		time = env.getTime();
 		simcarP = simcar.getP().myclone();
 		simcarH = simcar.getH().myclone();
-		simcarLanePos = env.getRoad().vehicleLanePosition(env.getSimcar()); // == X.5 for the center of lane;
+		simcarLanePos = env.getRoad().vehicleLanePosition(env.getSimcar()); // ==
+																			// X.5
+																			// for
+																			// the
+																			// center
+																			// of
+																			// lane;
 		// .0 means exactly over the lane line
 		// lane is 12 feet wide
-		
+
 		simcarIndex = simcar.getIndex();
 		simcarSpeed = simcar.getSpeed();
-		steerAngle = simcar.getSteerAngle(); // steering angle, in radians (I think)
+		steerAngle = simcar.getSteerAngle(); // steering angle, in radians (I
+												// think)
 		accelerator = simcar.getAccelerator();
 		brake = simcar.getBrake();
 		autocarPos = autocar.getP().myclone();
@@ -120,10 +125,10 @@ public class Sample {
 		return autocarSpeed;
 	}
 
-	 public boolean getAutocarBraking() {
-		 return autocarBraking;
-	 }
-	
+	public boolean getAutocarBraking() {
+		return autocarBraking;
+	}
+
 	// public LocationChunk getEyeLocation() {
 	// return eyeLocation;
 	// }

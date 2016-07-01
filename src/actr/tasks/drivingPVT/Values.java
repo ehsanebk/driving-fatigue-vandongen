@@ -60,7 +60,7 @@ public class Values {
 			sum += v.elementAt(i);
 		return sum / (1.0 * v.size());
 	}
-	
+
 	public String meanDF3() {
 		if (v.size() == 0)
 			return "0";
