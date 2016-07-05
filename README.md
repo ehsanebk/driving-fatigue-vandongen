@@ -24,6 +24,8 @@ Note that the simple graphics simulation is used for real-time runs, whereas a s
 
 * Ehsan B Khosroshahi
 * Dario D Salvucci
+* Bella Z Veksler
+* Glenn Gunzelmann
 
 ### References ###
 
