@@ -1,6 +1,7 @@
 package actr.tasks.driving;
 
 import java.text.DecimalFormat;
+import java.util.Vector;
 
 /**
  * A class that defines useful measures for data collection.
@@ -21,6 +22,11 @@ public class Results {
 	public double STEX3; // percentage of samples with steering angel exceeding
 							// 3˚
 	public double taskSteeringDev;
+	public double[] taskLatVel_10Segments = new double[10];
+	public double[] taskSpeedDev_10Segments = new double[10];
+	public double[] STEX3_10Segments = new double[10];
+
+	
 	DecimalFormat df3 = new DecimalFormat("#.000");
 
 	@Override

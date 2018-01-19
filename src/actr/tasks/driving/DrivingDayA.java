@@ -35,7 +35,7 @@ public class DrivingDayA extends Task {
 	private final double steerNaMax = .07;
 	private final double thwFollow = 1.0; // 1.0 orig
 
-	private double simulationDurarion = 60 * 30; // the driving sessions are 30
+	private double simulationDurarion = 1 * 30; // the driving sessions are 30
 													// min (30 * 60sec)
 	private double accelBrake = 0, speed = 0;
 
@@ -320,7 +320,10 @@ public class DrivingDayA extends Task {
 			Values[] totalSpeedDev = new Values[numberOfSimulations];
 			Values[] totalSTEX3 = new Values[numberOfSimulations];
 			Values[] totalSteeringDev = new Values[numberOfSimulations];
-
+			Values[][] totalLatDev_10Segment = new Values[numberOfSimulations][10];
+			Values[][] totalSpeedDev_10Segment = new Values[numberOfSimulations][10];
+			Values[][] totalSTEX3_10Segment = new Values[numberOfSimulations][10];
+			
 			for (int i = 0; i < numberOfSimulations; i++) {
 				totalLatDev[i] = new Values();
 				totalLatVel[i] = new Values();
@@ -329,6 +332,11 @@ public class DrivingDayA extends Task {
 				totalSpeedDev[i] = new Values();
 				totalSTEX3[i] = new Values();
 				totalSteeringDev[i] = new Values();
+				for (int j = 0; j < 10; j++) {
+					totalLatDev_10Segment[i][j] = new Values();
+					totalSpeedDev_10Segment[i][j] = new Values();
+					totalSTEX3_10Segment[i][j] = new Values();	
+				}
 			}
 
 			for (Task taskCast : tasks) {
@@ -342,6 +350,11 @@ public class DrivingDayA extends Task {
 					totalSpeedDev[i].add(results.taskSpeedDev);
 					totalSTEX3[i].add(results.STEX3);
 					totalSteeringDev[i].add(results.taskSteeringDev);
+					for (int j = 0; j < 10; j++) {
+						totalLatDev_10Segment[i][j].add(results.STEX3_10Segments.elementAt(j));
+						totalSpeedDev_10Segment[i][j].add(results.taskSpeedDev_10Segments.elementAt(j));;
+						totalSTEX3_10Segment[i][j].add();;	
+					}
 				}
 			}
 

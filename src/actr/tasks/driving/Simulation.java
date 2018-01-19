@@ -95,9 +95,8 @@ public class Simulation {
 		double sumSteeringDev = 0;
 		double sumLatVel = 0;
 		double sumSpeedDev = 0;
-
 		double numSTEX3 = 0; // number of samples with steering angel exceeding
-								// 3˚
+		// 3˚
 		double numTaskDetects = 0, numTaskDetectsCount = 0;
 		double sumBrakeRTs = 0, numBrakeRTs = 0, lastBrakeTime = 0;
 		boolean brakeEvent = false;
@@ -115,6 +114,8 @@ public class Simulation {
 			Sample s = samples.elementAt(i);
 			Sample sprev = samples.elementAt(i - 1);
 
+			// s.getSimcarIndex() s
+			
 			// if ((s.event > 0) || (s.getTime() < stopTime + 5.0)) {
 
 			numTaskSamples++;
@@ -180,6 +181,7 @@ public class Simulation {
 		// }
 
 		Results r = new Results();
+
 		// r.ifc = ifc;
 		// r.task = task;
 		r.driver = driver;
@@ -200,6 +202,27 @@ public class Simulation {
 		r.laneViolations = laneViolations;
 		r.STEX3 = numSTEX3 / numTaskSamples * 100;
 		r.taskSteeringDev = Math.sqrt(sumSteeringDev / numTaskSamples);
+
+		//Getting the values for the 10 segments of the driving data
+		int segSize = samples.size()/10;
+		for (int i = 0; i < 10; i++) {
+			int numTaskSamplesSeg=0;
+			double numSTEX3Seg =0;
+			double sumLatDevSeg=0;
+			double sumSpeedDevSeg=0;
+			for (int j = i * segSize ; j < (i+1)*segSize; j++) {
+				Sample s = samples.elementAt(i);
+				numTaskSamplesSeg++;
+				if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
+					numSTEX3Seg++;
+				double latdevSeg = 3.66 * (s.getSimcarLanePosition() - LANE_CENTER);
+				sumLatDevSeg += (latdevSeg * latdevSeg);
+				sumSpeedDevSeg += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getSimcarSpeed() - s.getAutocarSpeed());
+			}
+			r.taskLatVel_10Segments[i]= Math.sqrt(sumLatDevSeg / numTaskSamplesSeg);
+			r.taskSpeedDev_10Segments[i]= Math.sqrt(sumSpeedDevSeg / numTaskSamplesSeg);
+			r.STEX3_10Segments[i]= numSTEX3Seg / numTaskSamplesSeg * 100;
+		}
 
 		return r;
 	}
