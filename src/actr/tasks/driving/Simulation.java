@@ -115,7 +115,7 @@ public class Simulation {
 			Sample sprev = samples.elementAt(i - 1);
 
 			// s.getSimcarIndex() s
-			
+
 			// if ((s.event > 0) || (s.getTime() < stopTime + 5.0)) {
 
 			numTaskSamples++;
@@ -203,27 +203,36 @@ public class Simulation {
 		r.STEX3 = numSTEX3 / numTaskSamples * 100;
 		r.taskSteeringDev = Math.sqrt(sumSteeringDev / numTaskSamples);
 
+		r.lastIndex = samples.lastElement().getSimcarIndex();
+
 		//Getting the values for the 10 segments of the driving data
-		int segSize = samples.size()/10;
+		//Every segment is 0.5 miles equal to 3365.0 m
+		//Total distance is 28 miles which is 45061.6 m
 		for (int i = 0; i < 10; i++) {
-			int numTaskSamplesSeg=0;
-			double numSTEX3Seg =0;
-			double sumLatDevSeg=0;
-			double sumSpeedDevSeg=0;
-			for (int j = i * segSize ; j < (i+1)*segSize; j++) {
-				Sample s = samples.elementAt(i);
-				numTaskSamplesSeg++;
-				if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
-					numSTEX3Seg++;
-				double latdevSeg = 3.66 * (s.getSimcarLanePosition() - LANE_CENTER);
-				sumLatDevSeg += (latdevSeg * latdevSeg);
-				sumSpeedDevSeg += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getSimcarSpeed() - s.getAutocarSpeed());
+			int numTaskSamplesSeg = 0;
+			double numSTEX3Seg = 0;
+			double sumLatDevSeg = 0;
+			double sumSpeedDevSeg = 0;
+			double x = 0;
+			for (int j = 1; j < samples.size(); j++) {
+				Sample s = samples.elementAt(j);
+				if (s.getSimcarIndex() > (x + 3356.0) && s.getSimcarIndex() < (x + 3356.0 + 804.67)){
+					numTaskSamplesSeg++;
+					if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
+						numSTEX3Seg++;
+					double latdevSeg = 3.66 * (s.getSimcarLanePosition() - LANE_CENTER);
+					sumLatDevSeg += (latdevSeg * latdevSeg);
+					sumSpeedDevSeg += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getSimcarSpeed() - s.getAutocarSpeed());
+				}
+				if (s.getSimcarIndex() >= (x + 3356.0 + 804.67))
+					break;
 			}
-			r.taskLatVel_10Segments[i]= Math.sqrt(sumLatDevSeg / numTaskSamplesSeg);
+			r.taskLatDev_10Segments[i]= Math.sqrt(sumLatDevSeg / numTaskSamplesSeg);
 			r.taskSpeedDev_10Segments[i]= Math.sqrt(sumSpeedDevSeg / numTaskSamplesSeg);
 			r.STEX3_10Segments[i]= numSTEX3Seg / numTaskSamplesSeg * 100;
+			x += 3356.0 + 804.67;
 		}
-
+		
 		return r;
 	}
 }

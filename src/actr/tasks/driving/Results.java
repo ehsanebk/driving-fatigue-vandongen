@@ -19,12 +19,13 @@ public class Results {
 	public double taskSpeedDev;
 	public double detectionError;
 	public double brakeRT;
-	public double STEX3; // percentage of samples with steering angel exceeding
-							// 3˚
+	public double STEX3; // percentage of samples with steering angel exceeding 3˚
 	public double taskSteeringDev;
-	public double[] taskLatVel_10Segments = new double[10];
+	public double[] taskLatDev_10Segments = new double[10];
 	public double[] taskSpeedDev_10Segments = new double[10];
 	public double[] STEX3_10Segments = new double[10];
+	
+	public double lastIndex; 
 
 	
 	DecimalFormat df3 = new DecimalFormat("#.000");
