@@ -327,8 +327,8 @@ public class DrivingDayA_10segments extends Task {
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
 		
-		File out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Model_TimePoints_Cumulative.csv");
-		//File out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Model_TimePoints_Cumulative.csv");
+		File out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
+		//File out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
 		PrintWriter outputCSV = null;
 		try {
 			outputCSV = new PrintWriter(out);
