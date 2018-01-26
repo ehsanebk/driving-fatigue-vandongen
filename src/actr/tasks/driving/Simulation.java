@@ -204,6 +204,7 @@ public class Simulation {
 		r.taskSteeringDev = Math.sqrt(sumSteeringDev / numTaskSamples);
 
 		r.lastIndex = samples.lastElement().getSimcarIndex();
+		r.taskTime = samples.lastElement().time;
 
 		//Getting the values for the 10 segments of the driving data
 		//Every segment is 0.5 miles equal to 3365.0 m

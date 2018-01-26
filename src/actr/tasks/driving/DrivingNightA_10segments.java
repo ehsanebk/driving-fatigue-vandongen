@@ -67,6 +67,9 @@ public class DrivingNightA_10segments extends Task {
 	double simulationStartTime = 0;
 	private Vector<Results> results = new Vector<Results>();
 	boolean completed;
+
+	//File out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+	File out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
 	
 	public DrivingNightA_10segments() {
 		super();
@@ -328,8 +331,6 @@ public class DrivingNightA_10segments extends Task {
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
 		
-		//File out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-		File out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
 		PrintWriter outputCSV = null;
 		try {
 			outputCSV = new PrintWriter(out);
@@ -369,6 +370,30 @@ public class DrivingNightA_10segments extends Task {
 					getModel().outputInLine(String.valueOf(df2.format(result.lastIndex) +"\t"));
 					getModel().outputInLine("\t");
 					outputCSV.print(String.valueOf(df2.format(result.lastIndex) +","));
+					outputCSV.print(",");
+				}
+				getModel().outputInLine("\n\n");
+				outputCSV.print("\n\n");
+			}
+			
+			getModel().output("\n******* Task Time ********** \n");
+			outputCSV.print("\n******* Task Time ********** \n");
+			for (Task taskCast : tasks) {
+				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				if (!task.completed){
+					getModel().outputInLine("–\t");
+					outputCSV.print("–,");
+				}
+				else{
+					getModel().outputInLine("\t");
+					outputCSV.print(",");
+				}
+				
+				for (int i = 0; i < numberOfSimulations; i++) {
+					Results result = task.results.elementAt(i);
+					getModel().outputInLine(String.valueOf(df2.format(result.taskTime) +"\t"));
+					getModel().outputInLine("\t");
+					outputCSV.print(String.valueOf(df2.format(result.taskTime) +","));
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n\n");

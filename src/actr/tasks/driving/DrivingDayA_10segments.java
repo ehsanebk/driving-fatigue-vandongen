@@ -38,7 +38,7 @@ public class DrivingDayA_10segments extends Task {
 
 	private final double simulationDurarion = 60 * 30; // the driving sessions are 30
 													// min (30 * 60sec)
-	private final double simulationDistance = 45061.6;  // equal to 28 miles
+	private final double simulationDistance =  45061.6;  // equal to 28 miles
 
 	private double accelBrake = 0, speed = 0;
 
@@ -66,6 +66,9 @@ public class DrivingDayA_10segments extends Task {
 	double simulationStartTime = 0;
 	private Vector<Results> results = new Vector<Results>();
 	boolean completed;
+
+	File out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
+	//File out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
 	
 	public DrivingDayA_10segments() {
 		super();
@@ -327,8 +330,6 @@ public class DrivingDayA_10segments extends Task {
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
 		
-		File out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
-		//File out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
 		PrintWriter outputCSV = null;
 		try {
 			outputCSV = new PrintWriter(out);
@@ -374,6 +375,30 @@ public class DrivingDayA_10segments extends Task {
 				outputCSV.print("\n\n");
 			}
 				
+			getModel().output("\n******* Task Time ********** \n");
+			outputCSV.print("\n******* Task Time ********** \n");
+			for (Task taskCast : tasks) {
+				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				if (!task.completed){
+					getModel().outputInLine("–\t");
+					outputCSV.print("–,");
+				}
+				else{
+					getModel().outputInLine("\t");
+					outputCSV.print(",");
+				}
+				
+				for (int i = 0; i < numberOfSimulations; i++) {
+					Results result = task.results.elementAt(i);
+					getModel().outputInLine(String.valueOf(df2.format(result.taskTime) +"\t"));
+					getModel().outputInLine("\t");
+					outputCSV.print(String.valueOf(df2.format(result.taskTime) +","));
+					outputCSV.print(",");
+				}
+				getModel().outputInLine("\n\n");
+				outputCSV.print("\n\n");
+			}
+
 			getModel().output("\n******* taskLatDev_10Segments ********** \n");
 			outputCSV.print("\n******* taskLatDev_10Segments ********** \n");
 			for (Task taskCast : tasks) {
