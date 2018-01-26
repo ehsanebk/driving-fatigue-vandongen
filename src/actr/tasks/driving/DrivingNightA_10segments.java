@@ -344,7 +344,6 @@ public class DrivingNightA_10segments extends Task {
 		getModel().output("******** Results of Night A **********");
 		outputCSV.print("******** Results of Night A **********");
 		try {
-			
 			DecimalFormat df = new DecimalFormat("#.000000");
 			
 			getModel().output("\n******* index ********** \n");
@@ -371,7 +370,7 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
-			
+				
 			getModel().output("\n******* Task Time ********** \n");
 			outputCSV.print("\n******* Task Time ********** \n");
 			for (Task taskCast : tasks) {
@@ -396,7 +395,36 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
+			
+			getModel().output("\n******* Index_10Segments ********** \n");
+			outputCSV.print("\n******* Index_10Segments ********** \n");
+			for (Task taskCast : tasks) {
+				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
+				if (!task.completed){
+					getModel().outputInLine("–\t");
+					outputCSV.print(",");
+				}
+				else{
+					getModel().outputInLine("\t");
+					outputCSV.print(",");
+				}
 				
+				for (int i = 0; i < numberOfSimulations; i++) {
+					Results result = task.results.elementAt(i);
+					for (int j = 0; j < 10; j++) {
+						getModel().outputInLine(result.startIndex_10Segments[j]
+								+"-" + result.endIndex_10Segments[j] +" ");
+						outputCSV.print(result.startIndex_10Segments[j]
+								+"-" + result.endIndex_10Segments[j] +",");
+					}
+					getModel().outputInLine("\t");
+					outputCSV.print(",,");
+				}
+				getModel().outputInLine("\n\n");
+				outputCSV.print("\n\n");
+			}
+
 			getModel().output("\n******* taskLatDev_10Segments ********** \n");
 			outputCSV.print("\n******* taskLatDev_10Segments ********** \n");
 			for (Task taskCast : tasks) {

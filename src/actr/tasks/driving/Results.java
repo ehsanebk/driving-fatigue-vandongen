@@ -24,6 +24,8 @@ public class Results {
 	public double[] taskLatDev_10Segments = new double[10];
 	public double[] taskSpeedDev_10Segments = new double[10];
 	public double[] STEX3_10Segments = new double[10];
+	public double[] startIndex_10Segments = new double[10];
+	public double[] endIndex_10Segments = new double[10];
 	
 	public double lastIndex; 
 

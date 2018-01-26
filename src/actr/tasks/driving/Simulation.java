@@ -66,14 +66,14 @@ public class Simulation {
 		return (-180 * (Math.atan2(hz, hx)) / Math.PI);
 	}
 
-	double headingError(Sample s) {
-		Road.Segment s2 = env.getRoad().getSegment((int) s.getSimcarRoadIndex());
-		Road.Segment s1 = env.getRoad().getSegment((int) s.getSimcarRoadIndex() - 1);
-		Position rh = s2.middle.subtract(s1.middle);
-		rh.normalize();
-		return Math.abs(
-				rotAngle(rh.getX(), rh.getZ()) - rotAngle(s.getSimcarHeading().getX(), s.getSimcarHeading().getZ()));
-	}
+//	double headingError(Sample s) {
+//		Road.Segment s2 = env.getRoad().getSegment((int) s.getSimcarRoadIndex());
+//		Road.Segment s1 = env.getRoad().getSegment((int) s.getSimcarRoadIndex() - 1);
+//		Position rh = s2.middle.subtract(s1.middle);
+//		rh.normalize();
+//		return Math.abs(
+//				rotAngle(rh.getX(), rh.getZ()) - rotAngle(s.getSimcarHeading().getX(), s.getSimcarHeading().getZ()));
+//	}
 
 	boolean lookingAhead(Sample s) {
 		return true;
@@ -145,13 +145,13 @@ public class Simulation {
 			// if ((s.event > 0) || (s.time < stopTime))
 			// {
 			// if (((s.event > 0) || (s.time < stopTime)) && !brakeEvent
-			if (!brakeEvent && (s.getAutocarBraking() && !sprev.getAutocarBraking())) {
-				brakeEvent = true;
-				lastBrakeTime = s.time;
-			}
-			if (brakeEvent && !s.getAutocarBraking()) {
-				brakeEvent = false;
-			}
+//			if (!brakeEvent && (s.getAutocarBraking() && !sprev.getAutocarBraking())) {
+//				brakeEvent = true;
+//				lastBrakeTime = s.time;
+//			}
+//			if (brakeEvent && !s.getAutocarBraking()) {
+//				brakeEvent = false;
+//			}
 			if (brakeEvent && (s.getBrake() > 0)) {
 				// System.out.println ("BrakeRT: " + (s.time -
 				// lastBrakeTime));
@@ -161,11 +161,11 @@ public class Simulation {
 			}
 			// }
 
-			headingErrors[numTaskSamples - 1] = headingError(s);
-			if (!lvDetected && (Math.abs(latdev) > (1.83 - 1.0))) {
-				laneViolations++;
-				lvDetected = true;
-			}
+//			headingErrors[numTaskSamples - 1] = headingError(s);
+//			if (!lvDetected && (Math.abs(latdev) > (1.83 - 1.0))) {
+//				laneViolations++;
+//				lvDetected = true;
+//			}
 		}
 
 		// if ((s.event == 1) && (sprev.event == 0)) {
@@ -205,34 +205,44 @@ public class Simulation {
 
 		r.lastIndex = samples.lastElement().getSimcarIndex();
 		r.taskTime = samples.lastElement().time;
-
+	
+		
 		//Getting the values for the 10 segments of the driving data
-		//Every segment is 0.5 miles equal to 3365.0 m
+		//Every segment is 0.5 miles equal to 804.67 m
 		//Total distance is 28 miles which is 45061.6 m
+		double segmentLength = 804.67;
+		double distanceBetweensegments = (r.lastIndex - 10 * segmentLength) / 11.0;
 		for (int i = 0; i < 10; i++) {
 			int numTaskSamplesSeg = 0;
 			double numSTEX3Seg = 0;
 			double sumLatDevSeg = 0;
 			double sumSpeedDevSeg = 0;
-			double x = 0;
+			// start_m is the start of each segment
+			double start_m = i * (distanceBetweensegments + segmentLength) + distanceBetweensegments;
 			for (int j = 1; j < samples.size(); j++) {
 				Sample s = samples.elementAt(j);
-				if (s.getSimcarIndex() > (x + 3356.0) && s.getSimcarIndex() < (x + 3356.0 + 804.67)){
+				if (s.getSimcarIndex() > (start_m) && s.getSimcarIndex() < (start_m +segmentLength)){
 					numTaskSamplesSeg++;
 					if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
 						numSTEX3Seg++;
 					double latdevSeg = 3.66 * (s.getSimcarLanePosition() - LANE_CENTER);
 					sumLatDevSeg += (latdevSeg * latdevSeg);
+//					sumSpeedDevSeg += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getSimcarSpeed() - s.getAutocarSpeed());
 					sumSpeedDevSeg += (s.getSimcarSpeed() - s.getAutocarSpeed()) * (s.getSimcarSpeed() - s.getAutocarSpeed());
 				}
-				if (s.getSimcarIndex() >= (x + 3356.0 + 804.67))
+				if (s.getSimcarIndex() >= (start_m +segmentLength))
 					break;
 			}
 			r.taskLatDev_10Segments[i]= Math.sqrt(sumLatDevSeg / numTaskSamplesSeg);
 			r.taskSpeedDev_10Segments[i]= Math.sqrt(sumSpeedDevSeg / numTaskSamplesSeg);
 			r.STEX3_10Segments[i]= numSTEX3Seg / numTaskSamplesSeg * 100;
-			x += 3356.0 + 804.67;
+			r.startIndex_10Segments[i] = (int)start_m;
+			r.endIndex_10Segments[i] = (int)start_m +segmentLength;
 		}
+		
+		// XXX DESTROYING THE SAMPLES VECTOR!
+		samples.clear();
+		samples = null;
 		
 		return r;
 	}

@@ -38,7 +38,7 @@ public class DrivingDayA_10segments extends Task {
 
 	private final double simulationDurarion = 60 * 30; // the driving sessions are 30
 													// min (30 * 60sec)
-	private final double simulationDistance =  45061.6;  // equal to 28 miles
+	private final double simulationDistance = 10000.0; // 45061.6;  // equal to 28 miles
 
 	private double accelBrake = 0, speed = 0;
 
@@ -51,15 +51,15 @@ public class DrivingDayA_10segments extends Task {
 			//
 			57.0, 60.0, 63.0, 66.0, // day2
 			81.0, 84.0, 87.0, 90.0, // day3
-			105.0, 108.0, 111.0, 114.0, // day4
-			129.0, 132.0, 135.0, 138.0, // day5
-			153.0, 156.0, 159.0, 162.0, // day6
-
-			201.0, 204.0, 207.0, 210.0, // day9
-			225.0, 228.0, 231.0, 234.0, // day10
-			249.0, 252.0, 255.0, 258.0, // day11
-			273.0, 276.0, 279.0, 282.0, // day12
-			297.0, 300.0, 303.0, 306.0 // day13
+//			105.0, 108.0, 111.0, 114.0, // day4
+//			129.0, 132.0, 135.0, 138.0, // day5
+//			153.0, 156.0, 159.0, 162.0, // day6
+//
+//			201.0, 204.0, 207.0, 210.0, // day9
+//			225.0, 228.0, 231.0, 234.0, // day10
+//			249.0, 252.0, 255.0, 258.0, // day11
+//			273.0, 276.0, 279.0, 282.0, // day12
+//			297.0, 300.0, 303.0, 306.0 // day13
 	};
 
 	int simulationNumber = 0;
@@ -130,6 +130,7 @@ public class DrivingDayA_10segments extends Task {
 				currentSimulation.update();
 				updateVisuals();
 				
+				// System.out.println(getModel().getDeclarative().size());
 				
 				// in case the car position is out of lane
 				if (currentSimulation.samples.lastElement().getSimcarLanePosition()<3.5
@@ -390,6 +391,35 @@ public class DrivingDayA_10segments extends Task {
 					getModel().outputInLine("\t");
 					outputCSV.print(String.valueOf(df.format(result.taskTime) +","));
 					outputCSV.print(",");
+				}
+				getModel().outputInLine("\n\n");
+				outputCSV.print("\n\n");
+			}
+			
+			getModel().output("\n******* Index_10Segments ********** \n");
+			outputCSV.print("\n******* Index_10Segments ********** \n");
+			for (Task taskCast : tasks) {
+				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
+				if (!task.completed){
+					getModel().outputInLine("–\t");
+					outputCSV.print(",");
+				}
+				else{
+					getModel().outputInLine("\t");
+					outputCSV.print(",");
+				}
+				
+				for (int i = 0; i < numberOfSimulations; i++) {
+					Results result = task.results.elementAt(i);
+					for (int j = 0; j < 10; j++) {
+						getModel().outputInLine(result.startIndex_10Segments[j]
+								+"-" + result.endIndex_10Segments[j] +" ");
+						outputCSV.print(result.startIndex_10Segments[j]
+								+"-" + result.endIndex_10Segments[j] +",");
+					}
+					getModel().outputInLine("\t");
+					outputCSV.print(",,");
 				}
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");

@@ -7,18 +7,18 @@ package actr.tasks.driving;
  */
 public class Sample {
 	public double time;
-	private Position simcarP;
-	private Position simcarH;
+//	private Position simcarP;
+//	private Position simcarH;
 	private double simcarLanePos;
 	private double simcarIndex;
 	private double simcarSpeed;
 	private double steerAngle;
 	private double accelerator;
 	private double brake;
-	private Position autocarPos;
-	private Position autocarHeading;
+//	private Position autocarPos;
+//	private Position autocarHeading;
 	private double autocarSpeed;
-	private boolean autocarBraking;
+//	private boolean autocarBraking;
 	// private LocationChunk eyeLocation;
 	// private boolean lookingAwayFromRoad;
 	// private LocationChunk handLocation;
@@ -32,8 +32,8 @@ public class Sample {
 		Autocar autocar = env.getAutocar();
 
 		time = env.getTime();
-		simcarP = simcar.getP().myclone();
-		simcarH = simcar.getH().myclone();
+//		simcarP = simcar.getP().myclone();
+//		simcarH = simcar.getH().myclone();
 		simcarLanePos = env.getRoad().vehicleLanePosition(env.getSimcar()); // ==
 																			// X.5
 																			// for
@@ -50,10 +50,10 @@ public class Sample {
 												// think)
 		accelerator = simcar.getAccelerator();
 		brake = simcar.getBrake();
-		autocarPos = autocar.getP().myclone();
-		autocarHeading = autocar.getH().myclone();
+//		autocarPos = autocar.getP().myclone();
+//		autocarHeading = autocar.getH().myclone();
 		autocarSpeed = autocar.getSpeed();
-		autocarBraking = autocar.isBraking();
+//		autocarBraking = autocar.isBraking();
 
 		// eyeLocation = model.getVision().getEyeLocation();
 		// if (eyeLocation != null)
@@ -77,13 +77,13 @@ public class Sample {
 		return time;
 	}
 
-	public Position getSimcarPosition() {
-		return simcarP;
-	}
-
-	public Position getSimcarHeading() {
-		return simcarH;
-	}
+//	public Position getSimcarPosition() {
+//		return simcarP;
+//	}
+//
+//	public Position getSimcarHeading() {
+//		return simcarH;
+//	}
 
 	public double getSimcarLanePosition() {
 		return simcarLanePos;
@@ -113,21 +113,21 @@ public class Sample {
 		return brake;
 	}
 
-	public Position getAutocarPos() {
-		return autocarPos;
-	}
-
-	public Position getAutocarHeading() {
-		return autocarHeading;
-	}
-
+//	public Position getAutocarPos() {
+//		return autocarPos;
+//	}
+//
+//	public Position getAutocarHeading() {
+//		return autocarHeading;
+//	}
+//
 	public double getAutocarSpeed() {
 		return autocarSpeed;
 	}
-
-	public boolean getAutocarBraking() {
-		return autocarBraking;
-	}
+//
+//	public boolean getAutocarBraking() {
+//		return autocarBraking;
+//	}
 
 	// public LocationChunk getEyeLocation() {
 	// return eyeLocation;
@@ -187,18 +187,18 @@ public class Sample {
 	public String toString(String separator) {
 		String s = "";
 		s += Utilities.format(time, 3);
-		s += separator + Utilities.format(simcarP.getX(), 3);
-		s += separator + Utilities.format(simcarP.getZ(), 3);
-		s += separator + Utilities.format(Utilities.rotationAngle(simcarH.getX(), simcarH.getZ()), 5);
+//		s += separator + Utilities.format(simcarP.getX(), 3);
+//		s += separator + Utilities.format(simcarP.getZ(), 3);
+//		s += separator + Utilities.format(Utilities.rotationAngle(simcarH.getX(), simcarH.getZ()), 5);
 		s += separator + Utilities.format(simcarLanePos, 3);
 		s += separator + Utilities.format(simcarIndex, 3);
 		s += separator + Utilities.format(simcarSpeed, 3);
 		s += separator + Utilities.format(steerAngle, 5);
 		s += separator + Utilities.format(accelerator, 3);
 		s += separator + Utilities.format(brake, 3);
-		s += separator + Utilities.format(autocarPos.getX(), 3);
+//		s += separator + Utilities.format(autocarPos.getX(), 3);
 		s += separator + Utilities.format(autocarSpeed, 3);
-		s += separator + (autocarBraking ? 1 : 0);
+//		s += separator + (autocarBraking ? 1 : 0);
 		// s += separator + (eyeLocation != null ?
 		// eyeLocation.toString(separator) :
 		// LocationChunk.nullString(separator));
@@ -244,16 +244,16 @@ public class Sample {
 	public String toDetailedString(String separator) {
 		String s = "";
 		s += time;
-		s += separator + simcarP.toString(separator);
-		s += separator + simcarH.toString(separator);
+//		s += separator + simcarP.toString(separator);
+//		s += separator + simcarH.toString(separator);
 		s += separator + simcarSpeed;
 		s += separator + steerAngle;
 		s += separator + accelerator;
 		s += separator + brake;
-		s += separator + autocarPos.toString(separator);
-		s += separator + autocarHeading.toString(separator);
-		s += separator + autocarSpeed;
-		s += separator + (autocarBraking ? 1 : 0);
+//		s += separator + autocarPos.toString(separator);
+//		s += separator + autocarHeading.toString(separator);
+//		s += separator + autocarSpeed;
+//		s += separator + (autocarBraking ? 1 : 0);
 		// s += separator + (eyeLocation != null ?
 		// eyeLocation.toString(separator) :
 		// LocationChunk.nullString(separator));
