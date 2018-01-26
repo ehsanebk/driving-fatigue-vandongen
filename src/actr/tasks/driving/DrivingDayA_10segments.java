@@ -343,18 +343,13 @@ public class DrivingDayA_10segments extends Task {
 		getModel().output("******** Results of Day A **********");
 		outputCSV.print("******** Results of Day A **********");
 		try {
-			int numberOfSimulations = results.size();
-			
-			for (int i = 0; i < numberOfSimulations; i++) {
-			
-			}
-
-			DecimalFormat df2 = new DecimalFormat("#.00");
+			DecimalFormat df = new DecimalFormat("#.000000");
 			
 			getModel().output("\n******* index ********** \n");
 			outputCSV.print("\n******* index ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
 				if (!task.completed){
 					getModel().outputInLine("–\t");
 					outputCSV.print("–,");
@@ -366,9 +361,9 @@ public class DrivingDayA_10segments extends Task {
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
-					getModel().outputInLine(String.valueOf(df2.format(result.lastIndex) +"\t"));
+					getModel().outputInLine(String.valueOf(df.format(result.lastIndex) +"\t"));
 					getModel().outputInLine("\t");
-					outputCSV.print(String.valueOf(df2.format(result.lastIndex) +","));
+					outputCSV.print(String.valueOf(df.format(result.lastIndex) +","));
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n\n");
@@ -379,6 +374,7 @@ public class DrivingDayA_10segments extends Task {
 			outputCSV.print("\n******* Task Time ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
 				if (!task.completed){
 					getModel().outputInLine("–\t");
 					outputCSV.print("–,");
@@ -390,9 +386,9 @@ public class DrivingDayA_10segments extends Task {
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
-					getModel().outputInLine(String.valueOf(df2.format(result.taskTime) +"\t"));
+					getModel().outputInLine(String.valueOf(df.format(result.taskTime) +"\t"));
 					getModel().outputInLine("\t");
-					outputCSV.print(String.valueOf(df2.format(result.taskTime) +","));
+					outputCSV.print(String.valueOf(df.format(result.taskTime) +","));
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n\n");
@@ -403,6 +399,7 @@ public class DrivingDayA_10segments extends Task {
 			outputCSV.print("\n******* taskLatDev_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
 				if (!task.completed){
 					getModel().outputInLine("–\t");
 					outputCSV.print(",");
@@ -415,8 +412,8 @@ public class DrivingDayA_10segments extends Task {
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df2.format(result.taskLatDev_10Segments[j]) +" ");
-						outputCSV.print(df2.format(result.taskLatDev_10Segments[j]) +",");
+						getModel().outputInLine(df.format(result.taskLatDev_10Segments[j]) +" ");
+						outputCSV.print(df.format(result.taskLatDev_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",,");
@@ -429,6 +426,7 @@ public class DrivingDayA_10segments extends Task {
 			outputCSV.print("\n*******STEX3_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
 				if (!task.completed){
 					getModel().outputInLine("–\t");
 					outputCSV.print("–,");
@@ -441,8 +439,8 @@ public class DrivingDayA_10segments extends Task {
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df2.format(result.STEX3_10Segments[j]) +" ");
-						outputCSV.print(df2.format(result.STEX3_10Segments[j]) +",");
+						getModel().outputInLine(df.format(result.STEX3_10Segments[j]) +" ");
+						outputCSV.print(df.format(result.STEX3_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",");
@@ -455,6 +453,7 @@ public class DrivingDayA_10segments extends Task {
 			outputCSV.print("\n******* taskSpeedDev_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
 				if (!task.completed){
 					getModel().outputInLine("–\t");
 					outputCSV.print("–,");
@@ -467,8 +466,8 @@ public class DrivingDayA_10segments extends Task {
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df2.format(result.taskSpeedDev_10Segments[j]) +" ");
-						outputCSV.print(df2.format(result.taskSpeedDev_10Segments[j]) +",");
+						getModel().outputInLine(df.format(result.taskSpeedDev_10Segments[j]) +" ");
+						outputCSV.print(df.format(result.taskSpeedDev_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",");
