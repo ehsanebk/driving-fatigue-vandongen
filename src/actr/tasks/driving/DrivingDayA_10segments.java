@@ -38,7 +38,7 @@ public class DrivingDayA_10segments extends Task {
 
 	private final double simulationDurarion = 60 * 30; // the driving sessions are 30
 													// min (30 * 60sec)
-	private final double simulationDistance = 10000.0; // 45061.6;  // equal to 28 miles
+	private final double simulationDistance = 45061.6;  // equal to 28 miles
 
 	private double accelBrake = 0, speed = 0;
 
@@ -49,8 +49,8 @@ public class DrivingDayA_10segments extends Task {
 
 	private double[] timesOfPVT = {
 			//
-			57.0, 60.0, 63.0, 66.0, // day2
-			81.0, 84.0, 87.0, 90.0, // day3
+//			57.0, 60.0, 63.0, 66.0, // day2
+//			81.0, 84.0, 87.0, 90.0, // day3
 //			105.0, 108.0, 111.0, 114.0, // day4
 //			129.0, 132.0, 135.0, 138.0, // day5
 //			153.0, 156.0, 159.0, 162.0, // day6
@@ -59,16 +59,14 @@ public class DrivingDayA_10segments extends Task {
 //			225.0, 228.0, 231.0, 234.0, // day10
 //			249.0, 252.0, 255.0, 258.0, // day11
 //			273.0, 276.0, 279.0, 282.0, // day12
-//			297.0, 300.0, 303.0, 306.0 // day13
+			297.0, 300.0, 303.0, 306.0 // day13
 	};
 
 	int simulationNumber = 0;
 	double simulationStartTime = 0;
 	private Vector<Results> results = new Vector<Results>();
 	boolean completed;
-
-	File out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
-	//File out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
+	File out; // output file
 	
 	public DrivingDayA_10segments() {
 		super();
@@ -79,6 +77,13 @@ public class DrivingDayA_10segments extends Task {
 
 	@Override
 	public void start() {
+		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		//out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		if (!out.exists()){
+			getModel().output("The file path is not valid!!");
+			getModel().stop();
+		}
+		
 		completed = true;
 		currentSimulation = new Simulation();
 
@@ -352,8 +357,8 @@ public class DrivingDayA_10segments extends Task {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();
 				if (!task.completed){
-					getModel().outputInLine("–\t");
-					outputCSV.print("–,");
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
 				}
 				else{
 					getModel().outputInLine("\t");
@@ -377,8 +382,8 @@ public class DrivingDayA_10segments extends Task {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();
 				if (!task.completed){
-					getModel().outputInLine("–\t");
-					outputCSV.print("–,");
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
 				}
 				else{
 					getModel().outputInLine("\t");
@@ -402,8 +407,8 @@ public class DrivingDayA_10segments extends Task {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();
 				if (!task.completed){
-					getModel().outputInLine("–\t");
-					outputCSV.print(",");
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
 				}
 				else{
 					getModel().outputInLine("\t");
@@ -431,8 +436,8 @@ public class DrivingDayA_10segments extends Task {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();
 				if (!task.completed){
-					getModel().outputInLine("–\t");
-					outputCSV.print(",");
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
 				}
 				else{
 					getModel().outputInLine("\t");
@@ -458,8 +463,8 @@ public class DrivingDayA_10segments extends Task {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();
 				if (!task.completed){
-					getModel().outputInLine("–\t");
-					outputCSV.print("–,");
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
 				}
 				else{
 					getModel().outputInLine("\t");
@@ -473,7 +478,7 @@ public class DrivingDayA_10segments extends Task {
 						outputCSV.print(df.format(result.STEX3_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
-					outputCSV.print(",");
+					outputCSV.print(",,");
 				}
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
@@ -485,8 +490,8 @@ public class DrivingDayA_10segments extends Task {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();
 				if (!task.completed){
-					getModel().outputInLine("–\t");
-					outputCSV.print("–,");
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
 				}
 				else{
 					getModel().outputInLine("\t");
@@ -500,7 +505,7 @@ public class DrivingDayA_10segments extends Task {
 						outputCSV.print(df.format(result.taskSpeedDev_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
-					outputCSV.print(",");
+					outputCSV.print(",,");
 				}
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");

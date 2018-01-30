@@ -14,7 +14,7 @@ public class Starter implements actr.env.Starter {
 		// core.openFrame(new File("model/PVT_DriverNightB.actr"));
 		// core.openFrame(new File("model/PVT_DriverDayA.actr"));
 		
-		//core.openFrame(new File("model/DrivingDayA_10segments.actr"));
-		core.openFrame(new File("model/DrivingNightA_10segments.actr"));
+		core.openFrame();
+		//core.openFrame(new File("model/DrivingNightA_10segments.actr"));
 	}
 }
