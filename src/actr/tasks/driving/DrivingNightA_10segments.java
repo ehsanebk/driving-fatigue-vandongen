@@ -69,6 +69,11 @@ public class DrivingNightA_10segments extends Task {
 	boolean completed;
 	File out; // output file 
 	
+	File outPara;  // for fatigue parameter output
+	PrintWriter outputPara = null;
+	
+	int c=0;
+	
 	public DrivingNightA_10segments() {
 		super();
 		nearLabel = new JLabel(".");
@@ -79,12 +84,23 @@ public class DrivingNightA_10segments extends Task {
 	@Override
 	public void start() {
 		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters.csv");
 		//out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-		if (!out.exists()){
+		if (!out.exists() ){
 			getModel().output("The file path is not valid!!");
 			getModel().stop();
 		}
-
+		
+		// for output fatigue parameters
+		try {
+			outputPara = new PrintWriter(outPara);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		outputPara.println("time,FP,FinalFP,UT");
+		
+		
 		completed = true;
 		currentSimulation = new Simulation();
 
@@ -135,8 +151,13 @@ public class DrivingNightA_10segments extends Task {
 				currentSimulation.getEnvironment().setTime(time - simulationStartTime);
 				currentSimulation.update();
 				updateVisuals();
-				
-				
+				c++;
+				if (simulationNumber == 1 )
+					outputPara.println(currentSimulation.getEnvironment().getTime()+","
+							+ getModel().getProcedural().getFatigueUtility() + ","
+							+ getModel().getProcedural().getFinalInstUtility() + "," 
+							+ getModel().getFatigue().getFatigueUT());
+				outputPara.flush();
 				// in case the car position is out of lane
 				if (currentSimulation.samples.lastElement().getSimcarLanePosition()<3.5
 						|| currentSimulation.samples.lastElement().getSimcarLanePosition()>5.5)
@@ -512,6 +533,8 @@ public class DrivingNightA_10segments extends Task {
 			}
 			outputCSV.flush();
 			outputCSV.close();
+			
+			outputPara.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
