@@ -152,7 +152,7 @@ public class DrivingNightA_10segments extends Task {
 				currentSimulation.update();
 				updateVisuals();
 				c++;
-				if (simulationNumber == 1 )
+				if (simulationNumber == 0)
 					outputPara.println(currentSimulation.getEnvironment().getTime()+","
 							+ getModel().getProcedural().getFatigueUtility() + ","
 							+ getModel().getProcedural().getFinalInstUtility() + "," 
