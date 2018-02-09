@@ -8,7 +8,7 @@
     :v nil
     :fatigue t   
     :iu 2.8
-    :ut 2.3
+    :ut 2.2
     
     ;;:microlapses nil
     :fpbmc .02
@@ -17,9 +17,9 @@
     :utbmc .01  
     :utmc -.003  ;; -.0012
     
-    :fp-dec 0.987
+    :fp-dec 0.985
     
-    :egs .10
+    :egs .25
     ;:cst t
     
     :dat .05
