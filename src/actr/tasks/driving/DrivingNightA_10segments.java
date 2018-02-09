@@ -49,16 +49,16 @@ public class DrivingNightA_10segments extends Task {
 
 	private double[] timesOfPVT = {
 			//
-//			45.0, 48.0, 51.0, 54.0, // day2
-//			69.0, 72.0, 75.0, 78.0, // day3
-//			93.0, 96.0, 99.0, 102.0, // day4
-//			117.0, 120.0, 123.0, 126.0, // day5
-//			141.0, 144.0, 147.0, 150.0, // day6
-//
-//			189.0, 192.0, 195.0, 198.0, // day9
-//			213.0, 216.0, 219.0, 222.0, // day10
-//			237.0, 240.0, 243.0, 246.0, // day11
-//			261.0, 264.0, 267.0, 270.0, // day12
+			45.0, 48.0, 51.0, 54.0, // day2
+			69.0, 72.0, 75.0, 78.0, // day3
+			93.0, 96.0, 99.0, 102.0, // day4
+			117.0, 120.0, 123.0, 126.0, // day5
+			141.0, 144.0, 147.0, 150.0, // day6
+
+			189.0, 192.0, 195.0, 198.0, // day9
+			213.0, 216.0, 219.0, 222.0, // day10
+			237.0, 240.0, 243.0, 246.0, // day11
+			261.0, 264.0, 267.0, 270.0, // day12
 			285.0, 288.0, 291.0, 294.0 // day13
 
 	};
@@ -83,9 +83,10 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public void start() {
-		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters.csv");
-		//out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		//out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		//outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters.csv");
+		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters.csv");
 		if (!out.exists() ){
 			getModel().output("The file path is not valid!!");
 			getModel().stop();

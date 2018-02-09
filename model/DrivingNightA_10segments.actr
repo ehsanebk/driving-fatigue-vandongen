@@ -16,9 +16,9 @@
     :utbmc .01  
     :utmc -.003  ;; -.0012
     
-    :fp-dec 0.99
+    :fp-dec 0.987
     
-    :egs .25
+    :egs .10
     ;:cst t
     
     :dat .05
