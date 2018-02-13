@@ -13,7 +13,6 @@ import java.util.Vector;
 import javax.swing.JLabel;
 import actr.task.Result;
 import actr.task.Task;
-import actr.tasks.drivingPVT.Values;
 
 /**
  * The main Driving task class that sets up the simulation and starts periodic
@@ -66,9 +65,12 @@ public class DrivingNightA_10segments extends Task {
 	int simulationNumber = 0;
 	double simulationStartTime = 0;
 	private Vector<Results> results = new Vector<Results>();
-	boolean completed;
-	File out; // output file 
+	private boolean completed;
+	private Vector<int []> microLapses = new Vector<int []>(); // [ number of mnicro lapses , number of total productions ] 
+	private int currentSimulation_NumberOf_MicroLapses=0;
+	private int currentSimulation_NumberOf_Productions=0;
 	
+	File out; // output file 
 	File outPara;  // for fatigue parameter output
 	PrintWriter outputPara = null;
 	
@@ -100,7 +102,6 @@ public class DrivingNightA_10segments extends Task {
 			e.printStackTrace();
 		}
 		outputPara.println("time,FP,FinalFP,UT");
-		
 		
 		completed = true;
 		currentSimulation = new Simulation();
@@ -153,19 +154,26 @@ public class DrivingNightA_10segments extends Task {
 				currentSimulation.update();
 				updateVisuals();
 				c++;
-				if (simulationNumber == 0)
+				if (getModel().getProcedural().isMicroLapse())
+					currentSimulation_NumberOf_MicroLapses++;
+				currentSimulation_NumberOf_Productions++;
+				if (simulationNumber == timesOfPVT.length-1)
 					outputPara.println(currentSimulation.getEnvironment().getTime()+","
 							+ getModel().getProcedural().getFatigueUtility() + ","
 							+ getModel().getProcedural().getFinalInstUtility() + "," 
 							+ getModel().getFatigue().getFatigueUT());
 				outputPara.flush();
 				// in case the car position is out of lane
-				if (currentSimulation.samples.lastElement().getSimcarLanePosition()<3.5
-						|| currentSimulation.samples.lastElement().getSimcarLanePosition()>5.5)
+				if (currentSimulation.samples.lastElement().getSimcarLanePosition()<3
+						|| currentSimulation.samples.lastElement().getSimcarLanePosition()>6)
 				{
 					System.out.println("car out of lane !!!");
 					completed = false;
 					results.add(currentSimulation.getResults());
+					int [] l = {currentSimulation_NumberOf_MicroLapses,currentSimulation_NumberOf_Productions} ;
+					currentSimulation_NumberOf_MicroLapses = 0;
+					currentSimulation_NumberOf_Productions = 0;
+					microLapses.add(l);
 					getModel().stop();
 				}
 
@@ -173,10 +181,13 @@ public class DrivingNightA_10segments extends Task {
 					simulator.repaint();
 
 			} else {
-
-				results.add(currentSimulation.getResults());
-				simulationNumber++;
 				System.out.println(simulationNumber);
+				results.add(currentSimulation.getResults());
+				int [] l = {currentSimulation_NumberOf_MicroLapses,currentSimulation_NumberOf_Productions} ;
+				currentSimulation_NumberOf_MicroLapses = 0;
+				currentSimulation_NumberOf_Productions = 0;
+				microLapses.add(l);
+				simulationNumber++;
 				// go to the next simulation or stop the model
 				if (simulationNumber < timesOfPVT.length) {
 					currentSimulation = new Simulation();
@@ -417,6 +428,30 @@ public class DrivingNightA_10segments extends Task {
 					getModel().outputInLine(String.valueOf(df.format(result.taskTime) +"\t"));
 					getModel().outputInLine("\t");
 					outputCSV.print(String.valueOf(df.format(result.taskTime) +","));
+					outputCSV.print(",");
+				}
+				getModel().outputInLine("\n\n");
+				outputCSV.print("\n\n");
+			}
+			
+			getModel().output("\n******* Number of MicroLapses ********** \n");
+			outputCSV.print("\n******* Number of MicroLapses ********** \n");
+			for (Task taskCast : tasks) {
+				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				int numberOfSimulations = task.results.size();
+				if (!task.completed){
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
+				}
+				else{
+					getModel().outputInLine("\t");
+					outputCSV.print(",");
+				}
+				
+				for (int i = 0; i < numberOfSimulations; i++) {
+					getModel().outputInLine(task.microLapses.get(i)[0]+"/"+ task.microLapses.get(i)[1]+"\t");
+					getModel().outputInLine("\t");
+					outputCSV.print(task.microLapses.get(i)[0]+"/"+ task.microLapses.get(i)[1] +",");
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n\n");
