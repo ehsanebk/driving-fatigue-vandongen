@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.Vector;
@@ -26,7 +28,7 @@ public class DrivingNightA_10segments extends Task {
 	private Simulation currentSimulation;
 	private JLabel nearLabel, carLabel, keypad;
 
-	private final double scale = .40; // .85;
+	private final double scale = .85;
 	private final double steerFactor_dfa = (16 * scale);
 	private final double steerFactor_dna = (4 * scale);
 	private final double steerFactor_na = (3 * scale);
@@ -73,6 +75,7 @@ public class DrivingNightA_10segments extends Task {
 	File out; // output file 
 	File outPara;  // for fatigue parameter output
 	PrintWriter outputPara = null;
+	PrintWriter outputCSV = null;
 	
 	int c=0;
 	
@@ -87,20 +90,18 @@ public class DrivingNightA_10segments extends Task {
 	public void start() {
 		//out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
 		//outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters.csv");
-		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
-		if (!out.exists() ){
-			getModel().output("The file path is not valid!!");
+		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
+		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
+		
+		// for output fatigue parameters and the data
+		try {
+			outputPara = new PrintWriter(outPara);
+			outputCSV = new PrintWriter(out);
+		} catch (FileNotFoundException e) {
+			getModel().output("The output file path is not valid!!");
 			getModel().stop();
 		}
 		
-		// for output fatigue parameters
-		try {
-			outputPara = new PrintWriter(outPara);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		outputPara.println("time,FP,FinalFP,UT");
 		
 		completed = true;
@@ -368,16 +369,6 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
-		
-		PrintWriter outputCSV = null;
-		try {
-			outputCSV = new PrintWriter(out);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
 		
 		getModel().output("******** Results of Night A **********");
 		outputCSV.print("******** Results of Night A **********");
