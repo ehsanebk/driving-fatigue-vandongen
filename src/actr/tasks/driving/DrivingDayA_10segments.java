@@ -86,17 +86,21 @@ public class DrivingDayA_10segments extends Task {
 
 	@Override
 	public void start() {
-		//out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
-		//outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters.csv");
-		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_CumulativeX.csv");
-		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day)X.csv");
+		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
+		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters.csv");
+//		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_CumulativeX.csv");
+//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day)X.csv");
+
+		if (!new File(out.getParent()).exists()){
+			getModel().output("The output file path is not valid!!");
+			getModel().stop();
+		}
+		
 		// for output fatigue parameters and the data
 		try {
 			outputPara = new PrintWriter(outPara);
-			outputCSV = new PrintWriter(out);
 		} catch (FileNotFoundException e) {
-			getModel().output("The output file path is not valid!!");
-			getModel().stop();
+			e.printStackTrace();
 		}
 
 		outputPara.println("time,FP,FinalFP,UT");
@@ -366,6 +370,14 @@ public class DrivingDayA_10segments extends Task {
 
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
+		
+		// for output the data
+		try {
+			outputCSV = new PrintWriter(out);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
 
 		getModel().output("******** Results of Day A **********");
 		outputCSV.print("******** Results of Day A **********");
