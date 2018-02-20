@@ -11,7 +11,7 @@
     
     ;;:microlapses nil
     :fpbmc .02
-    :fpmc  -.015 ;; -.005
+    :fpmc  -.013 ;; -.005
     
     :utbmc .01  
     :utmc -.003  ;; -.0012
