@@ -86,10 +86,10 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public void start() {
-		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
-//		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
-//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
+//		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+//		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
+		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
+		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
 
 		if (!new File(out.getParent()).exists()){
 			getModel().output("The output file path is not valid!!");
@@ -408,7 +408,8 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
-				
+			outputCSV.flush();
+			
 			getModel().output("\n******* Task Time ********** \n");
 			outputCSV.print("\n******* Task Time ********** \n");
 			for (Task taskCast : tasks) {
@@ -433,6 +434,7 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
+			outputCSV.flush();
 			
 			getModel().output("\n******* Number of MicroLapses ********** \n");
 			outputCSV.print("\n******* Number of MicroLapses ********** \n");
@@ -457,6 +459,7 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
+			outputCSV.flush();
 			
 			getModel().output("\n******* Index_10Segments ********** \n");
 			outputCSV.print("\n******* Index_10Segments ********** \n");
@@ -486,6 +489,7 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
+			outputCSV.flush();
 
 			getModel().output("\n******* taskLatDev_10Segments ********** \n");
 			outputCSV.print("\n******* taskLatDev_10Segments ********** \n");
@@ -513,6 +517,7 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
+			outputCSV.flush();
 			
 			getModel().output("\n*******STEX3_10Segments ********** \n");
 			outputCSV.print("\n*******STEX3_10Segments ********** \n");
@@ -540,6 +545,7 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
+			outputCSV.flush();
 			
 			getModel().output("\n******* taskSpeedDev_10Segments ********** \n");
 			outputCSV.print("\n******* taskSpeedDev_10Segments ********** \n");
