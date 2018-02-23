@@ -13,6 +13,7 @@
 )
 
 (sgp 
+    :cst nil
     :v nil
     :fatigue t   
     :iu 2.8
@@ -45,10 +46,6 @@
         isa goal
         state                 wait
         - state                 done
-    ?manual>
-        state                 free
-    ?visual>
-        state                 free
     ?visual-location>
         buffer                empty
 ==>
@@ -59,11 +56,11 @@
 (p attend-stimulus
     =goal>
         isa goal
-        state                 =state
-        - state                 done                       
-        - state                 look
+        state  wait
     =visual-location>
         isa visual-location
+    ?visual>
+        state free
 ==>
     !eval! (fatigue-reset-percentage)
     +visual>               
@@ -90,7 +87,7 @@
         isa press-key
         key space
     =goal>
-        state done
+        state wait
     +visual>
         isa clear
 )
@@ -99,7 +96,7 @@
 (p press-key 
     =goal>
         isa goal
-        ;state wait
+        state wait
     ?manual>
         state free 
 ==>

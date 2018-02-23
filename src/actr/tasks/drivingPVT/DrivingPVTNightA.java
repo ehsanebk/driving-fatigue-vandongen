@@ -110,12 +110,14 @@ public class DrivingPVTNightA extends Task {
 			stimulusVisibility = true;
 			lastTime = getModel().getTime();
 			// setting up the state to wait
-			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("stimulus"));
-			if (getModel().getRealTime())
+//			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("stimulus"));
+			if (getModel().isVerbose())
 				getModel().output("!!!!! Stimulus !!!!!");
 			
-//			// calling percentage reset after any new task presentation (audio or visual)
+			// calling percentage reset after any new task presentation (audio or visual)
 //			getModel().getFatigue().fatigueResetPercentages();
+//			if (getModel().isVerbose())
+//				getModel().output("!!!! Fatigue Percentage Reset !!!!");
 
 			// Handling the sleep attacks -- adding an event in 30 s to see if
 			// the current stimulus is still on
@@ -189,6 +191,8 @@ public class DrivingPVTNightA extends Task {
 	// calling percentage reset after any new task presentation (audio or visual)
 	void fatigueResetPercentage() {
 		getModel().getFatigue().fatigueResetPercentages();
+		if (getModel().isVerbose())
+			getModel().output("!!!! Fatigue Percentage Reset !!!!");
 	}
 
 	@Override
@@ -226,7 +230,7 @@ public class DrivingPVTNightA extends Task {
 				currentSession.lapses++;
 			}
 			// setting up the state to wait
-			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("wait"));
+//			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("wait"));
 
 		} else {
 			currentSession.responses++;
