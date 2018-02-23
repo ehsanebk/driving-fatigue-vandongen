@@ -227,12 +227,6 @@ public class DrivingDayA_10segments extends Task {
 		}
 	}
 
-	// calling percentage reset after any new task presentation (audio or
-	// visual)
-	void fatigueResetPercentage() {
-		getModel().getFatigue().fatigueResetPercentages();
-	}
-
 	void updateVisuals() {
 		Environment env = currentSimulation.getEnvironment();
 		if (env.getSimcar().getNearPoint() != null) {
@@ -289,6 +283,11 @@ public class DrivingDayA_10segments extends Task {
 		} else if (cmd.equals("fatigue-reset-percentage")) {
 			fatigueResetPercentage();
 		}
+	}
+
+	// calling percentage reset after any new task presentation (audio or visual)
+	void fatigueResetPercentage() {
+		getModel().getFatigue().fatigueResetPercentages();
 	}
 
 	@Override

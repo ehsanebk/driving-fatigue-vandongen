@@ -25,7 +25,7 @@
     :utbmc .01  
     :utmc -.0012
     
-    :fp-dec 0.01
+    :fp-dec 0.99
     
     :egs .25
     ;:cst t
@@ -52,6 +52,7 @@
     ?visual-location>
         buffer                empty
 ==>
+    !eval! (fatigue-reset-percentage)
 )
 ;(spp :u 1)
 
@@ -64,6 +65,7 @@
     =visual-location>
         isa visual-location
 ==>
+    !eval! (fatigue-reset-percentage)
     +visual>               
         isa	move-attention
         screen-pos =visual-location
@@ -82,6 +84,7 @@
     ?manual>
         state free 
 ==>
+    !eval! (fatigue-reset-percentage)
     !output! (=val)
     +manual>
         isa press-key
@@ -100,6 +103,7 @@
     ?manual>
         state free 
 ==>
+    !eval! (fatigue-reset-percentage)
     !output! ("***  press Key - False Start  ***")
     +manual>
         isa press-key

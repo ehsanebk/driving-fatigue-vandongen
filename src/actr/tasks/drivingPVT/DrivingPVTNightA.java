@@ -57,16 +57,14 @@ public class DrivingPVTNightA extends Task {
 		double startTime = 0;
 		int falseStarts = 0;
 		int alertRosponses = 0;
-		int alertResponseSpread[] = new int[35]; // Alert responses (150-500ms,
-													// 10ms
-		// intervals )
-
+		// Alert responses (150-500 ms,10 ms intervals )
+		int alertResponseSpread[] = new int[35]; 
 		double totalSessionTime = 0;
 		int lapses = 0;
 		int sleepAttacks = 0;
 		int stimulusIndex = 0;
 		int responses = 0; // number of responses, this can be diff from the
-							// stimulusIndex because of false resonces
+		// stimulusIndex because of false resonces
 		double responseTotalTime = 0;
 	}
 
@@ -113,10 +111,11 @@ public class DrivingPVTNightA extends Task {
 			lastTime = getModel().getTime();
 			// setting up the state to wait
 			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("stimulus"));
-
-			// calling percentage reset after any new task presentation (audio
-			// or visual)
-			getModel().getFatigue().fatigueResetPercentages();
+			if (getModel().getRealTime())
+				getModel().output("!!!!! Stimulus !!!!!");
+			
+//			// calling percentage reset after any new task presentation (audio or visual)
+//			getModel().getFatigue().fatigueResetPercentages();
 
 			// Handling the sleep attacks -- adding an event in 30 s to see if
 			// the current stimulus is still on
@@ -131,11 +130,10 @@ public class DrivingPVTNightA extends Task {
 						stimulusVisibility = false;
 						currentSession.sleepAttacks++;
 						currentSession.responses++; // when sleep attack happens
-													// we add to the number of
-													// responses
-						System.out
-								.println("Sleep attack at time ==>" + (getModel().getTime() - currentSession.startTime)
-										+ "model time :" + getModel().getTime());
+						// we add to the number of
+						// responses
+						System.out.println("Sleep attack at time ==>" + (getModel().getTime() - currentSession.startTime)
+								+ "model time :" + getModel().getTime());
 						System.out.println(currentSession.stimulusIndex + " " + sleepAttackIndex);
 						addUpdate(1.0);
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),
@@ -180,6 +178,20 @@ public class DrivingPVTNightA extends Task {
 	}
 
 	@Override
+	public void eval(Iterator<String> it) {
+		it.next(); // (
+		String cmd = it.next();
+		if (cmd.equals("fatigue-reset-percentage")) {
+			fatigueResetPercentage();
+		}
+	}
+
+	// calling percentage reset after any new task presentation (audio or visual)
+	void fatigueResetPercentage() {
+		getModel().getFatigue().fatigueResetPercentages();
+	}
+
+	@Override
 	public void typeKey(char c) {
 
 		if (stimulusVisibility == true) {
@@ -204,11 +216,11 @@ public class DrivingPVTNightA extends Task {
 				currentSession.falseStarts++;
 			} else if (responseTime > .150 && responseTime <= .500) {
 				currentSession.alertResponseSpread[(int) ((responseTime - .150) * 100)]++; // making
-																							// the
-																							// array
-																							// for
-																							// response
-																							// time
+				// the
+				// array
+				// for
+				// response
+				// time
 				currentSession.alertRosponses++;
 			} else if (responseTime > .500 && responseTime < 30.0) {
 				currentSession.lapses++;
@@ -309,7 +321,7 @@ public class DrivingPVTNightA extends Task {
 				// totallProportionAlertResponcesSpread[s][i].mean();
 
 				getModel().output(s + "\t" + df3.format(totallProportionFalseAlerts[s].mean()) + "\t"
-				// + Utilities.toString(AlertResponsesProportion) + " "
+						// + Utilities.toString(AlertResponsesProportion) + " "
 						+ df3.format(totallProportionAlertRresponces[s].mean()) + "\t"
 						+ df3.format(totallProportionLapsesValues[s].mean()) + "\t"
 						+ df3.format(totallProportionSleepAtacks[s].mean()));
