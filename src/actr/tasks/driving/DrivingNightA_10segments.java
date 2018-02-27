@@ -26,7 +26,7 @@ public class DrivingNightA_10segments extends Task {
 	private Simulation currentSimulation;
 	private JLabel nearLabel, carLabel, keypad;
 
-	private final double scale = .85;
+	private final double scale = .45;
 	private final double steerFactor_dfa = (16 * scale);
 	private final double steerFactor_dna = (4 * scale);
 	private final double steerFactor_na = (3 * scale);
@@ -86,10 +86,10 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public void start() {
-//		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-//		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
-		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
-		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
+		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
+//		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
+//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
 
 		if (!new File(out.getParent()).exists()){
 			getModel().output("The output file path is not valid!!");
@@ -249,7 +249,7 @@ public class DrivingNightA_10segments extends Task {
 	}
 
 	boolean isCarStable(double na, double nva, double fva) {
-		double f = 2.5;
+		double f = 0.5; //2.5;
 		return (Math.abs(na) < .025 * f) && (Math.abs(nva) < .0125 * f) && (Math.abs(fva) < .0125 * f);
 	}
 
@@ -288,6 +288,8 @@ public class DrivingNightA_10segments extends Task {
 	// calling percentage reset after any new task presentation (audio or visual)
 	void fatigueResetPercentage() {
 		getModel().getFatigue().fatigueResetPercentages();
+		if (getModel().isVerbose())
+			getModel().output("!!!! Fatigue Percentage Reset !!!!");
 	}
 
 	@Override
@@ -518,8 +520,8 @@ public class DrivingNightA_10segments extends Task {
 			}
 			outputCSV.flush();
 			
-			getModel().output("\n*******STEX3_10Segments ********** \n");
-			outputCSV.print("\n*******STEX3_10Segments ********** \n");
+			getModel().output("\n******* STEX3_10Segments ********** \n");
+			outputCSV.print("\n******* STEX3_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();

@@ -108,16 +108,10 @@ public class DrivingPVTNightA extends Task {
 			label.setVisible(true);
 			processDisplay();
 			stimulusVisibility = true;
-			lastTime = getModel().getTime();
-			// setting up the state to wait
-//			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("stimulus"));
 			if (getModel().isVerbose())
 				getModel().output("!!!!! Stimulus !!!!!");
-			
-			// calling percentage reset after any new task presentation (audio or visual)
-//			getModel().getFatigue().fatigueResetPercentages();
-//			if (getModel().isVerbose())
-//				getModel().output("!!!! Fatigue Percentage Reset !!!!");
+
+			lastTime = getModel().getTime();
 
 			// Handling the sleep attacks -- adding an event in 30 s to see if
 			// the current stimulus is still on
@@ -162,8 +156,6 @@ public class DrivingPVTNightA extends Task {
 						sleepAttackIndex = 0;
 						currentSession.startTime = getModel().getTime();
 						getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
-						// System.out.println(sessionNumber +" : "+
-						// getModel().getFatigue().computeBioMathValueForHour());
 						getModel().getFatigue().startFatigueSession();
 						addUpdate(1.0);
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),
@@ -219,19 +211,12 @@ public class DrivingPVTNightA extends Task {
 			if (responseTime < .150) {
 				currentSession.falseStarts++;
 			} else if (responseTime > .150 && responseTime <= .500) {
-				currentSession.alertResponseSpread[(int) ((responseTime - .150) * 100)]++; // making
-				// the
-				// array
-				// for
-				// response
-				// time
+				// making the array for alert reaction times
+				currentSession.alertResponseSpread[(int) ((responseTime - .150) * 100)]++; 
 				currentSession.alertRosponses++;
 			} else if (responseTime > .500 && responseTime < 30.0) {
 				currentSession.lapses++;
 			}
-			// setting up the state to wait
-//			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("wait"));
-
 		} else {
 			currentSession.responses++;
 			currentSession.falseStarts++;

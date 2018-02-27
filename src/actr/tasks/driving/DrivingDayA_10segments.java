@@ -86,10 +86,10 @@ public class DrivingDayA_10segments extends Task {
 
 	@Override
 	public void start() {
-//		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
-//		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day).csv");
-		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_CumulativeX.csv");
-		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day)X.csv");
+		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_Cumulative.csv");
+		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day).csv");
+//		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_CumulativeX.csv");
+//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day)X.csv");
 
 		if (!new File(out.getParent()).exists()){
 			getModel().output("The output file path is not valid!!");
@@ -249,7 +249,7 @@ public class DrivingDayA_10segments extends Task {
 	}
 
 	boolean isCarStable(double na, double nva, double fva) {
-		double f = 2.5;
+		double f = 0.5; //2.5
 		return (Math.abs(na) < .025 * f) && (Math.abs(nva) < .0125 * f) && (Math.abs(fva) < .0125 * f);
 	}
 
@@ -288,6 +288,8 @@ public class DrivingDayA_10segments extends Task {
 	// calling percentage reset after any new task presentation (audio or visual)
 	void fatigueResetPercentage() {
 		getModel().getFatigue().fatigueResetPercentages();
+		if (getModel().isVerbose())
+			getModel().output("!!!! Fatigue Percentage Reset !!!!");
 	}
 
 	@Override
@@ -518,8 +520,8 @@ public class DrivingDayA_10segments extends Task {
 			}
 			outputCSV.flush();
 
-			getModel().output("\n*******STEX3_10Segments ********** \n");
-			outputCSV.print("\n*******STEX3_10Segments ********** \n");
+			getModel().output("\n******* STEX3_10Segments ********** \n");
+			outputCSV.print("\n******* STEX3_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				int numberOfSimulations = task.results.size();

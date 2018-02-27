@@ -26,7 +26,7 @@
     :utbmc .01  
     :utmc -.0012
     
-    :fp-dec 0.99
+    :fp-dec 0.998
     
     :egs .25
     ;:cst t
@@ -45,11 +45,11 @@
     =goal>
         isa goal
         state                 wait
-        - state                 done
+        - state                 none
     ?visual-location>
         buffer                empty
 ==>
-    !eval! (fatigue-reset-percentage)
+        ; !eval! (fatigue-reset-percentage)
 )
 ;(spp :u 1)
 
