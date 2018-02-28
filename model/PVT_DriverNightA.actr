@@ -20,13 +20,13 @@
     :ut 2.3
     
     ;;:microlapses nil
-    :fpbmc .02
+    :fpbmc .018
     :fpmc -.005
     
-    :utbmc .01  
-    :utmc -.0012
+    :utbmc .012  
+    :utmc -.002
     
-    :fp-dec 0.998
+    :fp-dec 0.997
     
     :egs .25
     ;:cst t
@@ -35,7 +35,7 @@
     :randomize-time t
     :vpft t
     
-    :max-prep-time-diff 10.0
+    :max-prep-time-diff 10.0  
 )
 
 (goal-focus goal)

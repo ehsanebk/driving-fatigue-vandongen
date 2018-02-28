@@ -87,15 +87,15 @@ public class DrivingPVTNightA extends Task {
 
 		addUpdate(1.0);
 
-		try {
-			File dataFile = new File("./model/data.txt");
-			if (!dataFile.exists())
-				dataFile.createNewFile();
-			data = new PrintStream(dataFile);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			File dataFile = new File("./model/data.txt");
+//			if (!dataFile.exists())
+//				dataFile.createNewFile();
+//			data = new PrintStream(dataFile);
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 	}
 
@@ -125,15 +125,13 @@ public class DrivingPVTNightA extends Task {
 						processDisplay();
 						stimulusVisibility = false;
 						currentSession.sleepAttacks++;
-						currentSession.responses++; // when sleep attack happens
-						// we add to the number of
-						// responses
+						// when sleep attack happens we add to the number of responses
+						currentSession.responses++; 
 						System.out.println("Sleep attack at time ==>" + (getModel().getTime() - currentSession.startTime)
 								+ "model time :" + getModel().getTime());
 						System.out.println(currentSession.stimulusIndex + " " + sleepAttackIndex);
 						addUpdate(1.0);
-						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),
-								Symbol.get("wait"));
+						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 					repaint();
 
@@ -158,8 +156,7 @@ public class DrivingPVTNightA extends Task {
 						getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
 						getModel().getFatigue().startFatigueSession();
 						addUpdate(1.0);
-						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),
-								Symbol.get("wait"));
+						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 				});
 
