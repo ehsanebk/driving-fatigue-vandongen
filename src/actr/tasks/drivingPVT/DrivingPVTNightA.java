@@ -28,8 +28,9 @@ public class DrivingPVTNightA extends Task {
 	private Boolean stimulusVisibility = false;
 	private String response = null;
 	private double responseTime = 0;
-	// the following two variables are for handling sleep attacks
+	// the following two variable are for handling sleep attacks
 	private int sleepAttackIndex = 0;
+	private double PVTduration = 600.0;
 
 	private double[] timesOfPVT = {
 			//
@@ -103,7 +104,7 @@ public class DrivingPVTNightA extends Task {
 	public void update(double time) {
 		currentSession.totalSessionTime = getModel().getTime() - currentSession.startTime;
 
-		if (currentSession.totalSessionTime <= 600.0) {
+		if (currentSession.totalSessionTime <= PVTduration) {
 			label.setText(stimulus);
 			label.setVisible(true);
 			processDisplay();
@@ -134,13 +135,13 @@ public class DrivingPVTNightA extends Task {
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 					repaint();
-
 				}
 			});
 		}
 
 		// Starting a new Session
 		else {
+			sessions.add(currentSession);
 			sessionNumber++;
 			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("none"));
 			// go to the next session or stop the model
@@ -148,7 +149,6 @@ public class DrivingPVTNightA extends Task {
 				addEvent(new Event(getModel().getTime() + 60.0, "task", "update") {
 					@Override
 					public void action() {
-						sessions.add(currentSession);
 						currentSession = new Session();
 						stimulusVisibility = false;
 						sleepAttackIndex = 0;
