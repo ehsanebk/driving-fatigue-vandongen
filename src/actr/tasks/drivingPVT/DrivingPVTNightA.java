@@ -31,7 +31,8 @@ public class DrivingPVTNightA extends Task {
 	// the following two variable are for handling sleep attacks
 	private int sleepAttackIndex = 0;
 	private double PVTduration = 600.0;
-
+	Random random;
+	
 	private double[] timesOfPVT = {
 			//
 			45.0, 48.0, 51.0, 54.0, // day2
@@ -78,15 +79,16 @@ public class DrivingPVTNightA extends Task {
 
 	@Override
 	public void start() {
+		random = new Random();
 		lastTime = 0;
-
 		currentSession = new Session();
 		stimulusVisibility = false;
 
 		getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
 		getModel().getFatigue().startFatigueSession();
 
-		addUpdate(1.0);
+		interStimulusInterval = random.nextDouble() * 8 + 2; // A random
+		addUpdate(interStimulusInterval);
 
 //		try {
 //			File dataFile = new File("./model/data.txt");
@@ -126,12 +128,14 @@ public class DrivingPVTNightA extends Task {
 						processDisplay();
 						stimulusVisibility = false;
 						currentSession.sleepAttacks++;
-						// when sleep attack happens we add to the number of responses
-						currentSession.responses++; 
-						System.out.println("Sleep attack at time ==>" + (getModel().getTime() - currentSession.startTime)
-								+ "model time :" + getModel().getTime());
-						System.out.println(currentSession.stimulusIndex + " " + sleepAttackIndex);
-						addUpdate(1.0);
+						// when sleep attack happens we add to the number of responses (NOT DOING IT FOR NOW)
+						// currentSession.numberOfResponses++; 
+						getModel().output("Sleep attack at session time  ==> " + (getModel().getTime() - currentSession.startTime)
+								+ " model time :" + getModel().getTime());
+						getModel().output("Stimulus index in the session ==> " + currentSession.stimulusIndex );
+						
+						interStimulusInterval = random.nextDouble() * 8 + 2; // A random
+						addUpdate(interStimulusInterval);
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 					repaint();
@@ -155,13 +159,14 @@ public class DrivingPVTNightA extends Task {
 						currentSession.startTime = getModel().getTime();
 						getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
 						getModel().getFatigue().startFatigueSession();
-						addUpdate(1.0);
+						
+						interStimulusInterval = random.nextDouble() * 8 + 2; // A random
+						addUpdate(interStimulusInterval);
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 				});
 
 			} else {
-				sessions.add(currentSession);
 				getModel().stop();
 			}
 
@@ -217,6 +222,10 @@ public class DrivingPVTNightA extends Task {
 		} else {
 			currentSession.responses++;
 			currentSession.falseStarts++;
+			
+			if (getModel().isVerbose())
+				getModel().output("False alert happened " + "- Session: " + sessionNumber //+ " Block:" + (currentSession.blocks.size() + 1)
+						+ "   time of session : " + (getModel().getTime() - currentSession.startTime));
 		}
 
 	}
