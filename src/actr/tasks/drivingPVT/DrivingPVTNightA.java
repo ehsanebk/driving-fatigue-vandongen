@@ -136,6 +136,7 @@ public class DrivingPVTNightA extends Task {
 						
 						interStimulusInterval = random.nextDouble() * 8 + 2; // A random
 						addUpdate(interStimulusInterval);
+						fatigueResetPercentage();
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 					repaint();
