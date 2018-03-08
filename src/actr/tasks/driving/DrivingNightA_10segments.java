@@ -87,10 +87,10 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public void start() {
-		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
-//		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
-//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
+//		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+//		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
+		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
+		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
 
 		if (!new File(out.getParent()).exists()){
 			getModel().output("The output file path is not valid!!");
@@ -382,10 +382,12 @@ public class DrivingNightA_10segments extends Task {
 		}
 
 		int numberOfSimulations = ((DrivingNightA_10segments)tasks[0]).results.size();
+		Values[] totalMicroLapses = new Values [numberOfSimulations];
 		Values[][] totalLatDev = new Values[numberOfSimulations][10];
 		Values[][] totalSTEX3 = new Values[numberOfSimulations][10];
 		Values[][] totalSpeedDev = new Values[numberOfSimulations][10];
 		for (int i = 0; i < numberOfSimulations; i++){
+			totalMicroLapses[i] = new Values();
 			for (int j = 0; j < 10; j++) {
 				totalLatDev[i][j] = new Values();
 				totalSTEX3[i][j] = new Values();
@@ -399,10 +401,11 @@ public class DrivingNightA_10segments extends Task {
 				continue;
 			for (int i = 0; i < numberOfSimulations; i++) {
 				Results results = task.results.elementAt(i);
+				totalMicroLapses[i].add((double)task.microLapses.get(i)[0]/task.microLapses.get(i)[1]);
 				for (int j = 0; j < 10; j++) {
 					totalLatDev[i][j].add(results.taskLatDev_10Segments[j]);
-					totalSTEX3[i][j].add(results.STEX3_10Segments[j]);;
-					totalSpeedDev[i][j].add(results.taskSpeedDev_10Segments[j]);;
+					totalSTEX3[i][j].add(results.STEX3_10Segments[j]);
+					totalSpeedDev[i][j].add(results.taskSpeedDev_10Segments[j]);
 				}
 			}
 		}
@@ -411,54 +414,73 @@ public class DrivingNightA_10segments extends Task {
 		
 		
 		getModel().output("******** Results of Night A **********");
-		outputCSV.print("******** Results of Night A **********");
+		outputCSV.println("******** Results of Night A **********");
 		
-		outputCSV.println("\n******* Average LatDev for 10 Segments **********");
-		int counter = 0 ;
+		int counter;
+		outputCSV.println(",");
+		outputCSV.println("******* Average Proportion of microlapses in the sessions **********");
+		counter = 0 ;
 		while (counter < numberOfSimulations ) {
 			if (counter % 4 ==0)
-				outputCSV.print("\n");
+				outputCSV.println();
 			if (counter == 20)
-				outputCSV.print("\n");
+				outputCSV.println(",\n");
+			outputCSV.print(",");
+			outputCSV.print("," + totalMicroLapses[counter].meanDF3());
+			outputCSV.flush();
+			counter++;
+		}
+		
+		outputCSV.println(",");
+		outputCSV.println("******* Average LatDev for 10 Segments **********");
+		counter = 0 ;
+		while (counter < numberOfSimulations ) {
+			if (counter % 4 ==0)
+				outputCSV.println();
+			if (counter == 20)
+				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
 				outputCSV.print("," + totalLatDev[counter][i].meanDF3());
 			}
+			outputCSV.flush();
 			counter++;
 		}
-		
-		outputCSV.println("\n******* Average STEX3 for 10 Segments **********");
+		outputCSV.println(",");
+		outputCSV.println("******* Average STEX3 for 10 Segments **********");
 		counter = 0 ;
 		while (counter < numberOfSimulations ) {
 			if (counter % 4 ==0)
-				outputCSV.print("\n");
+				outputCSV.println();
 			if (counter == 20)
-				outputCSV.print("\n");
+				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
 				outputCSV.print("," + totalSTEX3[counter][i].meanDF3());
 			}
+			outputCSV.flush();
 			counter++;
 		}
-		
-		outputCSV.println("\n******* Average SpeedDev for 10 Segments **********");
+		outputCSV.println(",");
+		outputCSV.println("******* Average SpeedDev for 10 Segments **********");
 		counter = 0 ;
 		while (counter < numberOfSimulations ) {
 			if (counter % 4 ==0)
-				outputCSV.print("\n");
+				outputCSV.println();
 			if (counter == 20)
-				outputCSV.print("\n");
+				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
 				outputCSV.print("," + totalSpeedDev[counter][i].meanDF3());
 			}
+			outputCSV.flush();
 			counter++;
 		}
 		
 		
 		try {
 			DecimalFormat df = new DecimalFormat("#.000000");
-			
+			outputCSV.println();
 			getModel().output("\n******* index ********** \n");
 			outputCSV.print("\n******* index ********** \n");
 			for (Task taskCast : tasks) {
