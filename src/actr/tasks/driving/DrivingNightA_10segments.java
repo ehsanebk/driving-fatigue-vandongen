@@ -36,8 +36,7 @@ public class DrivingNightA_10segments extends Task {
 	private final double steerNaMax = .07;
 	private final double thwFollow = 1.0; // 1.0 orig
 
-	private final double simulationDurarion = 60 * 30; // the driving sessions are 30
-													// min (30 * 60sec)
+	private final double simulationDurarion = 60 * 30; // the driving sessions are 30 min (30 * 60sec)
 	private final double simulationDistance = 45061.6;  // equal to 28 miles
 
 	private double accelBrake = 0, speed = 0;
@@ -67,7 +66,7 @@ public class DrivingNightA_10segments extends Task {
 	double simulationStartTime = 0;
 	private Vector<Results> results = new Vector<Results>();
 	private boolean completed;
-	private Vector<int []> microLapses = new Vector<int []>(); // [ number of mnicro lapses , number of total productions ] 
+	private Vector<int []> microLapses = new Vector<int []>(); // [ number of micro lapses , number of total productions ] 
 	private int currentSimulation_NumberOf_MicroLapses=0;
 	private int currentSimulation_NumberOf_Productions=0;
 	
@@ -87,10 +86,10 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public void start() {
-//		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
-//		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
-		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
-		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
+		out = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_Cumulative.csv");
+		outPara = new File("/Users/ehsanebk/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night).csv");
+//		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Night_CumulativeX.csv");
+//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
 
 		if (!new File(out.getParent()).exists()){
 			getModel().output("The output file path is not valid!!");
@@ -485,6 +484,7 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.print("\n******* index ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
 					outputCSV.print("*,");
@@ -510,6 +510,7 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.print("\n******* Task Time ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
 					outputCSV.print("*,");
@@ -535,6 +536,7 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.print("\n******* Number of MicroLapses ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
 					outputCSV.print("*,");
@@ -559,6 +561,7 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.print("\n******* Index_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
 					outputCSV.print("*,");
@@ -588,6 +591,7 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.print("\n******* taskLatDev_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
 					outputCSV.print("*,");
@@ -615,6 +619,7 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.print("\n******* STEX3_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
 					outputCSV.print("*,");
@@ -642,6 +647,7 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.print("\n******* taskSpeedDev_10Segments ********** \n");
 			for (Task taskCast : tasks) {
 				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
 					outputCSV.print("*,");
