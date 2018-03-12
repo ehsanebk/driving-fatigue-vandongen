@@ -11,10 +11,10 @@
     :ut 2.3
     
     ;;:microlapses nil
-    :fpbmc .02
+    :fpbmc .018
     :fpmc -.05
     
-    :utbmc .01 
+    :utbmc .012 
     :utmc -.012
     
     :fp-dec 0.999  
@@ -306,6 +306,32 @@
 ==>
         ;!eval! (fatigue-reset-percentage)
     =goal>
+        isa wait6
+        na =na ; nil
+        fa =fa ;nil
+        na2 =na
+        fa2 =fa
+        fd2 =fd
+        fkind2 =fkind
+        fthw2 =fthw
+        time2 =time
+)
+;(spp :u 1)
+
+(p wait6 
+    =goal>
+        isa wait6
+        na =na ; nil
+        fa =fa ;nil
+        na2 =na
+        fa2 =fa
+        fd2 =fd
+        fkind2 =fkind
+        fthw2 =fthw
+        time2 =time
+==>
+        ;!eval! (fatigue-reset-percentage)
+    =goal>
         isa wait-end
         na =na ; nil
         fa =fa ;nil
@@ -318,7 +344,6 @@
 )
 ;(spp :u 1)
 
-;(spp :u 1)
 (p wait-end 
     =goal>
         isa wait-end

@@ -332,84 +332,6 @@
 ==>
         ;!eval! (fatigue-reset-percentage)
     =goal>
-        isa wait7
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-)
-;(spp :u 1)
-
-(p wait7 
-    =goal>
-        isa wait7
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
-        isa wait8
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-)
-;(spp :u 1)
-
-(p wait8 
-    =goal>
-        isa wait8
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
-        isa wait9
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-)
-;(spp :u 1)
-
-(p wait9 
-    =goal>
-        isa wait9
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
         isa wait-end
         na =na ; nil
         fa =fa ;nil
@@ -421,6 +343,7 @@
         time2 =time
 )
 ;(spp :u 1)
+
 (p wait-end 
     =goal>
         isa wait-end
