@@ -1,12 +1,14 @@
 package actr.tasks.drivingPVT;
 
 import java.util.*;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import actr.model.Event;
 import actr.model.Symbol;
 import actr.task.*;
-import actr.tasks.drivingPVT.SessionPVT.Block;
+import actr.tasks.test.fatigue.Values;
 
 /**
  * Model of PVT test and Fatigue mechanism
@@ -19,7 +21,7 @@ import actr.tasks.drivingPVT.SessionPVT.Block;
  * @author Ehsan Khosroshahi
  */
 
-public class DrivingPVTNightA extends Task {
+public class DrivingPVTNightA_OLD extends Task {
 	private TaskLabel label;
 	private double lastTime = 0;
 	private String stimulus = "\u2588";
@@ -48,13 +50,29 @@ public class DrivingPVTNightA extends Task {
 
 	};
 	int sessionNumber = 0; // starts from 0
-	private Block currentBlock;
-	private SessionPVT currentSession;
-	private Vector<SessionPVT> sessions = new Vector<SessionPVT>();
+	private Session currentSession;
+	private Vector<Session> sessions = new Vector<Session>();
 
+	@SuppressWarnings("unused")
 	private PrintStream data;
 
-	public DrivingPVTNightA() {
+	class Session {
+		double startTime = 0;
+		int falseStarts = 0;
+		int alertRosponses = 0;
+		Values reactionTimes = new Values();
+		// Alert responses (150-500 ms,10 ms intervals )
+		int alertResponseSpread[] = new int[35]; 
+		double totalSessionTime = 0;
+		int lapses = 0;
+		int sleepAttacks = 0;
+		int stimulusIndex = 0;
+		int responses = 0; // number of responses, this can be diff from the
+		// stimulusIndex because of false resonces
+		double responseTotalTime = 0;
+	}
+
+	public DrivingPVTNightA_OLD() {
 		super();
 		label = new TaskLabel("", 200, 150, 40, 20);
 		add(label);
@@ -65,8 +83,7 @@ public class DrivingPVTNightA extends Task {
 	public void start() {
 		random = new Random();
 		lastTime = 0;
-		currentSession = new SessionPVT();
-		currentBlock = currentSession.new Block();
+		currentSession = new Session();
 		stimulusVisibility = false;
 
 		getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
@@ -90,8 +107,7 @@ public class DrivingPVTNightA extends Task {
 	@Override
 	public void update(double time) {
 		currentSession.totalSessionTime = getModel().getTime() - currentSession.startTime;
-		currentBlock.totalBlockTime = getModel().getTime() - currentBlock.startTime;
-		
+
 		if (currentSession.totalSessionTime <= PVTduration) {
 			label.setText(stimulus);
 			label.setVisible(true);
@@ -100,7 +116,7 @@ public class DrivingPVTNightA extends Task {
 			if (getModel().isVerbose())
 				getModel().output("!!!!! Stimulus !!!!!");
 
-			lastTime = getModel().getTime(); // when the stimulus has happened
+			lastTime = getModel().getTime();
 
 			// Handling the sleep attacks -- adding an event in 30 s to see if
 			// the current stimulus is still on
@@ -114,7 +130,6 @@ public class DrivingPVTNightA extends Task {
 						processDisplay();
 						stimulusVisibility = false;
 						currentSession.sleepAttacks++;
-						currentBlock.sleepAttacks++;
 						// when sleep attack happens we add to the number of responses (NOT DOING IT FOR NOW)
 						// currentSession.numberOfResponses++; 
 						getModel().output("Sleep attack at session time  ==> " + (getModel().getTime() - currentSession.startTime)
@@ -123,42 +138,28 @@ public class DrivingPVTNightA extends Task {
 						
 						interStimulusInterval = random.nextDouble() * 8 + 2; // A random
 						addUpdate(interStimulusInterval);
-						fatigueResetPercentage(); // reseting the system
+						fatigueResetPercentage();
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 					repaint();
-
 				}
 			});
-
-			// Handling the 5-min blocks
-			// adding a new block
-			if (currentBlock.totalBlockTime >= 300 ) {
-				currentSession.blocks.add(currentBlock);
-				currentBlock = currentSession.new Block();
-				currentBlock.startTime = currentSession.startTime + currentSession.blockIndex * 300.0;
-				currentSession.blockIndex++;
-			}
 		}
 
 		// Starting a new Session
 		else {
-			currentSession.blocks.add(currentBlock);
 			sessions.add(currentSession);
 			sessionNumber++;
 			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("none"));
-			
 			// go to the next session or stop the model
 			if (sessionNumber < timesOfPVT.length) {
 				addEvent(new Event(getModel().getTime() + 60.0, "task", "update") {
 					@Override
 					public void action() {
-						currentSession = new SessionPVT();
-						currentBlock = currentSession.new Block();
+						currentSession = new Session();
 						stimulusVisibility = false;
 						sleepAttackIndex = 0;
 						currentSession.startTime = getModel().getTime();
-						currentBlock.startTime = getModel().getTime();
 						getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
 						getModel().getFatigue().startFatigueSession();
 						
@@ -167,9 +168,11 @@ public class DrivingPVTNightA extends Task {
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 				});
+
 			} else {
 				getModel().stop();
 			}
+
 		}
 	}
 
@@ -188,52 +191,49 @@ public class DrivingPVTNightA extends Task {
 		if (getModel().isVerbose())
 			getModel().output("!!!! Fatigue Percentage Reset !!!!");
 	}
-	
+
 	@Override
 	public void typeKey(char c) {
+
 		if (stimulusVisibility == true) {
 			response = c + "";
 			responseTime = getModel().getTime() - lastTime;
-			responseTime *= 1000; //Changing the scale to Millisecond
-			
-			if (response != null) {
-				currentSession.numberOfResponses++;
-				currentBlock.numberOfResponses++;
+
+			if (response != null) // && response.equals("spc"))
+			{
+				currentSession.responses++;
 				currentSession.responseTotalTime += responseTime;
 				currentSession.reactionTimes.add(responseTime);
-				currentBlock.reactionTimes.add(responseTime);
 			}
 
 			label.setVisible(false);
 			processDisplay();
 
-
-			interStimulusInterval = random.nextDouble() * 8 + 2; // A random
+			Random random = new Random();
+			interStimulusInterval = random.nextDouble() * 8 + 1; // A random
 			addUpdate(interStimulusInterval);
 			stimulusVisibility = false;
 
-			if (responseTime > 150 && responseTime <= 500){
+			if (responseTime < .150) {
+				currentSession.falseStarts++;
+			} else if (responseTime > .150 && responseTime <= .500) {
 				// making the array for alert reaction times
-				currentBlock.alertResponse[(int) ((responseTime - 150) / 10)]++;
-				currentSession.alertResponse[(int) ((responseTime - 150) / 10)]++;
+				currentSession.alertResponseSpread[(int) ((responseTime - .150) * 100)]++; 
+				currentSession.alertRosponses++;
+			} else if (responseTime > .500 && responseTime < 30.0) {
+				currentSession.lapses++;
 			}
-			
 		} else {
-			currentSession.reactionTimes.add(1);
-			currentBlock.reactionTimes.add(1);
-			currentBlock.numberOfResponses++;
-			currentSession.numberOfResponses++;
-
+			currentSession.responses++;
+			currentSession.falseStarts++;
+			currentSession.reactionTimes.add(0);
+			
 			if (getModel().isVerbose())
-				getModel().output("False alert happened " + "- Session: " + sessionNumber + " Block:" + (currentSession.blocks.size() + 1)
+				getModel().output("False alert happened " + "- Session: " + sessionNumber //+ " Block:" + (currentSession.blocks.size() + 1)
 						+ "   time of session : " + (getModel().getTime() - currentSession.startTime));
 		}
-	}
 
-//	@Override
-//	public int analysisIterations() {
-// 		return 100;
-//	}
+	}
 
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
@@ -272,28 +272,28 @@ public class DrivingPVTNightA extends Task {
 			}
 
 			for (Task taskCast : tasks) {
-				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
+				DrivingPVTNightA_OLD task = (DrivingPVTNightA_OLD) taskCast;
 				for (int i = 0; i < numberOfSessions; i++) {
-					totallFalseAlerts[i].add(task.sessions.elementAt(i).getNumberOfFalseStarts());
-					totallLapsesValues[i].add(task.sessions.get(i).getNumberOfLapses());
+					totallFalseAlerts[i].add(task.sessions.elementAt(i).falseStarts);
+					totallLapsesValues[i].add(task.sessions.get(i).lapses);
 					totallSleepAtacks[i].add(task.sessions.get(i).sleepAttacks);
-					totallAlertResponces[i].add(task.sessions.get(i).getNumberOfAlertResponses());
-					totallResponsesNumber[i].add(task.sessions.get(i).numberOfResponses);
+					totallAlertResponces[i].add(task.sessions.get(i).alertRosponses);
+					totallResponsesNumber[i].add(task.sessions.get(i).responses);
 					for (int j = 0; j < 35; j++) {
-						totallAlertResponcesSpread[i][j].add(task.sessions.get(i).alertResponse[j]);
+						totallAlertResponcesSpread[i][j].add(task.sessions.get(i).alertResponseSpread[j]);
 					}
 
 					totallProportionFalseAlerts[i]
-							.add((double) task.sessions.get(i).getNumberOfFalseStarts() / task.sessions.get(i).numberOfResponses);
+							.add((double) task.sessions.get(i).falseStarts / task.sessions.get(i).responses);
 					totallProportionLapsesValues[i]
-							.add((double) task.sessions.get(i).getNumberOfLapses() / task.sessions.get(i).numberOfResponses);
+							.add((double) task.sessions.get(i).lapses / task.sessions.get(i).responses);
 					totallProportionSleepAtacks[i]
-							.add((double) task.sessions.get(i).sleepAttacks / task.sessions.get(i).numberOfResponses);
+							.add((double) task.sessions.get(i).sleepAttacks / task.sessions.get(i).responses);
 					totallProportionAlertRresponces[i]
-							.add((double) task.sessions.get(i).getNumberOfAlertResponses() / task.sessions.get(i).numberOfResponses);
+							.add((double) task.sessions.get(i).alertRosponses / task.sessions.get(i).responses);
 					for (int j = 0; j < 35; j++) {
 						totallProportionAlertResponcesSpread[i][j].add(
-								(double) task.sessions.get(i).alertResponse[j] / task.sessions.get(i).numberOfResponses);
+								(double) task.sessions.get(i).alertResponseSpread[j] / task.sessions.get(i).responses);
 					}
 				}
 			}
@@ -320,40 +320,28 @@ public class DrivingPVTNightA extends Task {
 				// AlertResponsesProportion[i] =
 				// totallProportionAlertResponcesSpread[s][i].mean();
 
-				getModel().output(s + "\t" + totallProportionFalseAlerts[s].mean() + "\t"
+				getModel().output(s + "\t" + df3.format(totallProportionFalseAlerts[s].mean()) + "\t"
 						// + Utilities.toString(AlertResponsesProportion) + " "
-						+ totallProportionAlertRresponces[s].mean() + "\t"
-						+ totallProportionLapsesValues[s].mean() + "\t"
-						+ totallProportionSleepAtacks[s].mean() );
+						+ df3.format(totallProportionAlertRresponces[s].mean()) + "\t"
+						+ df3.format(totallProportionLapsesValues[s].mean()) + "\t"
+						+ df3.format(totallProportionSleepAtacks[s].mean()));
 			}
 
 			getModel().output("\nAverage Number of lapses in the time points \n");
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 ");
 			for (int i = 0; i < 5; i++) {
-				getModel().output((i + 2) + "\t" + totallLapsesValues[i * 4].meanDF3() + "\t"
-						+ totallLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallLapsesValues[i * 4 + 2].meanDF3() + "\t"
-						+ totallLapsesValues[i * 4 + 3].meanDF3());
+				getModel().output((i + 2) + "\t" + totallLapsesValues[i * 4].mean() + "\t"
+						+ totallLapsesValues[i * 4 + 1].mean() + "\t" + totallLapsesValues[i * 4 + 2].mean() + "\t"
+						+ totallLapsesValues[i * 4 + 3].mean());
 			}
 			getModel().output("* 34 h break *");
 			for (int i = 5; i < 10; i++) {
-				getModel().output((i + 4) + "\t" + totallLapsesValues[i * 4].meanDF3() + "\t"
-						+ totallLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallLapsesValues[i * 4 + 2].meanDF3() + "\t"
-						+ totallLapsesValues[i * 4 + 3].meanDF3());
+				getModel().output((i + 4) + "\t" + totallLapsesValues[i * 4].mean() + "\t"
+						+ totallLapsesValues[i * 4 + 1].mean() + "\t" + totallLapsesValues[i * 4 + 2].mean() + "\t"
+						+ totallLapsesValues[i * 4 + 3].mean());
 			}
 			getModel().output("\n*******************************************\n");
 
-			for (Task taskCast : tasks) {
-				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
-				for (int i = 0; i < numberOfSessions; i++) {
-					getModel().outputInLine(task.sessions.get(i).reactionTimes.toString() + "\n");
-					for (int j = 0; j < task.sessions.get(i).blocks.size(); j++) {
-						getModel().outputInLine(task.sessions.get(i).blocks.get(j).reactionTimes.toString()+ "\n");
-					}
-					getModel().output("***");
-				}
-				getModel().output("\n***********************************\n");
-			}
-			
 //			File dataFile = new File("./result/BioMathValuesNightA.txt");
 //			if (!dataFile.exists())
 //				dataFile.createNewFile();
@@ -364,6 +352,13 @@ public class DrivingPVTNightA extends Task {
 //			}
 //			data.close();
 
+			for (Task taskCast : tasks) {
+				DrivingPVTNightA_OLD task = (DrivingPVTNightA_OLD) taskCast;
+				for (int i = 0; i < numberOfSessions; i++) {
+					getModel().outputInLine(task.sessions.get(i).reactionTimes.toString() + "\n");
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

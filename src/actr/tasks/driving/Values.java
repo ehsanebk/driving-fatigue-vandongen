@@ -60,31 +60,6 @@ public class Values {
 			sum += v.elementAt(i);
 		return sum / (1.0 * v.size());
 	}
-	
-	public double meanInRange(double min, double max) {
-		if (v.size() == 0)
-			return 0;
-		double sum = 0;
-		int counter = 0;
-		for (int i = 0; i < v.size(); i++)
-			if (inRange(v.elementAt(i), min, max)){
-				sum += v.elementAt(i);
-				counter ++;
-			}
-		return sum / (1.0 * counter);
-	}
-
-	public boolean inRange(double x, double min, double max) {
-		return (x >= min && x <= max);
-	}
-	
-	public double average() {
-		return mean();
-	}
-	
-	public double averageInRange(double min, double max){
-		return meanInRange(min, max);
-	}
 
 	public String meanDF3() {
 		if (v.size() == 0)
@@ -94,6 +69,10 @@ public class Values {
 			sum += v.elementAt(i);
 		DecimalFormat df3 = new DecimalFormat("#.000");
 		return df3.format(sum / (1.0 * v.size()));
+	}
+
+	public double average() {
+		return mean();
 	}
 
 	public double stddev() {
