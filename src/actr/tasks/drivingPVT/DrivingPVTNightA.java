@@ -201,7 +201,7 @@ public class DrivingPVTNightA extends Task {
 				currentBlock.numberOfResponses++;
 				currentSession.responseTotalTime += responseTime;
 				currentSession.reactionTimes.add(responseTime);
-				currentBlock.reactionTimes.add(responseTime);
+				currentBlock.blockReactionTimes.add(responseTime);
 			}
 
 			label.setVisible(false);
@@ -220,7 +220,7 @@ public class DrivingPVTNightA extends Task {
 			
 		} else {
 			currentSession.reactionTimes.add(1);
-			currentBlock.reactionTimes.add(1);
+			currentBlock.blockReactionTimes.add(1);
 			currentBlock.numberOfResponses++;
 			currentSession.numberOfResponses++;
 
@@ -246,7 +246,6 @@ public class DrivingPVTNightA extends Task {
 			Values[] totallSleepAtacks = new Values[numberOfSessions];
 			Values[] totallAlertResponces = new Values[numberOfSessions];
 			Values[][] totallAlertResponcesSpread = new Values[numberOfSessions][35];
-			Values[] totallResponsesNumber = new Values[numberOfSessions];
 
 			Values[] totallProportionLapsesValues = new Values[numberOfSessions];
 			Values[] totallProportionFalseAlerts = new Values[numberOfSessions];
@@ -260,7 +259,7 @@ public class DrivingPVTNightA extends Task {
 				totallFalseAlerts[i] = new Values();
 				totallSleepAtacks[i] = new Values();
 				totallAlertResponces[i] = new Values();
-				totallResponsesNumber[i] = new Values();
+				
 				totallProportionLapsesValues[i] = new Values();
 				totallProportionFalseAlerts[i] = new Values();
 				totallProportionSleepAtacks[i] = new Values();
@@ -274,23 +273,22 @@ public class DrivingPVTNightA extends Task {
 			for (Task taskCast : tasks) {
 				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
 				for (int i = 0; i < numberOfSessions; i++) {
-					totallFalseAlerts[i].add(task.sessions.elementAt(i).getNumberOfFalseStarts());
+					totallFalseAlerts[i].add(task.sessions.elementAt(i).getNumberOfFalseAlerts());
 					totallLapsesValues[i].add(task.sessions.get(i).getNumberOfLapses());
-					totallSleepAtacks[i].add(task.sessions.get(i).sleepAttacks);
+					totallSleepAtacks[i].add(task.sessions.get(i).getNumberOfSleepAttacks());
 					totallAlertResponces[i].add(task.sessions.get(i).getNumberOfAlertResponses());
-					totallResponsesNumber[i].add(task.sessions.get(i).numberOfResponses);
 					for (int j = 0; j < 35; j++) {
 						totallAlertResponcesSpread[i][j].add(task.sessions.get(i).alertResponse[j]);
 					}
 
 					totallProportionFalseAlerts[i]
-							.add((double) task.sessions.get(i).getNumberOfFalseStarts() / task.sessions.get(i).numberOfResponses);
-					totallProportionLapsesValues[i]
-							.add((double) task.sessions.get(i).getNumberOfLapses() / task.sessions.get(i).numberOfResponses);
+							.add(task.sessions.get(i).getProportionOfFalseAlert());
 					totallProportionSleepAtacks[i]
-							.add((double) task.sessions.get(i).sleepAttacks / task.sessions.get(i).numberOfResponses);
+							.add(task.sessions.get(i).getProportionOfSleepAttacks());
+					totallProportionLapsesValues[i]
+							.add(task.sessions.get(i).getProportionOfLapses());
 					totallProportionAlertRresponces[i]
-							.add((double) task.sessions.get(i).getNumberOfAlertResponses() / task.sessions.get(i).numberOfResponses);
+							.add(task.sessions.get(i).getProportionOfAlertResponses());
 					for (int j = 0; j < 35; j++) {
 						totallProportionAlertResponcesSpread[i][j].add(
 								(double) task.sessions.get(i).alertResponse[j] / task.sessions.get(i).numberOfResponses);
@@ -320,15 +318,15 @@ public class DrivingPVTNightA extends Task {
 				// AlertResponsesProportion[i] =
 				// totallProportionAlertResponcesSpread[s][i].mean();
 
-				getModel().output(s + "\t" + totallProportionFalseAlerts[s].mean() + "\t"
+				getModel().output(s + "\t" + totallProportionFalseAlerts[s].meanDF3() + "\t"
 						// + Utilities.toString(AlertResponsesProportion) + " "
-						+ totallProportionAlertRresponces[s].mean() + "\t"
-						+ totallProportionLapsesValues[s].mean() + "\t"
-						+ totallProportionSleepAtacks[s].mean() );
+						+ totallProportionAlertRresponces[s].meanDF3() + "\t"
+						+ totallProportionLapsesValues[s].meanDF3() + "\t"
+						+ totallProportionSleepAtacks[s].meanDF3() );
 			}
 
 			getModel().output("\nAverage Number of lapses in the time points \n");
-			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 ");
+			getModel().output("Night\t21:00\t00:00\t03:00\t06:00 ");
 			for (int i = 0; i < 5; i++) {
 				getModel().output((i + 2) + "\t" + totallLapsesValues[i * 4].meanDF3() + "\t"
 						+ totallLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallLapsesValues[i * 4 + 2].meanDF3() + "\t"
@@ -342,17 +340,79 @@ public class DrivingPVTNightA extends Task {
 			}
 			getModel().output("\n*******************************************\n");
 
+			
+			
+			/////  Outputting the blocks ////
+			Values[][] totallBlockLapsesValues = new Values[numberOfSessions][2];
+			Values[][] totallBlockFalseAlerts = new Values[numberOfSessions][2];
+			Values[][] totallBlockAlertResponces = new Values[numberOfSessions][2];
+			
+			Values[][] totallBlockProportionLapsesValues = new Values[numberOfSessions][2];
+			Values[][] totallBlockProportionFalseAlerts = new Values[numberOfSessions][2];
+			
+			
+			// allocating memory to the vectors
+			for (int i = 0; i < numberOfSessions; i++) {
+				for (int j = 0; j < 2; j++) {
+					totallBlockLapsesValues[i][j] = new Values();
+					totallBlockFalseAlerts[i][j] = new Values();
+					totallBlockAlertResponces[i][j] = new Values();
+					
+					totallBlockProportionLapsesValues[i][j] = new Values();
+					totallBlockProportionFalseAlerts[i][j] = new Values();
+				}
+				
+			}
+
 			for (Task taskCast : tasks) {
 				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
 				for (int i = 0; i < numberOfSessions; i++) {
-					getModel().outputInLine(task.sessions.get(i).reactionTimes.toString() + "\n");
-					for (int j = 0; j < task.sessions.get(i).blocks.size(); j++) {
-						getModel().outputInLine(task.sessions.get(i).blocks.get(j).reactionTimes.toString()+ "\n");
+					for (int j = 0; j < 2; j++) {
+						totallBlockLapsesValues[i][j].add(task.sessions.elementAt(i).blocks.get(j).getNumberOfLapses());
+						totallBlockFalseAlerts[i][j].add(task.sessions.get(i).blocks.get(j).getNumberOfFalseAlerts());
+						totallBlockAlertResponces[i][j].add(task.sessions.get(i).blocks.get(j).getNumberOfAlertResponses());
+						
+						totallBlockProportionFalseAlerts[i][j].add(task.sessions.get(i).blocks.get(j).getProportionOfFalseAlert());
+						totallBlockProportionLapsesValues[i][j].add(task.sessions.get(i).blocks.get(j).getProportionOfLapses());
 					}
-					getModel().output("***");
 				}
-				getModel().output("\n***********************************\n");
 			}
+
+
+
+			getModel().output("\nAverage Number of block lapses in the time points \n");
+			getModel().output("Night\t21:00\t\t00:00\t\t03:00\t\t06:00\t ");
+			getModel().output("   \t1of2\t2of2\t1of2\t2of2\t1of2\t2of2\t1of2\t2of2 ");
+			for (int i = 0; i < 5; i++) { getModel().output((i + 2) + "\t" 
+					+ totallBlockLapsesValues[i * 4][0].meanDF3() 	  + "\t"     + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"
+					+ totallBlockLapsesValues[i * 4 + 1][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 1][1].meanDF3() +"\t"
+					+ totallBlockLapsesValues[i * 4 + 2][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 2][1].meanDF3() +"\t"
+					+ totallBlockLapsesValues[i * 4 + 3][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 3][1].meanDF3() +"\t"
+					);
+			}
+			getModel().output("* 34 h break *");
+			for (int i = 5; i < 10; i++) { getModel().output((i + 4) + "\t" 
+					+ totallBlockLapsesValues[i * 4][0].meanDF3() 	  + "\t"     + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"
+					+ totallBlockLapsesValues[i * 4 + 1][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 1][1].meanDF3() +"\t"
+					+ totallBlockLapsesValues[i * 4 + 2][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 2][1].meanDF3() +"\t"
+					+ totallBlockLapsesValues[i * 4 + 3][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 3][1].meanDF3() +"\t"
+					);
+			}
+			
+			/// Outputting the raw data
+//			getModel().output("\n*******************************************\n");
+//			
+//			for (Task taskCast : tasks) {
+//				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
+//				for (int i = 0; i < numberOfSessions; i++) {
+//					getModel().outputInLine(task.sessions.get(i).reactionTimes.toString() + "\n");
+//					for (int j = 0; j < task.sessions.get(i).blocks.size(); j++) {
+//						getModel().outputInLine(task.sessions.get(i).blocks.get(j).blockReactionTimes.toString()+ "\n");
+//					}
+//					getModel().output("***");
+//				}
+//				getModel().output("\n***********************************\n");
+//			}
 			
 //			File dataFile = new File("./result/BioMathValuesNightA.txt");
 //			if (!dataFile.exists())
