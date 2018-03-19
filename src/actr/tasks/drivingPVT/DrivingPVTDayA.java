@@ -20,18 +20,7 @@ import actr.tasks.drivingPVT.SessionPVT.Block;
  */
 
 public class DrivingPVTDayA extends Task {
-	private TaskLabel label;
-	private double lastTime = 0;
-	private String stimulus = "\u2588";
-	private double interStimulusInterval = 0.0;
-	private Boolean stimulusVisibility = false;
-	private String response = null;
-	private double responseTime = 0;
-	// the following two variable are for handling sleep attacks
-	private int sleepAttackIndex = 0;
 	private double PVTduration = 600.0;
-	Random random;
-	
 	private double[] timesOfPVT = {
 			//
 			57.0, 60.0, 63.0, 66.0, // day2
@@ -47,6 +36,17 @@ public class DrivingPVTDayA extends Task {
 			297.0, 300.0, 303.0, 306.0 // day13
 
 	};
+	
+	private TaskLabel label;
+	private double lastTime = 0;
+	private String stimulus = "\u2588";
+	private double interStimulusInterval = 0.0;
+	private Boolean stimulusVisibility = false;
+	private String response = null;
+	private double responseTime = 0;
+	private int sleepAttackIndex = 0; // the variable for handling sleep attacks
+	Random random;
+	
 	int sessionNumber = 0; // starts from 0
 	private Block currentBlock;
 	private SessionPVT currentSession;
@@ -127,7 +127,6 @@ public class DrivingPVTDayA extends Task {
 						getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"),Symbol.get("wait"));
 					}
 					repaint();
-
 				}
 			});
 
@@ -147,7 +146,6 @@ public class DrivingPVTDayA extends Task {
 			sessions.add(currentSession);
 			sessionNumber++;
 			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("none"));
-			
 			// go to the next session or stop the model
 			if (sessionNumber < timesOfPVT.length) {
 				addEvent(new Event(getModel().getTime() + 60.0, "task", "update") {
@@ -188,7 +186,7 @@ public class DrivingPVTDayA extends Task {
 		if (getModel().isVerbose())
 			getModel().output("!!!! Fatigue Percentage Reset !!!!");
 	}
-	
+
 	@Override
 	public void typeKey(char c) {
 		if (stimulusVisibility == true) {
@@ -206,24 +204,13 @@ public class DrivingPVTDayA extends Task {
 
 			label.setVisible(false);
 			processDisplay();
-
-
+			
 			interStimulusInterval = random.nextDouble() * 8 + 2; // A random
 			addUpdate(interStimulusInterval);
 			stimulusVisibility = false;
-
-			if (responseTime > 150 && responseTime <= 500){
-				// making the array for alert reaction times
-				currentBlock.alertResponse[(int) ((responseTime - 150) / 10)]++;
-				currentSession.alertResponse[(int) ((responseTime - 150) / 10)]++;
-			}
-			
-		} else {
+		} else {   // False start situation
 			currentSession.reactionTimes.add(1);
 			currentBlock.blockReactionTimes.add(1);
-			currentBlock.numberOfResponses++;
-			currentSession.numberOfResponses++;
-
 			if (getModel().isVerbose())
 				getModel().output("False alert happened " + "- Session: " + sessionNumber + " Block:" + (currentSession.blocks.size() + 1)
 						+ "   time of session : " + (getModel().getTime() - currentSession.startTime));
@@ -277,10 +264,7 @@ public class DrivingPVTDayA extends Task {
 					totallLapsesValues[i].add(task.sessions.get(i).getNumberOfLapses());
 					totallSleepAtacks[i].add(task.sessions.get(i).getNumberOfSleepAttacks());
 					totallAlertResponces[i].add(task.sessions.get(i).getNumberOfAlertResponses());
-					for (int j = 0; j < 35; j++) {
-						totallAlertResponcesSpread[i][j].add(task.sessions.get(i).alertResponse[j]);
-					}
-
+					
 					totallProportionFalseAlerts[i]
 							.add(task.sessions.get(i).getProportionOfFalseAlert());
 					totallProportionSleepAtacks[i]
@@ -289,10 +273,6 @@ public class DrivingPVTDayA extends Task {
 							.add(task.sessions.get(i).getProportionOfLapses());
 					totallProportionAlertRresponces[i]
 							.add(task.sessions.get(i).getProportionOfAlertResponses());
-					for (int j = 0; j < 35; j++) {
-						totallProportionAlertResponcesSpread[i][j].add(
-								(double) task.sessions.get(i).alertResponse[j] / task.sessions.get(i).numberOfResponses);
-					}
 				}
 			}
 
@@ -326,7 +306,7 @@ public class DrivingPVTDayA extends Task {
 			}
 
 			getModel().output("\nAverage Number of lapses in the time points \n");
-			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 ");
+			getModel().output("Night\t21:00\t00:00\t03:00\t06:00 ");
 			for (int i = 0; i < 5; i++) {
 				getModel().output((i + 2) + "\t" + totallLapsesValues[i * 4].meanDF3() + "\t"
 						+ totallLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallLapsesValues[i * 4 + 2].meanDF3() + "\t"
@@ -381,7 +361,7 @@ public class DrivingPVTDayA extends Task {
 
 
 			getModel().output("\nAverage Number of block lapses in the time points \n");
-			getModel().output("Day\t21:00\t\t00:00\t\t03:00\t\t06:00\t ");
+			getModel().output("Night\t21:00\t\t00:00\t\t03:00\t\t06:00\t ");
 			getModel().output("   \t1of2\t2of2\t1of2\t2of2\t1of2\t2of2\t1of2\t2of2 ");
 			for (int i = 0; i < 5; i++) { getModel().output((i + 2) + "\t" 
 					+ totallBlockLapsesValues[i * 4][0].meanDF3() 	  + "\t"     + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"
@@ -430,5 +410,5 @@ public class DrivingPVTDayA extends Task {
 		Result result = new Result();
 		return result;
 	}
-	
+
 }
