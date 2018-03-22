@@ -265,29 +265,14 @@ public class DrivingPVTDayA extends Task {
 					totallSleepAtacks[i].add(task.sessions.get(i).getNumberOfSleepAttacks());
 					totallAlertResponces[i].add(task.sessions.get(i).getNumberOfAlertResponses());
 					
-					totallProportionFalseAlerts[i]
-							.add(task.sessions.get(i).getProportionOfFalseAlert());
-					totallProportionSleepAtacks[i]
-							.add(task.sessions.get(i).getProportionOfSleepAttacks());
-					totallProportionLapsesValues[i]
-							.add(task.sessions.get(i).getProportionOfLapses());
-					totallProportionAlertRresponces[i]
-							.add(task.sessions.get(i).getProportionOfAlertResponses());
+					totallProportionFalseAlerts[i].add(task.sessions.get(i).getProportionOfFalseAlert());
+					totallProportionSleepAtacks[i].add(task.sessions.get(i).getProportionOfSleepAttacks());
+					totallProportionLapsesValues[i].add(task.sessions.get(i).getProportionOfLapses());
+					totallProportionAlertRresponces[i].add(task.sessions.get(i).getProportionOfAlertResponses());
 				}
 			}
 
 			DecimalFormat df3 = new DecimalFormat("#.000");
-
-			// getModel().output("******* Proportion of Responses
-			// **********\n");
-			// getModel()
-			// .output("#\tFS "
-			// + " --------------------------- Alert Responses
-			// --------------------------- "
-			// + " Alert Responses "
-			// + " --------------------------- Alert Responses
-			// ---------------------------- "
-			// + "L SA");
 
 			getModel().output("******* Average Proportion of Responses **********\n");
 			getModel().output("#\tFS\t" + "AR\t " + "L\t" + "SA");
@@ -305,8 +290,23 @@ public class DrivingPVTDayA extends Task {
 						+ totallProportionSleepAtacks[s].meanDF3() );
 			}
 
+			getModel().output("\nAverage Proportion of lapses in the time points \n");
+			getModel().output("Day\t09:00\t12:00\t15:00\t18:00 ");
+			for (int i = 0; i < 5; i++) {
+				getModel().output((i + 2) + "\t" + totallProportionLapsesValues[i * 4].meanDF3() + "\t"
+						+ totallProportionLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallProportionLapsesValues[i * 4 + 2].meanDF3() + "\t"
+						+ totallProportionLapsesValues[i * 4 + 3].meanDF3());
+			}
+			getModel().output("* 34 h break *");
+			for (int i = 5; i < 10; i++) {
+				getModel().output((i + 4) + "\t" + totallProportionLapsesValues[i * 4].meanDF3() + "\t"
+						+ totallProportionLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallProportionLapsesValues[i * 4 + 2].meanDF3() + "\t"
+						+ totallProportionLapsesValues[i * 4 + 3].meanDF3());
+			}
+			getModel().output("\n*******************************************\n");
+			
 			getModel().output("\nAverage Number of lapses in the time points \n");
-			getModel().output("Night\t21:00\t00:00\t03:00\t06:00 ");
+			getModel().output("Day\t09:00\t12:00\t15:00\t18:00 ");
 			for (int i = 0; i < 5; i++) {
 				getModel().output((i + 2) + "\t" + totallLapsesValues[i * 4].meanDF3() + "\t"
 						+ totallLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallLapsesValues[i * 4 + 2].meanDF3() + "\t"
@@ -319,8 +319,6 @@ public class DrivingPVTDayA extends Task {
 						+ totallLapsesValues[i * 4 + 3].meanDF3());
 			}
 			getModel().output("\n*******************************************\n");
-
-			
 			
 			/////  Outputting the blocks ////
 			Values[][] totallBlockLapsesValues = new Values[numberOfSessions][2];
@@ -329,7 +327,6 @@ public class DrivingPVTDayA extends Task {
 			
 			Values[][] totallBlockProportionLapsesValues = new Values[numberOfSessions][2];
 			Values[][] totallBlockProportionFalseAlerts = new Values[numberOfSessions][2];
-			
 			
 			// allocating memory to the vectors
 			for (int i = 0; i < numberOfSessions; i++) {
@@ -341,7 +338,6 @@ public class DrivingPVTDayA extends Task {
 					totallBlockProportionLapsesValues[i][j] = new Values();
 					totallBlockProportionFalseAlerts[i][j] = new Values();
 				}
-				
 			}
 
 			for (Task taskCast : tasks) {
@@ -360,11 +356,31 @@ public class DrivingPVTDayA extends Task {
 
 
 
-			getModel().output("\nAverage Number of block lapses in the time points \n");
-			getModel().output("Night\t21:00\t\t00:00\t\t03:00\t\t06:00\t ");
+			getModel().output("\nAverage Proportion of block lapses in the time points \n");
+			getModel().output("Day\t09:00\t\t12:00\t\t15:00\t\t18:00\t ");
 			getModel().output("   \t1of2\t2of2\t1of2\t2of2\t1of2\t2of2\t1of2\t2of2 ");
 			for (int i = 0; i < 5; i++) { getModel().output((i + 2) + "\t" 
-					+ totallBlockLapsesValues[i * 4][0].meanDF3() 	  + "\t"     + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"
+					+ totallBlockProportionLapsesValues[i * 4][0].meanDF3() 	+ "\t" + totallBlockProportionLapsesValues[i * 4][1].meanDF3() +"\t"
+					+ totallBlockProportionLapsesValues[i * 4 + 1][0].meanDF3() + "\t" + totallBlockProportionLapsesValues[i * 4 + 1][1].meanDF3() +"\t"
+					+ totallBlockProportionLapsesValues[i * 4 + 2][0].meanDF3() + "\t" + totallBlockProportionLapsesValues[i * 4 + 2][1].meanDF3() +"\t"
+					+ totallBlockProportionLapsesValues[i * 4 + 3][0].meanDF3() + "\t" + totallBlockProportionLapsesValues[i * 4 + 3][1].meanDF3() +"\t"
+					);
+			}
+			getModel().output("* 34 h break *");
+			for (int i = 5; i < 10; i++) { getModel().output((i + 4) + "\t" 
+					+ totallBlockProportionLapsesValues[i * 4][0].meanDF3() 	+ "\t" + totallBlockProportionLapsesValues[i * 4][1].meanDF3() +"\t"
+					+ totallBlockProportionLapsesValues[i * 4 + 1][0].meanDF3() + "\t" + totallBlockProportionLapsesValues[i * 4 + 1][1].meanDF3() +"\t"
+					+ totallBlockProportionLapsesValues[i * 4 + 2][0].meanDF3() + "\t" + totallBlockProportionLapsesValues[i * 4 + 2][1].meanDF3() +"\t"
+					+ totallBlockProportionLapsesValues[i * 4 + 3][0].meanDF3() + "\t" + totallBlockProportionLapsesValues[i * 4 + 3][1].meanDF3() +"\t"
+					);
+			}
+			getModel().output("\n*******************************************\n");
+			
+			getModel().output("\nAverage Number of block lapses in the time points \n");
+			getModel().output("Day\t09:00\t\t12:00\t\t15:00\t\t18:00\t ");
+			getModel().output("   \t1of2\t2of2\t1of2\t2of2\t1of2\t2of2\t1of2\t2of2 ");
+			for (int i = 0; i < 5; i++) { getModel().output((i + 2) + "\t" 
+					+ totallBlockLapsesValues[i * 4    ][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"
 					+ totallBlockLapsesValues[i * 4 + 1][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 1][1].meanDF3() +"\t"
 					+ totallBlockLapsesValues[i * 4 + 2][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 2][1].meanDF3() +"\t"
 					+ totallBlockLapsesValues[i * 4 + 3][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 3][1].meanDF3() +"\t"
@@ -372,7 +388,7 @@ public class DrivingPVTDayA extends Task {
 			}
 			getModel().output("* 34 h break *");
 			for (int i = 5; i < 10; i++) { getModel().output((i + 4) + "\t" 
-					+ totallBlockLapsesValues[i * 4][0].meanDF3() 	  + "\t"     + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"
+					+ totallBlockLapsesValues[i * 4    ][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"
 					+ totallBlockLapsesValues[i * 4 + 1][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 1][1].meanDF3() +"\t"
 					+ totallBlockLapsesValues[i * 4 + 2][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 2][1].meanDF3() +"\t"
 					+ totallBlockLapsesValues[i * 4 + 3][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4 + 3][1].meanDF3() +"\t"

@@ -16,11 +16,11 @@
     :cst nil
     :v nil
     :fatigue t   
-    :iu 2.8
+    :iu 3
     :ut 2.3
     
     ;;:microlapses nil
-    :fpbmc .018
+    :fpbmc .025
     :fpmc -.05
     
     :utbmc .012  
