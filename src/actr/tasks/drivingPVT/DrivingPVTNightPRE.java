@@ -19,21 +19,21 @@ import actr.tasks.drivingPVT.SessionPVT.Block;
  * @author Ehsan Khosroshahi
  */
 
-public class DrivingPVTDayA extends Task {
+public class DrivingPVTNightPRE extends Task {
 	private double PVTduration = 600.0;
 	private double[] timesOfPVT = {
 			//
-			57.0, 60.0, 63.0, 66.0, // day2
-			81.0, 84.0, 87.0, 90.0, // day3
-			105.0, 108.0, 111.0, 114.0, // day4
-			129.0, 132.0, 135.0, 138.0, // day5
-			153.0, 156.0, 159.0, 162.0, // day6
+			45.0, 48.0, 51.0, 54.0, // day2
+			69.0, 72.0, 75.0, 78.0, // day3
+			93.0, 96.0, 99.0, 102.0, // day4
+			117.0, 120.0, 123.0, 126.0, // day5
+			141.0, 144.0, 147.0, 150.0, // day6
 
-			201.0, 204.0, 207.0, 210.0, // day9
-			225.0, 228.0, 231.0, 234.0, // day10
-			249.0, 252.0, 255.0, 258.0, // day11
-			273.0, 276.0, 279.0, 282.0, // day12
-			297.0, 300.0, 303.0, 306.0 // day13
+			189.0, 192.0, 195.0, 198.0, // day9
+			213.0, 216.0, 219.0, 222.0, // day10
+			237.0, 240.0, 243.0, 246.0, // day11
+			261.0, 264.0, 267.0, 270.0, // day12
+			285.0, 288.0, 291.0, 294.0 // day13
 
 	};
 	
@@ -54,7 +54,7 @@ public class DrivingPVTDayA extends Task {
 
 	private PrintStream data;
 
-	public DrivingPVTDayA() {
+	public DrivingPVTNightPRE() {
 		super();
 		label = new TaskLabel("", 200, 150, 40, 20);
 		add(label);
@@ -258,21 +258,36 @@ public class DrivingPVTDayA extends Task {
 			}
 
 			for (Task taskCast : tasks) {
-				DrivingPVTDayA task = (DrivingPVTDayA) taskCast;
+				DrivingPVTNightPRE task = (DrivingPVTNightPRE) taskCast;
 				for (int i = 0; i < numberOfSessions; i++) {
 					totallFalseAlerts[i].add(task.sessions.elementAt(i).getNumberOfFalseAlerts());
 					totallLapsesValues[i].add(task.sessions.get(i).getNumberOfLapses());
 					totallSleepAtacks[i].add(task.sessions.get(i).getNumberOfSleepAttacks());
 					totallAlertResponces[i].add(task.sessions.get(i).getNumberOfAlertResponses());
 					
-					totallProportionFalseAlerts[i].add(task.sessions.get(i).getProportionOfFalseAlert());
-					totallProportionSleepAtacks[i].add(task.sessions.get(i).getProportionOfSleepAttacks());
-					totallProportionLapsesValues[i].add(task.sessions.get(i).getProportionOfLapses());
-					totallProportionAlertRresponces[i].add(task.sessions.get(i).getProportionOfAlertResponses());
+					totallProportionFalseAlerts[i]
+							.add(task.sessions.get(i).getProportionOfFalseAlert());
+					totallProportionSleepAtacks[i]
+							.add(task.sessions.get(i).getProportionOfSleepAttacks());
+					totallProportionLapsesValues[i]
+							.add(task.sessions.get(i).getProportionOfLapses());
+					totallProportionAlertRresponces[i]
+							.add(task.sessions.get(i).getProportionOfAlertResponses());
 				}
 			}
 
 			DecimalFormat df3 = new DecimalFormat("#.000");
+
+			// getModel().output("******* Proportion of Responses
+			// **********\n");
+			// getModel()
+			// .output("#\tFS "
+			// + " --------------------------- Alert Responses
+			// --------------------------- "
+			// + " Alert Responses "
+			// + " --------------------------- Alert Responses
+			// ---------------------------- "
+			// + "L SA");
 
 			getModel().output("******* Average Proportion of Responses **********\n");
 			getModel().output("#\tFS\t" + "AR\t " + "L\t" + "SA");
@@ -291,7 +306,7 @@ public class DrivingPVTDayA extends Task {
 			}
 
 			getModel().output("\nAverage Proportion of lapses in the time points \n");
-			getModel().output("Day\t09:00\t12:00\t15:00\t18:00 ");
+			getModel().output("Night\t21:00\t00:00\t03:00\t06:00 ");
 			for (int i = 0; i < 5; i++) {
 				getModel().output((i + 2) + "\t" + totallProportionLapsesValues[i * 4].meanDF3() + "\t"
 						+ totallProportionLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallProportionLapsesValues[i * 4 + 2].meanDF3() + "\t"
@@ -304,9 +319,9 @@ public class DrivingPVTDayA extends Task {
 						+ totallProportionLapsesValues[i * 4 + 3].meanDF3());
 			}
 			getModel().output("\n*******************************************\n");
-			
+
 			getModel().output("\nAverage Number of lapses in the time points \n");
-			getModel().output("Day\t09:00\t12:00\t15:00\t18:00 ");
+			getModel().output("Night\t21:00\t00:00\t03:00\t06:00 ");
 			for (int i = 0; i < 5; i++) {
 				getModel().output((i + 2) + "\t" + totallLapsesValues[i * 4].meanDF3() + "\t"
 						+ totallLapsesValues[i * 4 + 1].meanDF3() + "\t" + totallLapsesValues[i * 4 + 2].meanDF3() + "\t"
@@ -328,6 +343,7 @@ public class DrivingPVTDayA extends Task {
 			Values[][] totallBlockProportionLapsesValues = new Values[numberOfSessions][2];
 			Values[][] totallBlockProportionFalseAlerts = new Values[numberOfSessions][2];
 			
+			
 			// allocating memory to the vectors
 			for (int i = 0; i < numberOfSessions; i++) {
 				for (int j = 0; j < 2; j++) {
@@ -338,10 +354,11 @@ public class DrivingPVTDayA extends Task {
 					totallBlockProportionLapsesValues[i][j] = new Values();
 					totallBlockProportionFalseAlerts[i][j] = new Values();
 				}
+				
 			}
 
 			for (Task taskCast : tasks) {
-				DrivingPVTDayA task = (DrivingPVTDayA) taskCast;
+				DrivingPVTNightPRE task = (DrivingPVTNightPRE) taskCast;
 				for (int i = 0; i < numberOfSessions; i++) {
 					for (int j = 0; j < 2; j++) {
 						totallBlockLapsesValues[i][j].add(task.sessions.elementAt(i).blocks.get(j).getNumberOfLapses());
@@ -357,7 +374,7 @@ public class DrivingPVTDayA extends Task {
 
 
 			getModel().output("\nAverage Proportion of block lapses in the time points \n");
-			getModel().output("Day\t09:00\t\t12:00\t\t15:00\t\t18:00\t ");
+			getModel().output("Night\t21:00\t\t00:00\t\t03:00\t\t06:00\t ");
 			getModel().output("   \t1of2\t2of2\t1of2\t2of2\t1of2\t2of2\t1of2\t2of2 ");
 			for (int i = 0; i < 5; i++) { getModel().output((i + 2) + "\t" 
 					+ totallBlockProportionLapsesValues[i * 4][0].meanDF3() 	+ "\t" + totallBlockProportionLapsesValues[i * 4][1].meanDF3() +"\t"
@@ -377,7 +394,7 @@ public class DrivingPVTDayA extends Task {
 			getModel().output("\n*******************************************\n");
 			
 			getModel().output("\nAverage Number of block lapses in the time points \n");
-			getModel().output("Day\t09:00\t\t12:00\t\t15:00\t\t18:00\t ");
+			getModel().output("Night\t21:00\t\t00:00\t\t03:00\t\t06:00\t ");
 			getModel().output("   \t1of2\t2of2\t1of2\t2of2\t1of2\t2of2\t1of2\t2of2 ");
 			for (int i = 0; i < 5; i++) { getModel().output((i + 2) + "\t" 
 					+ totallBlockLapsesValues[i * 4    ][0].meanDF3() + "\t" + totallBlockLapsesValues[i * 4][1].meanDF3() +"\t"

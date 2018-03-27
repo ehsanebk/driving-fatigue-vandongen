@@ -17,6 +17,9 @@ public class SessionPVT {
 	int numberOfResponses = 0; // number of responses, this can be diff from the
 	// stimulusIndex because of false responses
 	double responseTotalTime = 0;
+	double timeOfTheDay;
+	double bioMathValue;
+	double timeAwake;
 	
 	public int getNumberOfAlertResponses(){
 		int count = 0;

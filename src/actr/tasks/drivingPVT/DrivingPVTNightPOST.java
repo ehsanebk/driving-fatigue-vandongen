@@ -19,21 +19,21 @@ import actr.tasks.drivingPVT.SessionPVT.Block;
  * @author Ehsan Khosroshahi
  */
 
-public class DrivingPVTNightA extends Task {
+public class DrivingPVTNightPOST extends Task {
 	private double PVTduration = 600.0;
 	private double[] timesOfPVT = {
 			//
-			45.0, 48.0, 51.0, 54.0, // day2
-			69.0, 72.0, 75.0, 78.0, // day3
-			93.0, 96.0, 99.0, 102.0, // day4
-			117.0, 120.0, 123.0, 126.0, // day5
-			141.0, 144.0, 147.0, 150.0, // day6
+			45.0+1, 48.0+1, 51.0+1, 54.0+1, // day2
+			69.0+1, 72.0+1, 75.0+1, 78.0+1, // day3
+			93.0+1, 96.0+1, 99.0+1, 102.0+1, // day4
+			117.0+1, 120.0+1, 123.0+1, 126.0+1, // day5
+			141.0+1, 144.0+1, 147.0+1, 150.0+1, // day6
 
-			189.0, 192.0, 195.0, 198.0, // day9
-			213.0, 216.0, 219.0, 222.0, // day10
-			237.0, 240.0, 243.0, 246.0, // day11
-			261.0, 264.0, 267.0, 270.0, // day12
-			285.0, 288.0, 291.0, 294.0 // day13
+			189.0+1, 192.0+1, 195.0+1, 198.0+1, // day9
+			213.0+1, 216.0+1, 219.0+1, 222.0+1, // day10
+			237.0+1, 240.0+1, 243.0+1, 246.0+1, // day11
+			261.0+1, 264.0+1, 267.0+1, 270.0+1, // day12
+			285.0+1, 288.0+1, 291.0+1, 294.0+1 // day13
 
 	};
 	
@@ -54,7 +54,7 @@ public class DrivingPVTNightA extends Task {
 
 	private PrintStream data;
 
-	public DrivingPVTNightA() {
+	public DrivingPVTNightPOST() {
 		super();
 		label = new TaskLabel("", 200, 150, 40, 20);
 		add(label);
@@ -258,7 +258,7 @@ public class DrivingPVTNightA extends Task {
 			}
 
 			for (Task taskCast : tasks) {
-				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
+				DrivingPVTNightPOST task = (DrivingPVTNightPOST) taskCast;
 				for (int i = 0; i < numberOfSessions; i++) {
 					totallFalseAlerts[i].add(task.sessions.elementAt(i).getNumberOfFalseAlerts());
 					totallLapsesValues[i].add(task.sessions.get(i).getNumberOfLapses());
@@ -358,7 +358,7 @@ public class DrivingPVTNightA extends Task {
 			}
 
 			for (Task taskCast : tasks) {
-				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
+				DrivingPVTNightPOST task = (DrivingPVTNightPOST) taskCast;
 				for (int i = 0; i < numberOfSessions; i++) {
 					for (int j = 0; j < 2; j++) {
 						totallBlockLapsesValues[i][j].add(task.sessions.elementAt(i).blocks.get(j).getNumberOfLapses());
