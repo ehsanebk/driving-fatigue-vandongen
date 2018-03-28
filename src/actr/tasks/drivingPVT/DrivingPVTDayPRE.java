@@ -1,12 +1,14 @@
 package actr.tasks.drivingPVT;
 
 import java.util.*;
+import java.io.File;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import actr.model.Event;
 import actr.model.Symbol;
 import actr.task.*;
 import actr.tasks.drivingPVT.SessionPVT.Block;
+import actr.tasks.test.fatigue.PVT88hours;
 
 /**
  * Model of PVT test and Fatigue mechanism
@@ -143,6 +145,9 @@ public class DrivingPVTDayPRE extends Task {
 		// Starting a new Session
 		else {
 			currentSession.blocks.add(currentBlock);
+			currentSession.bioMathValue = getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[sessionNumber]);
+			currentSession.timeAwake = getModel().getFatigue().getTimeAwake(timesOfPVT[sessionNumber]);
+			currentSession.timeOfTheDay = timesOfPVT[sessionNumber] % 24;
 			sessions.add(currentSession);
 			sessionNumber++;
 			getModel().getDeclarative().get(Symbol.get("goal")).set(Symbol.get("state"), Symbol.get("none"));
@@ -417,8 +422,36 @@ public class DrivingPVTDayPRE extends Task {
 //
 //			for (int h = 0; h < timesOfPVT[timesOfPVT.length - 1]; h++) {
 //				data.println(h + "\t" + df3.format(getModel().getFatigue().getBioMathModelValueforHour(h)));
-//			}
-//			data.close();
+			//			}
+			//			data.close();
+
+			// Writing Numbers to the file based on sessions
+			File dataSessionFile = new File("./resultPVT/dataSessions_Day_PRE.txt");
+			if (!dataSessionFile.exists())
+				dataSessionFile.createNewFile();
+			PrintStream dataSession = new PrintStream(dataSessionFile);
+			DrivingPVTDayPRE task = (DrivingPVTDayPRE) tasks[0];
+			dataSession.println("Day PRE");
+
+			dataSession.print("TimeOfDay" + ",");
+			for (int i = 0; i < numberOfSessions; i++) 
+				dataSession.print(task.sessions.get(i).timeOfTheDay + ",");
+			dataSession.print("\n");
+			dataSession.flush();
+
+			dataSession.print("BioMath" + ",");
+			for (int i = 0; i < numberOfSessions; i++)
+				dataSession.print(task.sessions.get(i).bioMathValue + ",");
+			dataSession.print("\n");
+			dataSession.flush();
+
+			dataSession.print("AwakeTime" + ",");
+			for (int i = 0; i < numberOfSessions; i++)
+				dataSession.print(task.sessions.get(i).timeAwake + ",");
+			dataSession.print("\n");
+			dataSession.flush();
+
+			dataSession.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
