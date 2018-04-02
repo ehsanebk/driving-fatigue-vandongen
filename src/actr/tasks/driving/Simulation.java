@@ -91,18 +91,16 @@ public class Simulation {
 		int numTaskSamples = 0;
 		@SuppressWarnings("unused")
 		double sumTime = 0;
-		double sumLatDev = 0;
 		double sumSteeringDev = 0;
+		Values latDev = new Values();
 		double sumLatVel = 0;
 		double sumSpeedDev = 0;
-		double numSTEX3 = 0; // number of samples with steering angel exceeding
-		// 3˚
+		double numSTEX3 = 0; // number of samples with steering angel exceeding 3˚
 		double numTaskDetects = 0, numTaskDetectsCount = 0;
 		double sumBrakeRTs = 0, numBrakeRTs = 0, lastBrakeTime = 0;
 		boolean brakeEvent = false;
 		double[] headingErrors = new double[samples.size()];
 		int laneViolations = 0;
-		boolean lvDetected = false;
 
 		double meanSteering = 0;
 		for (int i = 0; i < samples.size(); i++) {
@@ -122,8 +120,8 @@ public class Simulation {
 			if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
 				numSTEX3++;
 
-			double latdev = 3.66 * (s.getSimcarLanePosition() - LANE_CENTER);
-			sumLatDev += (latdev * latdev);
+			latDev.add(3.66 * (s.getSimcarLanePosition() - LANE_CENTER));
+			
 
 			sumSteeringDev = Math.abs(Math.pow((Utilities.rad2deg(s.getSteerAngle()) - meanSteering), 2));
 
@@ -187,7 +185,7 @@ public class Simulation {
 		r.driver = driver;
 		// if (r.task.numActions() > 0) r.taskTime = sumTime / numTasks;
 		// else r.taskTime = 0;
-		r.taskLatDev = Math.sqrt(sumLatDev / numTaskSamples);
+		r.taskLatDev = latDev.stddev();
 		r.taskLatVel = sumLatVel / numTaskSamples;
 		r.taskSpeedDev = Math.sqrt(sumSpeedDev / numTaskSamples);
 
