@@ -33,7 +33,7 @@ public class DrivingNightA_10segments extends Task {
 	private final double steerFactor_na = (3 * scale);
 	private final double accelFactor_thw = (2 * .40); // 1 orig, 3?
 	private final double accelFactor_dthw = (4 * .40); // 3 orig, 5?
-	private final double steerNaMax = .01;
+	private final double steerNaMax = .01; // orig .07
 	private final double thwFollow = 1.0; // 1.0 orig
 
 	private final double simulationDurarion = 60 * 30; // the driving sessions are 30 min (30 * 60sec)
