@@ -41,7 +41,6 @@ public class Sample {
 		simcarIndex = simcar.getIndex();
 		simcarSpeed = simcar.getSpeed();
 		steerAngle = simcar.getSteerAngle(); // steering angle, in radiant (I think)
-		System.out.println(steerAngle);
 		accelerator = simcar.getAccelerator();
 		brake = simcar.getBrake();
 //		autocarPos = autocar.getP().myclone();
