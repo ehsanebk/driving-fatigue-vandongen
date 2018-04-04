@@ -30,10 +30,10 @@ public class DrivingNightA_10segments extends Task {
 	private final double scale = .45;
 	private final double steerFactor_dfa = (16 * scale);
 	private final double steerFactor_dna = (4 * scale);
-	private final double steerFactor_na = (3 * scale);
-	private final double accelFactor_thw = (2 * .40); // 1 orig, 3?
-	private final double accelFactor_dthw = (4 * .40); // 3 orig, 5?
-	private final double steerNaMax = .01; // orig .07
+	private final double steerFactor_na = (3 * scale); // 3 orig
+	private final double accelFactor_thw = (3 * .40); // 1 .40 orig, 3?
+	private final double accelFactor_dthw = (5 * .40); // 3 .40 orig, 5?
+	private final double steerNaMax = .01; //.07 orig
 	private final double thwFollow = 1.0; // 1.0 orig
 
 	private final double simulationDurarion = 60 * 30; // the driving sessions are 30 min (30 * 60sec)
@@ -424,7 +424,7 @@ public class DrivingNightA_10segments extends Task {
 			if (counter == 20)
 				outputCSV.println(",\n");
 			outputCSV.print(",");
-			outputCSV.print("," + totalMicroLapses[counter].meanDF3());
+			outputCSV.print("," + totalMicroLapses[counter].mean());
 			outputCSV.flush();
 			counter++;
 		}
@@ -439,7 +439,7 @@ public class DrivingNightA_10segments extends Task {
 				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalLatDev[counter][i].meanDF3());
+				outputCSV.print("," + totalLatDev[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;
@@ -454,7 +454,7 @@ public class DrivingNightA_10segments extends Task {
 				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSTEX3[counter][i].meanDF3());
+				outputCSV.print("," + totalSTEX3[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;
@@ -469,7 +469,7 @@ public class DrivingNightA_10segments extends Task {
 				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSpeedDev[counter][i].meanDF3());
+				outputCSV.print("," + totalSpeedDev[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;

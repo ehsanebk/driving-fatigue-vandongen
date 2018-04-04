@@ -424,7 +424,7 @@ public class DrivingDayA_10segments extends Task {
 			if (counter == 20)
 				outputCSV.println(",\n");
 			outputCSV.print(",");
-			outputCSV.print("," + totalMicroLapses[counter].meanDF3());
+			outputCSV.print("," + totalMicroLapses[counter].mean());
 			outputCSV.flush();
 			counter++;
 		}
@@ -439,7 +439,7 @@ public class DrivingDayA_10segments extends Task {
 				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalLatDev[counter][i].meanDF3());
+				outputCSV.print("," + totalLatDev[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;
@@ -454,7 +454,7 @@ public class DrivingDayA_10segments extends Task {
 				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSTEX3[counter][i].meanDF3());
+				outputCSV.print("," + totalSTEX3[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;
@@ -469,7 +469,7 @@ public class DrivingDayA_10segments extends Task {
 				outputCSV.println(",\n");
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSpeedDev[counter][i].meanDF3());
+				outputCSV.print("," + totalSpeedDev[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;
