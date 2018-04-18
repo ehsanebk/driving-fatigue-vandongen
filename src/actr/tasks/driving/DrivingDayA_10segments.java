@@ -383,12 +383,14 @@ public class DrivingDayA_10segments extends Task {
 		Values[] totalMicroLapses = new Values [numberOfSimulations];
 		Values[][] totalLatDev = new Values[numberOfSimulations][10];
 		Values[][] totalSTEX3 = new Values[numberOfSimulations][10];
+		Values[][] totalSteeringDev = new Values[numberOfSimulations][10];
 		Values[][] totalSpeedDev = new Values[numberOfSimulations][10];
 		for (int i = 0; i < numberOfSimulations; i++){
 			totalMicroLapses[i] = new Values();
 			for (int j = 0; j < 10; j++) {
 				totalLatDev[i][j] = new Values();
 				totalSTEX3[i][j] = new Values();
+				totalSteeringDev[i][j] = new Values();
 				totalSpeedDev[i][j] = new Values();
 			}
 		}
@@ -403,14 +405,13 @@ public class DrivingDayA_10segments extends Task {
 				for (int j = 0; j < 10; j++) {
 					totalLatDev[i][j].add(results.taskLatDev_10Segments[j]);
 					totalSTEX3[i][j].add(results.STEX3_10Segments[j]);
+					totalSteeringDev[i][j].add(results.taskSteeringDev_10Segments[j]);
 					totalSpeedDev[i][j].add(results.taskSpeedDev_10Segments[j]);
 				}
 			}
 		}
 		
-		
-		
-		
+		//  Outputting the result
 		getModel().output("******** Results of Day A **********");
 		outputCSV.println("******** Results of Day A **********");
 		
@@ -455,6 +456,21 @@ public class DrivingDayA_10segments extends Task {
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
 				outputCSV.print("," + totalSTEX3[counter][i].mean());
+			}
+			outputCSV.flush();
+			counter++;
+		}
+		outputCSV.println(",");
+		outputCSV.println("******* Average SteeringDev for 10 Segments **********");
+		counter = 0 ;
+		while (counter < numberOfSimulations ) {
+			if (counter % 4 ==0)
+				outputCSV.println();
+			if (counter == 20)
+				outputCSV.println(",\n");
+			outputCSV.print(",");
+			for (int i = 0; i < 10; i++) {
+				outputCSV.print("," + totalSteeringDev[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;
@@ -633,6 +649,34 @@ public class DrivingDayA_10segments extends Task {
 					for (int j = 0; j < 10; j++) {
 						getModel().outputInLine(df.format(result.STEX3_10Segments[j]) +" ");
 						outputCSV.print(df.format(result.STEX3_10Segments[j]) +",");
+					}
+					getModel().outputInLine("\t");
+					outputCSV.print(",,");
+				}
+				getModel().outputInLine("\n\n");
+				outputCSV.print("\n\n");
+			}
+			outputCSV.flush();
+			
+			getModel().output("\n******* taskSteeringDev_10Segments ********** \n");
+			outputCSV.print("\n******* taskSteeringDev_10Segments ********** \n");
+			for (Task taskCast : tasks) {
+				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
+				numberOfSimulations = task.results.size(); // some task might not be complete
+				if (!task.completed){
+					getModel().outputInLine("*\t");
+					outputCSV.print("*,");
+				}
+				else{
+					getModel().outputInLine("\t");
+					outputCSV.print(",");
+				}
+				
+				for (int i = 0; i < numberOfSimulations; i++) {
+					Results result = task.results.elementAt(i);
+					for (int j = 0; j < 10; j++) {
+						getModel().outputInLine(df.format(result.taskSteeringDev_10Segments[j]) +" ");
+						outputCSV.print(df.format(result.taskSteeringDev_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",,");

@@ -91,7 +91,7 @@ public class Simulation {
 		int numTaskSamples = 0;
 		@SuppressWarnings("unused")
 		double sumTime = 0;
-		double sumSteeringDev = 0;
+		Values steeringDev = new Values();
 		Values latDev = new Values();
 		double sumLatVel = 0;
 		Values speedDev = new Values();
@@ -104,7 +104,7 @@ public class Simulation {
 
 		double meanSteering = 0;
 		for (int i = 0; i < samples.size(); i++) {
-			meanSteering += Utilities.rad2deg(samples.elementAt(i).getSteerAngle());
+			meanSteering += Utilities.rad2deg(samples.elementAt(i).getSimcarSteeringAngle());
 		}
 		meanSteering = meanSteering / samples.size();
 
@@ -117,13 +117,13 @@ public class Simulation {
 			// if ((s.event > 0) || (s.getTime() < stopTime + 5.0)) {
 
 			numTaskSamples++;
-			if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
+			if (Utilities.rad2deg(s.getSimcarSteeringAngle()) > 3.0)
 				numSTEX3++;
 
 			latDev.add(3.66 * (s.getSimcarLanePosition() - LANE_CENTER));
 			
 
-			sumSteeringDev = Math.abs(Math.pow((Utilities.rad2deg(s.getSteerAngle()) - meanSteering), 2));
+			steeringDev.add(Utilities.rad2deg(s.getSimcarSteeringAngle())); // = Math.abs(Math.pow((Utilities.rad2deg(s.getSteerAngle()) - meanSteering), 2));
 
 			sumLatVel += Math.abs(
 					(3.66 * (s.getSimcarLanePosition() - sprev.getSimcarLanePosition())) / Environment.SAMPLE_TIME);
@@ -201,7 +201,7 @@ public class Simulation {
 
 		r.laneViolations = laneViolations;
 		r.STEX3 = numSTEX3 / numTaskSamples * 100;
-		r.taskSteeringDev = Math.sqrt(sumSteeringDev / numTaskSamples);
+		r.taskSteeringDev = steeringDev.stddev();
 
 		r.lastIndex = samples.lastElement().getSimcarIndex();
 		r.taskTime = samples.lastElement().time;
@@ -217,22 +217,25 @@ public class Simulation {
 			double numSTEX3Seg = 0;
 			Values latDevSeg = new Values();
 			Values speedDevSeg = new Values();
+			Values steeringDevSeg = new Values();
 			// start_m is the start of each segment
 			double start_m = i * (distanceBetweensegments + segmentLength) + distanceBetweensegments;
 			for (int j = 1; j < samples.size(); j++) {
 				Sample s = samples.elementAt(j);
 				if (s.getSimcarIndex() > (start_m) && s.getSimcarIndex() < (start_m +segmentLength)){
 					numTaskSamplesSeg++;
-					if (Utilities.rad2deg(s.getSteerAngle()) > 3.0)
+					if (Utilities.rad2deg(s.getSimcarSteeringAngle()) > 3.0)
 						numSTEX3Seg++;
 					latDevSeg.add(3.66 * (s.getSimcarLanePosition() - LANE_CENTER));
-					speedDevSeg.add(s.getSimcarSpeed()); 
+					speedDevSeg.add(2.23694 * s.getSimcarSpeed());  // changing from km/h to MPH
+					steeringDevSeg.add(Utilities.rad2deg(s.getSimcarSteeringAngle()));
 				}
 				if (s.getSimcarIndex() >= (start_m +segmentLength))
 					break;
 			}
 			r.taskLatDev_10Segments[i]= latDevSeg.stddev();
-			r.taskSpeedDev_10Segments[i]= 2.23694 * speedDevSeg.stddev();
+			r.taskSpeedDev_10Segments[i]= speedDevSeg.stddev();
+			r.taskSteeringDev_10Segments[i]= steeringDevSeg.stddev();
 			r.STEX3_10Segments[i]= (numSTEX3Seg / numTaskSamplesSeg) * 100;
 			r.startIndex_10Segments[i] = (int)start_m;
 			r.endIndex_10Segments[i] = (int)start_m +segmentLength;

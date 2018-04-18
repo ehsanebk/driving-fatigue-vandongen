@@ -94,7 +94,7 @@ public class Sample {
 		return simcarSpeed;
 	}
 
-	public double getSteerAngle() {
+	public double getSimcarSteeringAngle() {
 		return steerAngle;
 	}
 
