@@ -228,7 +228,7 @@ public class Simulation {
 					if (Utilities.rad2deg(s.getSimcarSteeringAngle()) > 3.0)
 						numSTEX3Seg++;
 					latPosSeg.add(3.66 * (s.getSimcarLanePosition() - LANE_CENTER));
-					speedSeg.add(2.23694 * s.getSimcarSpeed());  // changing from km/h to MPH
+					speedSeg.add(2.23694 * s.getSimcarSpeed());  // changing from m/s to MPH
 					//steeringSeg.add(Utilities.rad2deg(s.getSimcarSteeringAngle()));
 					steeringSeg.add(s.getSimcarSteeringAngle());
 				}
