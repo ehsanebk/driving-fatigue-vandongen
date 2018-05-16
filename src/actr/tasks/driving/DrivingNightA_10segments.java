@@ -363,6 +363,12 @@ public class DrivingNightA_10segments extends Task {
 	// simulator.stop();
 	// }
 
+	// number of participants in the experiment is 13 for night condition
+	@Override
+	public int analysisIterations() {
+ 		return 13;
+	}
+
 	public static Image getImage(final String name) {
 		URL url = DrivingNightA_10segments.class.getResource("images/" + name);
 		return Toolkit.getDefaultToolkit().getImage(url);

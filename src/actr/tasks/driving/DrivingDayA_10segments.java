@@ -362,6 +362,12 @@ public class DrivingDayA_10segments extends Task {
 	// public void finish() {
 	// simulator.stop();
 	// }
+	
+	// number of participants in the experiment is 12 for day condition
+	@Override
+	public int analysisIterations() {
+ 		return 12;
+	}
 
 	public static Image getImage(final String name) {
 		URL url = DrivingDayA_10segments.class.getResource("images/" + name);
@@ -493,29 +499,46 @@ public class DrivingDayA_10segments extends Task {
 		
 		
 		try {
+			
 			DecimalFormat df = new DecimalFormat("#.000000");
 			outputCSV.println();
-			getModel().output("\n******* index ********** \n");
-			outputCSV.print("\n******* index ********** \n");
+			int count = 1;
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
 				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
-					getModel().outputInLine("*\t");
-					outputCSV.print("*,");
+					getModel().output("* Day " + count + "\n");
+					outputCSV.print("* Day " + count + "\n");
 				}
 				else{
-					getModel().outputInLine("\t");
-					outputCSV.print(",");
+					getModel().output("Day " + count + "\n");
+					outputCSV.print("Day " + count + "\n");
 				}
 				
+				//session #
+				getModel().output("Session #\t");
+				outputCSV.print("Session #,");			
+				for (int i = 0; i < numberOfSimulations; i++) {
+					getModel().outputInLine((i+4) +"\t");
+					outputCSV.print((i+4) +",");
+				}
+				getModel().outputInLine("\n");
+				outputCSV.print("\n");
+				
+				//LP_STD #
+				getModel().output("LP_STD\t");
+				outputCSV.print("LP_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
-					getModel().outputInLine(String.valueOf(df.format(result.lastIndex) +"\t"));
-					getModel().outputInLine("\t");
+					
+					getModel().outputInLine(String.valueOf(df.format(result.taskLatDev_10Segments) +"\t"));
 					outputCSV.print(String.valueOf(df.format(result.lastIndex) +","));
 					outputCSV.print(",");
 				}
+				
+				
+				
+				
 				getModel().outputInLine("\n\n");
 				outputCSV.print("\n\n");
 			}
