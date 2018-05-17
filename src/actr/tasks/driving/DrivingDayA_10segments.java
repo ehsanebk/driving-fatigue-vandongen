@@ -85,9 +85,9 @@ public class DrivingDayA_10segments extends Task {
 
 	@Override
 	public void start() {
-		out = new File("./result-10seg/Results_Model_TimePoints_Day_Cumulative.csv");
+//		out = new File("./result-10seg/Results_Model_TimePoints_Day_Cumulative.csv");
 		outPara = new File("./result-10seg/Results_Fatigue_Parameters(Day).csv");
-//		out = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Model_TimePoints_Day_CumulativeX.csv");
+		out = new File("/Users/Ehsan/OneDrive - Drexel University/Driving Data(Van Dongen)/Result_Model_Driving/Results_Model_TimePoints_Day_Cumulative.csv");
 //		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day)X.csv");
 
 		if (!new File(out.getParent()).exists()){
@@ -496,12 +496,12 @@ public class DrivingDayA_10segments extends Task {
 			outputCSV.flush();
 			counter++;
 		}
-		
+		getModel().outputInLine("\n");
+		outputCSV.print("\n");
+		outputCSV.flush();
 		
 		try {
-			
 			DecimalFormat df = new DecimalFormat("#.000000");
-			outputCSV.println();
 			int count = 1;
 			for (Task taskCast : tasks) {
 				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
@@ -525,25 +525,52 @@ public class DrivingDayA_10segments extends Task {
 				getModel().outputInLine("\n");
 				outputCSV.print("\n");
 				
-				//LP_STD #
+				//LP_STD 
 				getModel().output("LP_STD\t");
 				outputCSV.print("LP_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
 					
-					getModel().outputInLine(String.valueOf(df.format(result.taskLatDev_10Segments) +"\t"));
-					outputCSV.print(String.valueOf(df.format(result.lastIndex) +","));
+					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(result.taskLatDev_10Segments)) +"\t"));
+					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(result.taskLatDev_10Segments)) +","));
 					outputCSV.print(",");
 				}
+				getModel().outputInLine("\n");
+				outputCSV.print("\n");
 				
+				//Steering_STD 
+				getModel().output("Steering_STD\t");
+				outputCSV.print("Steering_STD,");			
+				for (int i = 0; i < numberOfSimulations; i++) {
+					Results result = task.results.elementAt(i);
+					
+					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(result.taskSteeringDev_10Segments)) +"\t"));
+					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(result.taskSteeringDev_10Segments)) +","));
+					outputCSV.print(",");
+				}
+				getModel().outputInLine("\n");
+				outputCSV.print("\n");
 				
+				//MPH_STD 
+				getModel().output("MPH_STD\t");
+				outputCSV.print("MPH_STD,");			
+				for (int i = 0; i < numberOfSimulations; i++) {
+					Results result = task.results.elementAt(i);
+					
+					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(result.taskSpeedDev_10Segments)) +"\t"));
+					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(result.taskSpeedDev_10Segments)) +","));
+					outputCSV.print(",");
+				}
+				getModel().outputInLine("\n");
+				outputCSV.print("\n");
+				outputCSV.flush();
 				
-				
-				getModel().outputInLine("\n\n");
-				outputCSV.print("\n\n");
+				count++;
 			}
 			outputCSV.flush();
 			
+			getModel().outputInLine("\n");
+			outputCSV.print("\n");
 			getModel().output("\n******* Task Time ********** \n");
 			outputCSV.print("\n******* Task Time ********** \n");
 			for (Task taskCast : tasks) {

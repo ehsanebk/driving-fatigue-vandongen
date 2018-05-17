@@ -243,10 +243,13 @@ public class Simulation {
 			r.endIndex_10Segments[i] = (int)start_m +segmentLength;
 		}
 		
+		
+		
 		// XXX DESTROYING THE SAMPLES VECTOR!
 		samples.clear();
 		samples = null;
 		
 		return r;
 	}
+	
 }

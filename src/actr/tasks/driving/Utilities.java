@@ -107,4 +107,13 @@ public class Utilities {
 		device.setFullScreenWindow(frame);
 		frame.validate();
 	}
+	
+	public static double arrayAverage(double[] array) {
+		double sum = 0;
+		for(int i=0; i < array.length ; i++)
+			sum = sum + array[i];
+		//calculate average value
+		return sum / array.length;
+
+	}
 }
