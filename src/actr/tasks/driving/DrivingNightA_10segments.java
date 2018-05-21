@@ -27,12 +27,12 @@ public class DrivingNightA_10segments extends Task {
 	private Simulation currentSimulation;
 	private JLabel nearLabel, carLabel, keypad;
 
-	private final double scale = .45;
+	private final double scale = .40;
 	private final double steerFactor_dfa = (16 * scale);
 	private final double steerFactor_dna = (4 * scale);
 	private final double steerFactor_na = (3 * scale); // 3 orig
-	private final double accelFactor_thw = (2 * .40); // 1 .40 orig, 3?
-	private final double accelFactor_dthw = (4 * .40); // 3 .40 orig, 5?
+	private final double accelFactor_thw = (1 * .40); // 1 .40 orig, 3?
+	private final double accelFactor_dthw = (3 * .40); // 3 .40 orig, 5?
 	private final double steerNaMax = .07; //.07 orig
 	private final double thwFollow = 1.0; // 1.0 orig
 
@@ -516,7 +516,7 @@ public class DrivingNightA_10segments extends Task {
 				}
 				
 				//session #
-				getModel().output("Session #\t");
+				getModel().outputInLine("Session #\t");
 				outputCSV.print("Session #,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					getModel().outputInLine((i+4) +"\t");
@@ -526,7 +526,7 @@ public class DrivingNightA_10segments extends Task {
 				outputCSV.print("\n");
 				
 				//LP_STD 
-				getModel().output("LP_STD\t");
+				getModel().outputInLine("LP_STD\t");
 				outputCSV.print("LP_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
@@ -539,7 +539,7 @@ public class DrivingNightA_10segments extends Task {
 				outputCSV.print("\n");
 				
 				//Steering_STD 
-				getModel().output("Steering_STD\t");
+				getModel().outputInLine("Steering_STD\t");
 				outputCSV.print("Steering_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
@@ -552,7 +552,7 @@ public class DrivingNightA_10segments extends Task {
 				outputCSV.print("\n");
 				
 				//MPH_STD 
-				getModel().output("MPH_STD\t");
+				getModel().outputInLine("MPH_STD\t");
 				outputCSV.print("MPH_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results result = task.results.elementAt(i);
