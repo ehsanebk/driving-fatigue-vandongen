@@ -1,10 +1,10 @@
 package actr.tasks.drivingPVT;
 
 import java.text.DecimalFormat;
-import java.util.Vector;
+import java.util.*;
 
 public class Values {
-	private Vector<Double> v;
+	Vector<Double> v;
 
 	public Values() {
 		v = new Vector<Double>();
@@ -23,6 +23,10 @@ public class Values {
 		return v.elementAt(i);
 	}
 
+	public void clear(){
+		v.clear();
+	}
+	
 	public void removeLast() {
 		if (v.size() > 0)
 			v.removeElementAt(v.size() - 1);
@@ -82,21 +86,6 @@ public class Values {
 		return meanInRange(min, max);
 	}
 
-	public boolean inRange(double x, double min, double max) {
-		return (x >= min && x <= max);
-	}
-
-	public String meanDF3() {
-		if (v.size() == 0)
-			return "0";
-		double sum = 0;
-		for (int i = 0; i < v.size(); i++)
-			sum += v.elementAt(i);
-		DecimalFormat df3 = new DecimalFormat("#.000");
-		return df3.format(sum / (1.0 * v.size()));
-	}
-
-
 	public double stddev() {
 		if (v.size() < 2)
 			return 0;
@@ -130,6 +119,59 @@ public class Values {
 		return rmse(0);
 	}
 
+	public double meanCrossings() {
+		if (v.size() == 0)
+			return 0;
+		double mean = mean();
+		double count = 0;
+		boolean pastPos = (v.elementAt(0) > mean);
+		for (int i = 0; i < v.size(); i++) {
+			boolean curPos = (v.elementAt(i) >= mean);
+			if (curPos != pastPos) {
+				count++;
+				pastPos = curPos;
+			}
+		}
+		return count;
+	}
+
+	public boolean inRange(double x, double min, double max) {
+		return (x >= min && x <= max);
+	}
+
+	public double stddevCrossings(double stddevs) {
+		if (v.size() == 0)
+			return 0;
+		double mean = mean();
+		double sd = stddev();
+		double min = mean - (stddevs * sd);
+		double max = mean + (stddevs * sd);
+		double count = 0;
+		for (int i = 1; i < v.size(); i++) {
+			double prevVal = v.elementAt(i - 1);
+			boolean prevIn = (prevVal >= min) && (prevVal <= max);
+			double curVal = v.elementAt(i);
+			boolean curIn = (curVal >= min) && (curVal <= max);
+			if (prevIn != curIn)
+				count++;
+		}
+		return count;
+	}
+
+	public double nonZeroRuns() {
+		if (v.size() == 0)
+			return 0;
+		double count = 0;
+		double lastval = v.elementAt(0);
+		for (int i = 1; i < v.size(); i++) {
+			double val = v.elementAt(i);
+			if (lastval == 0 && val > 0)
+				count++;
+			lastval = val;
+		}
+		return count;
+	}
+
 	public String toString(DecimalFormat df) {
 		if (v.size() == 0)
 			return "";
@@ -140,10 +182,8 @@ public class Values {
 		return s;
 	}
 
-	private final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("#.000");
-
-	@Override
 	public String toString() {
-		return toString(DEFAULT_FORMAT);
+		return toString(Utilities.df4);
 	}
+	
 }

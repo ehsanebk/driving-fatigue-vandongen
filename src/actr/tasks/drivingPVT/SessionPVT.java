@@ -1,168 +1,114 @@
 package actr.tasks.drivingPVT;
 
 import java.util.Vector;
-import actr.tasks.test.fatigue.Values;
 
 public class SessionPVT {
 
-	Vector<Block> blocks = new Vector<Block>();
-	int blockIndex = 1;
-	Values reactionTimes = new Values();
-	Values timeOfStimuliFromStart;
+	Values RT = new Values();
+	Values timeOfReactionsFromStart;
 	
 	double startTime = 0;
 	double totalSessionTime = 0;
-	int sleepAttacks = 0;
 	int stimulusIndex = 0;
 	int numberOfResponses = 0; // number of responses, this can be diff from the
 	// stimulusIndex because of false responses
-	double responseTotalTime = 0;
+	
 	double timeOfTheDay;
 	double bioMathValue;
 	double timeAwake;
 	
-	public int getNumberOfAlertResponses(){
-		int count = 0;
-		for (int i = 0; i < reactionTimes.size() ; i++) 
-			if (reactionTimes.get(i) > 150 && reactionTimes.get(i) <= 500)
-				count++;
-		return count;
-	}
-	
-	public int getNumberOfLapses(){
-		int count = 0;
-		for (int i = 0; i < reactionTimes.size() ; i++) 
-			if (reactionTimes.get(i) > 500)
-				count++;
-		return count;
-	}
-	
-	public int getNumberOfFalseAlerts(){
-		int count = 0;
-		for (int i = 0; i < reactionTimes.size() ; i++) 
-			if (reactionTimes.get(i) <= 150)
-				count++;
-		return count;
-	}
-	
-	public int getNumberOfSleepAttacks(){
-		return sleepAttacks;
-	}
-	
-	public double getProportionOfFalseAlert() {
-		return (double)getNumberOfFalseAlerts()/ reactionTimes.size();
-	}
-	public double getProportionOfLapses() {
-		return (double)getNumberOfLapses()/ reactionTimes.size();
-	}
-	public double getProportionOfSleepAttacks() {
-		return (double)getNumberOfSleepAttacks()/ reactionTimes.size();
-	}
-	
-	public double getProportionOfAlertResponses() {
-		return (double) getNumberOfAlertResponses() / reactionTimes.size();
-	}
-	
-	public double getMeanAlertReactionTimes() {
-		Values Alert = new Values();
-		for (int i = 0; i < reactionTimes.size(); i++) {
-			double r = reactionTimes.get(i);
-			if (r <= 500 && r >= 150)
-				Alert.add(r);
-		}
-		return Alert.average();
-	}
-	
-	public int[] getAlertResponseDistribution () {
-		int alertResponse[] = new int[35]; // Alert responses (150-500 ms,10 ms intervals )
-		for (int i = 0; i < reactionTimes.size(); i++) {
-			double responseTime = reactionTimes.get(i);
-			if (responseTime > 150 && responseTime <= 500){
-				// making the array for alert reaction times
-				alertResponse[(int) ((responseTime - 150) / 10)]++;
-			}
-		}
-		return alertResponse;
-	}
-	
-	public double[] getProportionAlertResponseDistribution () {
-		double proportionAlertResponse[] = new double[35]; // Alert responses (150-500 ms,10 ms intervals )
-		int alertResponse[] = getAlertResponseDistribution(); // Alert responses (150-500 ms,10 ms intervals )
-		for (int i = 0; i < 35; i++) {
-			proportionAlertResponse[i] = (double)alertResponse[i] / reactionTimes.size();
-		}
-		return proportionAlertResponse;
+	public SessionPVT() {
+		RT = new Values();
+		timeOfReactionsFromStart = new Values();
+		//blocks = new Vector<Block>();
 	}
 
-	// 5-min blocks
-	class Block {
-		Values blockReactionTimes = new Values();
-		double startTime;
-		double totalBlockTime;
-		int alertResponse[] = new int[35]; // Alert responses (150-500ms, 10ms
-		// intervals )
-		int numberOfResponses = 0;
-		int sleepAttacks = 0;
-		public int getNumberOfAlertResponses(){
-			int count = 0;
-			for (int i = 0; i < blockReactionTimes.size() ; i++)
-				if (blockReactionTimes.get(i) > 150 && blockReactionTimes.get(i) <= 500)
-					count++;
-			return count;
-		}
-		
-		public int getNumberOfLapses(){
-			int count = 0;
-			for (int i = 0; i < blockReactionTimes.size() ; i++) 
-				if (blockReactionTimes.get(i) > 500)
-					count++;
-			return count;
-		}
-		
-		public int getNumberOfFalseAlerts(){
-			int count = 0;
-			for (int i = 0; i < blockReactionTimes.size() ; i++) 
-				if (blockReactionTimes.get(i) <= 150)
-					count++;
-			return count;
-		}
-		public double getProportionOfFalseAlert() {
-			return (double)getNumberOfFalseAlerts()/ blockReactionTimes.size();
-		}
-		public double getProportionOfLapses() {
-			return (double)getNumberOfLapses()/ blockReactionTimes.size();
-		}
-		public double getProportionOfAlertResponses() {
-			return (double) getNumberOfAlertResponses() / blockReactionTimes.size();
-		}
-		public double getMeanAlertReactionTimes() {
-			Values Alert = new Values();
-			for (int i = 0; i < blockReactionTimes.size(); i++) {
-				double r = blockReactionTimes.get(i);
-				if (r <= 500 && r >= 150)
-					Alert.add(r);
-			}
-			return Alert.average();
-		}
-		public int[] getAlertResponseDistribution () {
-			int alertResponse[] = new int[35]; // Alert responses (150-500 ms,10 ms intervals )
-			for (int i = 0; i < blockReactionTimes.size(); i++) {
-				double responseTime = blockReactionTimes.get(i);
-				if (responseTime > 150 && responseTime <= 500){
-					// making the array for alert reaction times
-					alertResponse[(int) ((responseTime - 150) / 10)]++;
-				}
-			}
-			return alertResponse;
-		}
-		
-		public double[] getProportionAlertResponseDistribution () {
-			double proportionAlertResponse[] = new double[35]; // Alert responses (150-500 ms,10 ms intervals )
-			int alertResponse[] = getAlertResponseDistribution(); // Alert responses (150-500 ms,10 ms intervals )
-			for (int i = 0; i < 35; i++) {
-				proportionAlertResponse[i] = (double)alertResponse[i] / blockReactionTimes.size();
-			}
-			return proportionAlertResponse;
-		}
+	// Sleep attacks at :
+	// 3207  S#10 Pre
+	// 3440  S#34 Post
+	public boolean sleepAttacks(){
+		for (int i = 0; i < RT.size(); i++) 
+			if ( RT.get(i) == 30000)
+				return true;
+		return false;
+
 	}
+	
+	public double getSessionAveAlertResponses(){
+		return RT.averageInRange(150, 500);
+	}
+	
+	public int getSessionNumberOfLapses(){
+		int l = 0;
+		for (int i = 0; i < RT.size(); i++) 
+			if ( RT.get(i) >= 500 && RT.get(i) < 30000)
+				l++;
+		return l;
+	}
+	
+	/**
+	 * @return Log-transformed Signal-to-Noise Ratio (LSNR) approximation
+	 */
+	public double getSessionLSNRapx(){
+		// LSNR_apx = B ((1/N) sum_1^N (1 / RT_i))    B = 3855ms
+		int N = 0;
+		int B = 3855;
+		double sum = 0;
+		for (int i = 0; i < RT.size(); i++) 
+			if ( RT.get(i) >= 150 && RT.get(i) < 30000){
+				sum = sum + 1.0 / RT.get(i);
+				N++;
+			}
+		return B * ((1.0/N) * sum);
+	}
+	
+	public Values getRTblock(int blockNumber){ // starts from 0
+		Values v = new Values();
+		if (blockNumber == 0)
+			v.add(RT.get(0));
+		for (int i = 1; i < timeOfReactionsFromStart.size(); i++) 
+			if (timeOfReactionsFromStart.get(i-1) > 300.0*(blockNumber)-1 && timeOfReactionsFromStart.get(i-1) <= 300.0*(blockNumber+1)-1){
+				if (RT.get(i) < 30000)
+					v.add(RT.get(i));
+			}
+		return v;
+	}
+	
+	/**
+	 * @param blockNumber
+	 * starts from 0
+	 * @return
+	 */
+	public int getBlockLapses(int blockNumber){
+		Values RTblock = getRTblock(blockNumber);
+		int l = 0;
+		for (int i = 0; i < RTblock.size(); i++) 
+			if (RTblock.get(i) >= 500 && RT.get(i) < 30000)
+				l++;
+		return l;
+	}
+
+	/**
+	 * starts from 0
+	 * @return Log-transformed Signal-to-Noise Ratio (LSNR) approximation
+	 */
+	public double getBlockLSNRapx(int blockNumber){
+		Values RTblock = getRTblock(blockNumber);
+		// LSNR_apx = B ((1/N) sum_1^N (1 / RT_i))    B = 3855ms
+		int N = 0;
+		int B = 3855;
+		double sum = 0;
+		for (int i = 0; i < RTblock.size(); i++) 
+			if ( RTblock.get(i) >= 150 && RT.get(i) < 30000){
+				sum = sum + 1.0 / RTblock.get(i);
+				N++;
+			}
+		return B * ((1.0/N) * sum);
+	}
+
+	public double getBlockAveAlertResponses(int blockNumber){
+		Values RTblock = getRTblock(blockNumber);
+		return RTblock.averageInRange(150, 500);
+	}
+	
 }

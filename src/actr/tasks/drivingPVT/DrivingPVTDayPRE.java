@@ -50,7 +50,6 @@ public class DrivingPVTDayPRE extends Task {
 	Random random;
 	
 	int sessionNumber = 0; // starts from 0
-	private Block currentBlock;
 	private SessionPVT currentSession;
 	private Vector<SessionPVT> sessions = new Vector<SessionPVT>();
 
@@ -68,7 +67,6 @@ public class DrivingPVTDayPRE extends Task {
 		random = new Random();
 		lastTime = 0;
 		currentSession = new SessionPVT();
-		currentBlock = currentSession.new Block();
 		stimulusVisibility = false;
 
 		getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
@@ -92,7 +90,7 @@ public class DrivingPVTDayPRE extends Task {
 	@Override
 	public void update(double time) {
 		currentSession.totalSessionTime = getModel().getTime() - currentSession.startTime;
-		currentBlock.totalBlockTime = getModel().getTime() - currentBlock.startTime;
+		
 		
 		if (currentSession.totalSessionTime <= PVTduration) {
 			label.setText(stimulus);
@@ -106,7 +104,6 @@ public class DrivingPVTDayPRE extends Task {
 
 			// Handling the sleep attacks -- adding an event in 30 s to see if
 			// the current stimulus is still on
-			currentSession.stimulusIndex++;
 			addEvent(new Event(getModel().getTime() + 30.0, "task", "update") {
 				@Override
 				public void action() {
@@ -115,8 +112,9 @@ public class DrivingPVTDayPRE extends Task {
 						label.setVisible(false);
 						processDisplay();
 						stimulusVisibility = false;
-						currentSession.sleepAttacks++;
-						currentBlock.sleepAttacks++;
+						
+						currentSession.RT.add(30000);
+						currentSession.timeOfReactionsFromStart.add(getModel().getTime() - currentSession.startTime);
 						// when sleep attack happens we add to the number of responses (NOT DOING IT FOR NOW)
 						// currentSession.numberOfResponses++; 
 						getModel().output("Sleep attack at session time  ==> " + (getModel().getTime() - currentSession.startTime)
@@ -131,20 +129,10 @@ public class DrivingPVTDayPRE extends Task {
 					repaint();
 				}
 			});
-
-			// Handling the 5-min blocks
-			// adding a new block
-			if (currentBlock.totalBlockTime >= 300 ) {
-				currentSession.blocks.add(currentBlock);
-				currentBlock = currentSession.new Block();
-				currentBlock.startTime = currentSession.startTime + currentSession.blockIndex * 300.0;
-				currentSession.blockIndex++;
-			}
 		}
 
 		// Starting a new Session
 		else {
-			currentSession.blocks.add(currentBlock);
 			currentSession.bioMathValue = getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[sessionNumber]);
 			currentSession.timeAwake = getModel().getFatigue().getTimeAwake(timesOfPVT[sessionNumber]);
 			currentSession.timeOfTheDay = timesOfPVT[sessionNumber] % 24;
@@ -157,11 +145,9 @@ public class DrivingPVTDayPRE extends Task {
 					@Override
 					public void action() {
 						currentSession = new SessionPVT();
-						currentBlock = currentSession.new Block();
 						stimulusVisibility = false;
 						sleepAttackIndex = 0;
 						currentSession.startTime = getModel().getTime();
-						currentBlock.startTime = getModel().getTime();
 						getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
 						getModel().getFatigue().startFatigueSession();
 						
@@ -201,10 +187,7 @@ public class DrivingPVTDayPRE extends Task {
 			
 			if (response != null) {
 				currentSession.numberOfResponses++;
-				currentBlock.numberOfResponses++;
-				currentSession.responseTotalTime += responseTime;
-				currentSession.reactionTimes.add(responseTime);
-				currentBlock.blockReactionTimes.add(responseTime);
+				currentSession.RT.add(responseTime);
 			}
 
 			label.setVisible(false);
@@ -214,10 +197,9 @@ public class DrivingPVTDayPRE extends Task {
 			addUpdate(interStimulusInterval);
 			stimulusVisibility = false;
 		} else {   // False start situation
-			currentSession.reactionTimes.add(1);
-			currentBlock.blockReactionTimes.add(1);
+			currentSession.RT.add(1);
 			if (getModel().isVerbose())
-				getModel().output("False alert happened " + "- Session: " + sessionNumber + " Block:" + (currentSession.blocks.size() + 1)
+				getModel().output("False alert happened " + "- Session: " + sessionNumber 
 						+ "   time of session : " + (getModel().getTime() - currentSession.startTime));
 		}
 	}
