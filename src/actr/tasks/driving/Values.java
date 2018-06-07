@@ -22,6 +22,10 @@ public class Values {
 	public double get(int i) {
 		return v.elementAt(i);
 	}
+	
+	public void clear(){
+		v.clear();
+	}
 
 	public void removeLast() {
 		if (v.size() > 0)
@@ -71,8 +75,25 @@ public class Values {
 		return df3.format(sum / (1.0 * v.size()));
 	}
 
+	public double meanInRange(double min, double max) {
+		if (v.size() == 0)
+			return 0;
+		double sum = 0;
+		int counter = 0;
+		for (int i = 0; i < v.size(); i++)
+			if (inRange(v.elementAt(i), min, max)){
+				sum += v.elementAt(i);
+				counter ++;
+			}
+		return sum / (1.0 * counter);
+	}
+	
 	public double average() {
 		return mean();
+	}
+	
+	public double averageInRange(double min, double max){
+		return meanInRange(min, max);
 	}
 
 	public double stddev() {
@@ -107,7 +128,60 @@ public class Values {
 	public double rmse() {
 		return rmse(0);
 	}
+	
+	public double meanCrossings() {
+		if (v.size() == 0)
+			return 0;
+		double mean = mean();
+		double count = 0;
+		boolean pastPos = (v.elementAt(0) > mean);
+		for (int i = 0; i < v.size(); i++) {
+			boolean curPos = (v.elementAt(i) >= mean);
+			if (curPos != pastPos) {
+				count++;
+				pastPos = curPos;
+			}
+		}
+		return count;
+	}
 
+	public boolean inRange(double x, double min, double max) {
+		return (x >= min && x <= max);
+	}
+
+	public double stddevCrossings(double stddevs) {
+		if (v.size() == 0)
+			return 0;
+		double mean = mean();
+		double sd = stddev();
+		double min = mean - (stddevs * sd);
+		double max = mean + (stddevs * sd);
+		double count = 0;
+		for (int i = 1; i < v.size(); i++) {
+			double prevVal = v.elementAt(i - 1);
+			boolean prevIn = (prevVal >= min) && (prevVal <= max);
+			double curVal = v.elementAt(i);
+			boolean curIn = (curVal >= min) && (curVal <= max);
+			if (prevIn != curIn)
+				count++;
+		}
+		return count;
+	}
+	
+	public double nonZeroRuns() {
+		if (v.size() == 0)
+			return 0;
+		double count = 0;
+		double lastval = v.elementAt(0);
+		for (int i = 1; i < v.size(); i++) {
+			double val = v.elementAt(i);
+			if (lastval == 0 && val > 0)
+				count++;
+			lastval = val;
+		}
+		return count;
+	}
+	
 	public String toString(DecimalFormat df) {
 		if (v.size() == 0)
 			return "";

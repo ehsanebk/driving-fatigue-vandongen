@@ -7,12 +7,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.Vector;
-
 import javax.swing.JLabel;
-
 import actr.task.Result;
 import actr.task.Task;
-import actr.tasks.drivingPVT.Values;
 
 /**
  * The main Driving task class that sets up the simulation and starts periodic

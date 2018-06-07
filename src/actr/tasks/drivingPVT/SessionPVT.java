@@ -1,6 +1,6 @@
 package actr.tasks.drivingPVT;
 
-import java.util.Vector;
+import actr.tasks.driving.Values;
 
 public class SessionPVT {
 
@@ -23,15 +23,11 @@ public class SessionPVT {
 		//blocks = new Vector<Block>();
 	}
 
-	// Sleep attacks at :
-	// 3207  S#10 Pre
-	// 3440  S#34 Post
 	public boolean sleepAttacks(){
 		for (int i = 0; i < RT.size(); i++) 
 			if ( RT.get(i) == 30000)
 				return true;
 		return false;
-
 	}
 	
 	public double getSessionAveAlertResponses(){
@@ -46,10 +42,18 @@ public class SessionPVT {
 		return l;
 	}
 	
+	public int getSessionNumberOfFalseAlerts(){
+		int l = 0;
+		for (int i = 0; i < RT.size(); i++) 
+			if ( RT.get(i) < 150)
+				l++;
+		return l;
+	}
+	
 	/**
 	 * @return Log-transformed Signal-to-Noise Ratio (LSNR) approximation
 	 */
-	public double getSessionLSNRapx(){
+	public double getSessionLSNR_apx(){
 		// LSNR_apx = B ((1/N) sum_1^N (1 / RT_i))    B = 3855ms
 		int N = 0;
 		int B = 3855;
@@ -92,7 +96,7 @@ public class SessionPVT {
 	 * starts from 0
 	 * @return Log-transformed Signal-to-Noise Ratio (LSNR) approximation
 	 */
-	public double getBlockLSNRapx(int blockNumber){
+	public double getBlockLSNR_apx(int blockNumber){
 		Values RTblock = getRTblock(blockNumber);
 		// LSNR_apx = B ((1/N) sum_1^N (1 / RT_i))    B = 3855ms
 		int N = 0;

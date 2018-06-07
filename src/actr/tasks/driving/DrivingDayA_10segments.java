@@ -13,7 +13,6 @@ import java.util.Vector;
 import javax.swing.JLabel;
 import actr.task.Result;
 import actr.task.Task;
-import actr.tasks.drivingPVT.Values;
 
 /**
  * The main Driving task class that sets up the simulation and starts periodic
