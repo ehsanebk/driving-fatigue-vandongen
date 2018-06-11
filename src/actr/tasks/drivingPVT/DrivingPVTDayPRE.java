@@ -2,7 +2,6 @@ package actr.tasks.drivingPVT;
 
 import java.util.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
@@ -10,7 +9,6 @@ import actr.model.Event;
 import actr.model.Symbol;
 import actr.task.*;
 import actr.tasks.driving.Values;
-import actr.tasks.test.fatigue.PVT88hours;
 
 /**
  * Model of PVT test and Fatigue mechanism
@@ -54,9 +52,7 @@ public class DrivingPVTDayPRE extends Task {
 	int sessionNumber = 0; // starts from 0
 	private SessionPVT currentSession;
 	private Vector<SessionPVT> sessions = new Vector<SessionPVT>();
-
-	private PrintStream data;
-
+	
 	public DrivingPVTDayPRE() {
 		super();
 		label = new TaskLabel("", 200, 150, 40, 20);
@@ -325,33 +321,68 @@ public class DrivingPVTDayPRE extends Task {
 					);
 			}
 
-			/// Outputting the raw data
-//			getModel().output("\n*******************************************\n");
-//			
-//			for (Task taskCast : tasks) {
-//				DrivingPVTNightA task = (DrivingPVTNightA) taskCast;
-//				for (int i = 0; i < numberOfSessions; i++) {
-//					getModel().outputInLine(task.sessions.get(i).reactionTimes.toString() + "\n");
-//					for (int j = 0; j < task.sessions.get(i).blocks.size(); j++) {
-//						getModel().outputInLine(task.sessions.get(i).blocks.get(j).blockReactionTimes.toString()+ "\n");
-//					}
-//					getModel().output("***");
-//				}
-//				getModel().output("\n***********************************\n");
-//			}
+			/// Outputting the raw data to a file
 			
-//			File dataFile = new File("./result/BioMathValuesNightA.txt");
-//			if (!dataFile.exists())
-//				dataFile.createNewFile();
-//			PrintStream data = new PrintStream(dataFile);
-//
-//			for (int h = 0; h < timesOfPVT[timesOfPVT.length - 1]; h++) {
-//				data.println(h + "\t" + df3.format(getModel().getFatigue().getBioMathModelValueforHour(h)));
-			//			}
-			//			data.close();
+			File dataFile = new File("/Users/Ehsan/OneDrive - Drexel University/Driving Data(Van Dongen)/Result_PVT/Model_PVT_DayPRE.csv");
+			if (!dataFile.exists())
+				dataFile.createNewFile();
+			PrintWriter fileOut = new PrintWriter(dataFile);
+			
+			fileOut.println("\n Day PRE \n");
+			
+			for (Task taskCast : tasks) {
+				DrivingPVTDayPRE task = (DrivingPVTDayPRE) taskCast;
+				fileOut.print("Session Ave Lapses,");
+				for (int i = 0; i < numberOfSessions; i++) {
+					fileOut.print(task.sessions.get(i).getSessionNumberOfLapses() + ",");
+				}
+				fileOut.print("\n");
+				fileOut.flush();
+				
+				fileOut.print("B1 Ave Lapses,");
+				for (int i = 0; i < numberOfSessions; i++) {
+					fileOut.print(task.sessions.get(i).getBlockLapses(0) + ",");
+				}
+				fileOut.print("\n");
+				fileOut.flush();
+				
+				fileOut.print("B2 Ave Lapses,");
+				for (int i = 0; i < numberOfSessions; i++) {
+					fileOut.print(task.sessions.get(i).getBlockLapses(1) + ",");
+				}
+				fileOut.print("\n");
+				fileOut.flush();
+				
+				fileOut.print("Session Ave LSNR_apx,");
+				for (int i = 0; i < numberOfSessions; i++) {
+					fileOut.print(task.sessions.get(i).getSessionLSNR_apx() + ",");
+				}
+				fileOut.print("\n");
+				fileOut.flush();
+				
+				fileOut.print("B1 Ave LSNR_apx,");
+				for (int i = 0; i < numberOfSessions; i++) {
+					fileOut.print(task.sessions.get(i).getBlockLSNR_apx(0) + ",");
+				}
+				fileOut.print("\n");
+				fileOut.flush();
+				
+				fileOut.print("B2 Ave LSNR_apx,");
+				for (int i = 0; i < numberOfSessions; i++) {
+					fileOut.print(task.sessions.get(i).getBlockLSNR_apx(1) + ",");
+				}
+				
+				fileOut.print("\n****\n");
+				fileOut.flush();
+			}
+			
+			fileOut.close();
 
+			
+			
+			
 			// Writing Numbers to the file based on sessions
-			File dataSessionFile = new File("./resultPVT/dataSessions_Day_PRE.txt");
+			File dataSessionFile = new File("./resultPVT/Day_PRE.txt");
 			if (!dataSessionFile.exists())
 				dataSessionFile.createNewFile();
 			PrintStream dataSession = new PrintStream(dataSessionFile);

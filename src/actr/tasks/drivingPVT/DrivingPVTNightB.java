@@ -4,10 +4,12 @@ import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import actr.model.Event;
 import actr.model.Symbol;
 import actr.task.*;
+import actr.tasks.driving.Values;
 
 /**
  * Model of PVT test and Fatigue mechanism
