@@ -66,7 +66,7 @@ public class DrivingPVTNightPOST extends Task {
 		lastTime = 0;
 		currentSession = new SessionPVT();
 		stimulusVisibility = false;
-
+		getModel().getFatigue().setCumulativeParameter(10);
 		getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
 		getModel().getFatigue().startFatigueSession();
 
