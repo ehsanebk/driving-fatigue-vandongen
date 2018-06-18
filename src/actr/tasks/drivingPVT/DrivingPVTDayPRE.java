@@ -323,7 +323,7 @@ public class DrivingPVTDayPRE extends Task {
 
 			/// Outputting the raw data to a file
 			
-			File dataFile = new File("/Users/Ehsan/OneDrive - Drexel University/Driving Data(Van Dongen)/Result_PVT/Model_PVT_DayPRE.csv");
+			File dataFile = new File("/Users/Ehsan/OneDrive - Drexel University/Driving Data(Van Dongen)/Result_PVT/RawData/Model_PVT_DayPRE.csv");
 			if (!dataFile.exists())
 				dataFile.createNewFile();
 			PrintWriter fileOut = new PrintWriter(dataFile);
