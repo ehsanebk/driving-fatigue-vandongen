@@ -30,8 +30,12 @@ public class SessionPVT {
 		return false;
 	}
 	
-	public double getSessionAveAlertResponses(){
+	public double getSessionAveAlertRT(){
 		return RT.averageInRange(150, 500);
+	}
+	
+	public double getSessionAveRT(){
+		return RT.average();
 	}
 	
 	public int getSessionNumberOfLapses(){

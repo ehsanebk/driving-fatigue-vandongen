@@ -371,6 +371,13 @@ public class DrivingPVTDayPRE extends Task {
 				for (int i = 0; i < numberOfSessions; i++) {
 					fileOut.print(task.sessions.get(i).getBlockLSNR_apx(1) + ",");
 				}
+				fileOut.print("\n");
+				fileOut.flush();
+				
+				fileOut.print("Session Ave RT,");
+				for (int i = 0; i < numberOfSessions; i++) {
+					fileOut.print(task.sessions.get(i).getSessionAveRT() + ",");
+				}
 				
 				fileOut.print("\n****\n");
 				fileOut.flush();
