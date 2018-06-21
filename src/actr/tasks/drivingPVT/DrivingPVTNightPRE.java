@@ -372,6 +372,16 @@ public class DrivingPVTNightPRE extends Task {
 					fileOut.print(task.sessions.get(i).getBlockLSNR_apx(1) + ",");
 				}
 				
+//				fileOut.print("Session Ave RT,");
+//				for (int i = 0; i < numberOfSessions; i++) {
+//					fileOut.print(task.sessions.get(i).getSessionAveRT() + ",");
+//				}
+//				
+//				fileOut.print("Session Ave Alert RT,");
+//				for (int i = 0; i < numberOfSessions; i++) {
+//					fileOut.print(task.sessions.get(i).getSessionAveAlertRT() + ",");
+//				}
+				
 				fileOut.print("\n****\n");
 				fileOut.flush();
 			}

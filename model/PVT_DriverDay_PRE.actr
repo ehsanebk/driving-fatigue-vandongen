@@ -31,7 +31,7 @@
     :egs .25
     ;:cst t
     
-    :dat .05
+    :dat .04 ;; orig .05
     :randomize-time t
     :vpft t
     

@@ -66,7 +66,7 @@ public class DrivingPVTNightPOST extends Task {
 		lastTime = 0;
 		currentSession = new SessionPVT();
 		stimulusVisibility = false;
-		getModel().getFatigue().setCumulativeParameter(10);
+		getModel().getFatigue().setCumulativeParameter(5);
 		getModel().getFatigue().setFatigueHour(timesOfPVT[sessionNumber]);
 		getModel().getFatigue().startFatigueSession();
 
@@ -371,6 +371,16 @@ public class DrivingPVTNightPOST extends Task {
 				for (int i = 0; i < numberOfSessions; i++) {
 					fileOut.print(task.sessions.get(i).getBlockLSNR_apx(1) + ",");
 				}
+				
+//				fileOut.print("Session Ave RT,");
+//				for (int i = 0; i < numberOfSessions; i++) {
+//					fileOut.print(task.sessions.get(i).getSessionAveRT() + ",");
+//				}
+//				
+//				fileOut.print("Session Ave Alert RT,");
+//				for (int i = 0; i < numberOfSessions; i++) {
+//					fileOut.print(task.sessions.get(i).getSessionAveAlertRT() + ",");
+//				}
 				
 				fileOut.print("\n****\n");
 				fileOut.flush();
