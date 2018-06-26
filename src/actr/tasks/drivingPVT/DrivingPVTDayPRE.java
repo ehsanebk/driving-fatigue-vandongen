@@ -2,6 +2,7 @@ package actr.tasks.drivingPVT;
 
 import java.util.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
@@ -391,7 +392,26 @@ public class DrivingPVTDayPRE extends Task {
 			
 			fileOut.close();
 
+			// Writing raw data to file based on sessions
+			File rawDataOut = new File("/Users/Ehsan/OneDrive - Drexel University/Driving Data(Van Dongen)/Result_PVT/RawData/Model_PVT_DayPRE(Raw).csv");
+			PrintWriter rawOutputCSV = null;
+			rawOutputCSV = new PrintWriter(rawDataOut);
 			
+			rawOutputCSV.println("\n Day PRE \n");
+			for (Task taskCast : tasks) {
+				DrivingPVTDayPRE task = (DrivingPVTDayPRE) taskCast;
+				for (int i = 0; i < numberOfSessions; i++) {
+					rawOutputCSV.print("session #"+ i+1 + ",");
+					for (int j = 0; j < task.sessions.get(i).RT.size(); j++) {
+						rawOutputCSV.print((int)task.sessions.get(i).RT.get(j) + ",");
+					}
+					rawOutputCSV.print("\n");
+				}
+				rawOutputCSV.print("\n****\n");
+				rawOutputCSV.flush();
+				
+			}
+			rawOutputCSV.close();
 			
 			
 			// Writing Numbers to the file based on sessions
