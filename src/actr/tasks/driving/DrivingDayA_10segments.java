@@ -106,7 +106,7 @@ public class DrivingDayA_10segments extends Task {
 		completed = true;
 		currentSimulation = new Simulation();
 
-		getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
+		getModel().getFatigue().setFatigueStartTime(timesOfPVT[simulationNumber]);
 		getModel().getFatigue().startFatigueSession();
 
 		if (getModel().getRealTime()) {
@@ -192,7 +192,7 @@ public class DrivingDayA_10segments extends Task {
 				if (simulationNumber < timesOfPVT.length) {
 					currentSimulation = new Simulation();
 					simulationStartTime = time;
-					getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
+					getModel().getFatigue().setFatigueStartTime(timesOfPVT[simulationNumber]);
 					getModel().getFatigue().startFatigueSession();
 
 					removeAll();

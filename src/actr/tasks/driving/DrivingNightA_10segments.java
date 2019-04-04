@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JLabel;
@@ -22,7 +23,7 @@ import actr.task.Task;
  */
 public class DrivingNightA_10segments extends Task {
 	// --- Task Code ---//
-
+	
 	private Simulation currentSimulation;
 	private JLabel nearLabel, carLabel, keypad;
 
@@ -35,7 +36,8 @@ public class DrivingNightA_10segments extends Task {
 	private final double steerNaMax = .07; //.07 orig
 	private final double thwFollow = 1.0; // 1.0 orig
 
-	private final double simulationDurarion = 60 * 30; // the driving sessions are 30 min (30 * 60sec)
+	private double simulationDurarion = 0; // the driving sessions are 30 min (30 * 60sec)
+	private ArrayList<Double> timesOfSimulation;
 	private final double simulationDistance = 45061.6;  // equal to 28 miles
 
 	private double accelBrake = 0, speed = 0;
@@ -44,21 +46,6 @@ public class DrivingNightA_10segments extends Task {
 	static final int centerX = (minX + maxX) / 2, centerY = (minY + maxY) / 2;
 
 	private static Simulator simulator = null;
-
-	private double[] timesOfPVT = {
-			//
-			45.0, 48.0, 51.0, 54.0, // day2
-			69.0, 72.0, 75.0, 78.0, // day3
-			93.0, 96.0, 99.0, 102.0, // day4
-			117.0, 120.0, 123.0, 126.0, // day5
-			141.0, 144.0, 147.0, 150.0, // day6
-
-			189.0, 192.0, 195.0, 198.0, // day9
-			213.0, 216.0, 219.0, 222.0, // day10
-			237.0, 240.0, 243.0, 246.0, // day11
-			261.0, 264.0, 267.0, 270.0, // day12
-			285.0, 288.0, 291.0, 294.0 // day13
-	};
 
 	int simulationNumber = 0;
 	double simulationStartTime = 0;
@@ -106,7 +93,10 @@ public class DrivingNightA_10segments extends Task {
 		completed = true;
 		currentSimulation = new Simulation();
 
-		getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
+		simulationDurarion = getModel().getFatigue().getTaskDuration(); // the driving sessions are 30 min (30 * 60sec)
+		timesOfSimulation = getModel().getFatigue().getTaskSchdule();
+		
+		getModel().getFatigue().setFatigueStartTime(timesOfSimulation.get(simulationNumber));
 		getModel().getFatigue().startFatigueSession();
 
 		if (getModel().getRealTime()) {
@@ -157,7 +147,7 @@ public class DrivingNightA_10segments extends Task {
 				if (getModel().getProcedural().isMicroLapse())
 					currentSimulation_NumberOf_MicroLapses++;
 				currentSimulation_NumberOf_Productions++;
-				if (simulationNumber == timesOfPVT.length-1)
+				if (simulationNumber == timesOfSimulation.size()-1)
 					outputPara.println(currentSimulation.getEnvironment().getTime()+","
 							+ getModel().getProcedural().getFatigueUtility() + ","
 							+ getModel().getProcedural().getFinalInstUtility() + "," 
@@ -189,10 +179,10 @@ public class DrivingNightA_10segments extends Task {
 				microLapses.add(l);
 				simulationNumber++;
 				// go to the next simulation or stop the model
-				if (simulationNumber < timesOfPVT.length) {
+				if (simulationNumber < timesOfSimulation.size()) {
 					currentSimulation = new Simulation();
 					simulationStartTime = time;
-					getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
+					getModel().getFatigue().setFatigueStartTime(timesOfSimulation.get(simulationNumber));
 					getModel().getFatigue().startFatigueSession();
 
 					removeAll();

@@ -77,7 +77,7 @@ public class DrivingNightB extends Task {
 	public void start() {
 		currentSimulation = new Simulation();
 
-		getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
+		getModel().getFatigue().setFatigueStartTime(timesOfPVT[simulationNumber]);
 		getModel().getFatigue().startFatigueSession();
 
 		if (getModel().getRealTime()) {
@@ -137,7 +137,7 @@ public class DrivingNightB extends Task {
 				if (simulationNumber < timesOfPVT.length) {
 					currentSimulation = new Simulation();
 					simulationStartTime = time;
-					getModel().getFatigue().setFatigueHour(timesOfPVT[simulationNumber]);
+					getModel().getFatigue().setFatigueStartTime(timesOfPVT[simulationNumber]);
 					getModel().getFatigue().startFatigueSession();
 
 					removeAll();
@@ -450,18 +450,18 @@ public class DrivingNightB extends Task {
 			getModel().output("Day\t21:00\t00:00\t03:00\t06:00 ");
 			for (int i = 0; i < 5; i++) {
 				getModel().output((i + 2) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4])) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4 + 1])) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4 + 2])) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4 + 3])));
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4])) + "\t"
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4 + 1])) + "\t"
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4 + 2])) + "\t"
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4 + 3])));
 			}
 			getModel().output("* 34 h break *");
 			for (int i = 5; i < 10; i++) {
 				getModel().output((i + 2) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4])) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4 + 1])) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4 + 2])) + "\t"
-						+ df3.format(getModel().getFatigue().getBioMathModelValueforHour(timesOfPVT[i * 4 + 3])));
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4])) + "\t"
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4 + 1])) + "\t"
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4 + 2])) + "\t"
+						+ df3.format(getModel().getFatigue().getBioMathModelValue(timesOfPVT[i * 4 + 3])));
 			}
 
 		} catch (Exception e) {

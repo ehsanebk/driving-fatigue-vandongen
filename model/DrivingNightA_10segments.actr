@@ -1,23 +1,50 @@
+;;
+;;
 (set-task "actr.tasks.driving.DrivingNightA_10segments")
-(set-schedule 
+(set-sleep-schedule 
     (8.0 22.0)(32.0 39.0)(44.0 58.0)(68.0 82.0)(92.0 106.0)(116.0 130.0)(140.0 154.0)
     (159.0 166.0)(176.0 183.0)(188.0 202.0)(212.0 226.0)(236.0 250.0)(260.0 274.0)(284.0 298.0)
 )
-(sgp
+
+(set-task-schedule 
+    ;;
+    45.0  48.0  51.0  54.0  ;;// day2
+    69.0  72.0  75.0  78.0  ;;// day3
+    93.0  96.0  99.0  102.0 ;;// day4
+    117.0 120.0 123.0 126.0 ;;// day5
+    141.0 144.0 147.0 150.0 ;;// day6
+    
+    189.0 192.0 195.0 198.0 ;;// day9
+    213.0 216.0 219.0 222.0 ;;// day10
+    237.0 240.0 243.0 246.0 ;;// day11
+    261.0 264.0 267.0 270.0 ;;// day12
+    285.0 288.0 291.0 294.0 ;;// day13
+)
+
+(set-task-duration 1800.0) ;; the driving sessions are 30 min (30 * 60sec)
+
+(sgp 
     :cst nil
-    :v nil
-    :fatigue t   
-    :iu 3
-    :ut 2.3
+    :v t
+    :fatigue t 
+    :fatigue-partial-matching t
+    :iu 1.63
+    :ut 1.22
+    ;; (IU-(fpbmc*BioMath)) - (UT-(utbmc*BioMath)) = X
+    ;; BioMath(utbmc-fpbmc) + IU - UT0 = X
+    ;; best value for  BioMath=4.26 (10am) : X=
+    ;; IU = BM * ( fpbmc - utbmc ) + X + UT0
     
     ;;:microlapses nil
-    :fpbmc .025
-    :fpmc -.05
+    :fpbmc .028
+    :fpmc .12 ;;.13
+    :fpmc0 0
     
-    :utbmc .012  
-    :utmc -.012
+    :utbmc .01
+    :utmc  .04 ;;.02
+    :utmc0 0
     
-    :fp-dec 0.999
+    :fp-dec 0.006
     
     :egs .25
     ;:cst t
@@ -26,7 +53,9 @@
     :randomize-time t
     :vpft t
     
+    :motor-feature-prep-time 0 ; .05
     :max-prep-time-diff 10.0  
+    :visual-attention-latency .055 ; .035
 )
 
 (add-dm (goal isa drive))
@@ -44,7 +73,8 @@
         state free
         buffer empty
 ==>
-        ;!eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-off)
     +visual-location>
         isa visual-location
         kind near
@@ -65,7 +95,8 @@
         state free
         buffer empty
 ==>
-        ;!eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-off)
     !bind! =na (image->angle =nx =nd)
     =goal>
         na =na
@@ -95,7 +126,8 @@
         state free
         buffer empty
 ==>
-        ;!eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-off)
     !bind! =fa (image->angle =fx =fd)
     !bind! =time (mp-time)
     !bind! =dna (- =na =na2)
@@ -139,7 +171,8 @@
         state free
         buffer empty
 ==>
-        ;!eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-off)
     !bind! =fa (image->angle =fx =fd)
     !bind! =v (get-velocity)
     !bind! =fthw (get-thw =fd =v)
@@ -174,9 +207,11 @@
         isa car
     !eval! (is-car-stable =na =vna =vfa)
 ==>
-        ;!eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-off)
     =goal>
-        isa wait1
+        isa wait
+        index 1
         na =na ; nil
         fa =fa ;nil
         na2 =na
@@ -187,6 +222,69 @@
         time2 =time
 )
 ;(spp :u 4)
+
+(p wait-continue
+    =goal>
+        isa wait
+        index =index
+        na =na ; nil
+        fa =fa ;nil
+        na2 =na
+        fa2 =fa
+        fd2 =fd
+        fkind2 =fkind
+        fthw2 =fthw
+        time2 =time
+    !ouput! (=index)
+        ;;!eval! (< =index 7)
+==>
+    !bind! =index (+ =index 1)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-on)
+    =goal>
+        isa wait
+        index =index
+        na =na ; nil
+        fa =fa ;nil
+        na2 =na
+        fa2 =fa
+        fd2 =fd
+        fkind2 =fkind
+        fthw2 =fthw
+        time2 =time
+        
+)
+
+(p wait-done
+    =goal>
+        isa wait
+        index =index
+        na =na ; nil
+        fa =fa ;nil
+        na2 =na
+        fa2 =fa
+        fd2 =fd
+        fkind2 =fkind
+        fthw2 =fthw
+        time2 =time
+        ;; !eval! (>= =index 7)
+==>
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-on)
+    =goal>
+        isa drive
+        na  nil
+        fa  nil
+        na2 =na
+        fa2 =fa
+        fd2 =fd
+        fkind2 =fkind
+        fthw2 =fthw
+        time2 =time
+)
+
+
+
 
 (p wait1 
     =goal>
@@ -200,138 +298,8 @@
         fthw2 =fthw
         time2 =time
 ==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
-        isa wait2
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-        
-)
-;(spp :u 1)
-
-(p wait2
-    =goal>
-        isa wait2
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
-        isa wait3
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-)
-;(spp :u 1)
-
-(p wait3
-    =goal>
-        isa wait3
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
-        isa wait4
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-)
-;(spp :u 1)
-
-(p wait4 
-    =goal>
-        isa wait4
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
-        isa wait5
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-)
-;(spp :u 1)
-
-(p wait5 
-    =goal>
-        isa wait5
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
-    =goal>
-        isa wait6
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-)
-;(spp :u 1)
-
-(p wait6 
-    =goal>
-        isa wait6
-        na =na ; nil
-        fa =fa ;nil
-        na2 =na
-        fa2 =fa
-        fd2 =fd
-        fkind2 =fkind
-        fthw2 =fthw
-        time2 =time
-==>
-        ;!eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-on)
     =goal>
         isa wait-end
         na =na ; nil
@@ -357,7 +325,8 @@
         fthw2 =fthw
         time2 =time
 ==>
-        ;!eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-on)
     =goal>
         isa drive
         na  nil
@@ -390,6 +359,7 @@
     !eval! (is-car-not-stable =na =vna =vfa)
 ==>
     !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-off)
     =goal>
         na nil
         fa nil
