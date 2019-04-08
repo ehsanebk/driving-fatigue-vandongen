@@ -55,10 +55,7 @@ public class DrivingNightA_10segments extends Task {
 	private int currentSimulation_NumberOf_MicroLapses=0;
 	private int currentSimulation_NumberOf_Productions=0;
 	
-	File out; // output file 
-	File outPara;  // for fatigue parameter output
-	PrintWriter outputPara = null;
-	PrintWriter outputCSV = null;
+
 	
 	int c=0;
 	
@@ -71,24 +68,7 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public void start() {
-//		out = new File("./result-10seg/Results_Model_TimePoints_Night_Cumulative.csv");
-		outPara = new File("./result-10seg/Results_Fatigue_Parameters(Night).csv");
-		out = new File("/Users/Ehsan/OneDrive - Drexel University/Driving Data(Van Dongen)/Result_Model_Driving/Results_Model_TimePoints_Night_Cumulative.csv");
-//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Night)X.csv");
 
-		if (!new File(out.getParent()).exists()){
-			getModel().output("The output file path is not valid!!");
-			getModel().stop();
-		}
-		
-		// for output fatigue parameters and the data
-		try {
-			outputPara = new PrintWriter(outPara);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		outputPara.println("time,FP,FinalFP,UT");
 		
 		completed = true;
 		currentSimulation = new Simulation();
@@ -147,12 +127,7 @@ public class DrivingNightA_10segments extends Task {
 				if (getModel().getProcedural().isMicroLapse())
 					currentSimulation_NumberOf_MicroLapses++;
 				currentSimulation_NumberOf_Productions++;
-				if (simulationNumber == timesOfSimulation.size()-1)
-					outputPara.println(currentSimulation.getEnvironment().getTime()+","
-							+ getModel().getProcedural().getFatigueUtility() + ","
-							+ getModel().getProcedural().getFinalInstUtility() + "," 
-							+ getModel().getFatigue().getFatigueUT());
-				outputPara.flush();
+				
 				// in case the car position is out of lane
 				if (currentSimulation.samples.lastElement().getSimcarLanePosition()<3
 						|| currentSimulation.samples.lastElement().getSimcarLanePosition()>6)
@@ -365,7 +340,39 @@ public class DrivingNightA_10segments extends Task {
 
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
+		
+		Result result = new Result();
+		///////////////////////////////////////////////////////////////////////////////////////////////////		
+		// Writing the output to csv files in the specified directory (outputDIR)
+		String DIR = getModel().getFatigue().getOutputDIR();
 
+		if (DIR == null)
+			return result;
+		
+		PrintWriter outputPara = null;
+		PrintWriter outputCSV = null;
+		
+		
+		File outPara = new File(DIR + "/"  + "Results_Fatigue_Parameters.csv");
+		File out = new File(DIR + "/"  +"Results_Model_TimePoints_Cumulative.csv");
+
+		if (!new File(out.getParent()).exists()){
+			getModel().output("The output file path is not valid!!");
+			getModel().stop();
+		}
+		
+		// for output fatigue parameters and the data
+		try {
+			outputPara = new PrintWriter(outPara);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		outputPara.println("time,FP,FinalFP,UT");
+		
+		
+		
+		
 		// for output the data
 		try {
 			outputCSV = new PrintWriter(out);
@@ -518,10 +525,10 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("LP_STD\t");
 				outputCSV.print("LP_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					
-					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(result.taskLatDev_10Segments)) +"\t"));
-					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(result.taskLatDev_10Segments)) +","));
+					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(results.taskLatDev_10Segments)) +"\t"));
+					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(results.taskLatDev_10Segments)) +","));
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n");
@@ -531,10 +538,10 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("Steering_STD\t");
 				outputCSV.print("Steering_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					
-					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(result.taskSteeringDev_10Segments)) +"\t"));
-					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(result.taskSteeringDev_10Segments)) +","));
+					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(results.taskSteeringDev_10Segments)) +"\t"));
+					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(results.taskSteeringDev_10Segments)) +","));
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n");
@@ -544,10 +551,10 @@ public class DrivingNightA_10segments extends Task {
 				getModel().outputInLine("MPH_STD\t");
 				outputCSV.print("MPH_STD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					
-					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(result.taskSpeedDev_10Segments)) +"\t"));
-					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(result.taskSpeedDev_10Segments)) +","));
+					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(results.taskSpeedDev_10Segments)) +"\t"));
+					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(results.taskSpeedDev_10Segments)) +","));
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n");
@@ -575,10 +582,10 @@ public class DrivingNightA_10segments extends Task {
 				}
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
-					getModel().outputInLine(String.valueOf(df.format(result.taskTime) +"\t"));
+					Results results = task.results.elementAt(i);
+					getModel().outputInLine(String.valueOf(df.format(results.taskTime) +"\t"));
 					getModel().outputInLine("\t");
-					outputCSV.print(String.valueOf(df.format(result.taskTime) +","));
+					outputCSV.print(String.valueOf(df.format(results.taskTime) +","));
 					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n\n");
@@ -626,12 +633,12 @@ public class DrivingNightA_10segments extends Task {
 				}
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(result.startIndex_10Segments[j]
-								+"-" + result.endIndex_10Segments[j] +" ");
-						outputCSV.print(result.startIndex_10Segments[j]
-								+"-" + result.endIndex_10Segments[j] +",");
+						getModel().outputInLine(results.startIndex_10Segments[j]
+								+"-" + results.endIndex_10Segments[j] +" ");
+						outputCSV.print(results.startIndex_10Segments[j]
+								+"-" + results.endIndex_10Segments[j] +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",,");
@@ -656,10 +663,10 @@ public class DrivingNightA_10segments extends Task {
 				}
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df.format(result.taskLatDev_10Segments[j]) +" ");
-						outputCSV.print(df.format(result.taskLatDev_10Segments[j]) +",");
+						getModel().outputInLine(df.format(results.taskLatDev_10Segments[j]) +" ");
+						outputCSV.print(df.format(results.taskLatDev_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",,");
@@ -684,10 +691,10 @@ public class DrivingNightA_10segments extends Task {
 				}
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df.format(result.STEX3_10Segments[j]) +" ");
-						outputCSV.print(df.format(result.STEX3_10Segments[j]) +",");
+						getModel().outputInLine(df.format(results.STEX3_10Segments[j]) +" ");
+						outputCSV.print(df.format(results.STEX3_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",,");
@@ -712,10 +719,10 @@ public class DrivingNightA_10segments extends Task {
 				}
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df.format(result.taskSteeringDev_10Segments[j]) +" ");
-						outputCSV.print(df.format(result.taskSteeringDev_10Segments[j]) +",");
+						getModel().outputInLine(df.format(results.taskSteeringDev_10Segments[j]) +" ");
+						outputCSV.print(df.format(results.taskSteeringDev_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",,");
@@ -740,10 +747,10 @@ public class DrivingNightA_10segments extends Task {
 				}
 				
 				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
+					Results results = task.results.elementAt(i);
 					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df.format(result.taskSpeedDev_10Segments[j]) +" ");
-						outputCSV.print(df.format(result.taskSpeedDev_10Segments[j]) +",");
+						getModel().outputInLine(df.format(results.taskSpeedDev_10Segments[j]) +" ");
+						outputCSV.print(df.format(results.taskSpeedDev_10Segments[j]) +",");
 					}
 					getModel().outputInLine("\t");
 					outputCSV.print(",,");
@@ -759,7 +766,16 @@ public class DrivingNightA_10segments extends Task {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Result result = new Result();
+		
+		
+//		if (simulationNumber == timesOfPVT.length-1)
+//			outputPara.println(currentSimulation.getEnvironment().getTime()+","
+//					+ getModel().getProcedural().getFatigueUtility() + ","
+//					+ getModel().getProcedural().getFinalInstUtility() + "," 
+//					+ getModel().getFatigue().getFatigueUT());
+//		outputPara.flush();
+		
+		
 		return result;
 	}
 
