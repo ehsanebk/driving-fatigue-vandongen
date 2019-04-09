@@ -8,6 +8,26 @@
     (176.0 190.0)(200.0 214.0)(224.0 238.0)(248.0 262.0)(272.0 286.0)(296.0 310.0)(320.0 334.0)
 )
 
+(set-task-schedule 
+    ;; //
+    57.0+1    60.0+1    63.0+1    66.0+1   ;; // day2
+    81.0+1    84.0+1    87.0+1    90.0+1   ;; // day3
+    105.0+1  108.0+1  111.0+1  114.0+1 ;; // day4
+    129.0+1  132.0+1  135.0+1  138.0+1 ;; // day5
+    153.0+1  156.0+1  159.0+1  162.0+1 ;; // day6
+    
+    201.0+1  204.0+1  207.0+1  210.0+1 ;; // day9
+    225.0+1  228.0+1  231.0+1  234.0+1 ;; // day10
+    249.0+1  252.0+1  255.0+1  258.0+1 ;; // day11
+    273.0+1  276.0+1  279.0+1  282.0+1 ;; // day12
+    297.0+1  300.0+1  303.0+1  306.0+1 ;; // day13
+    
+)
+
+(set-task-duration 600.0) ;;2100
+
+(set-output-dir "./test/fatigue/pvt_35min")
+
 (add-dm
     (goal isa goal state wait)
 )
@@ -15,41 +35,52 @@
 (sgp 
     :cst nil
     :v nil
-    :fatigue t   
-    :iu 3
-    :ut 2.3
+    :fatigue t 
+    :fatigue-partial-matching t
+    :iu 1.63
+    :ut 1.22
+    ;; (IU-(fpbmc*BioMath)) - (UT-(utbmc*BioMath)) = X
+    ;; BioMath(utbmc-fpbmc) + IU - UT0 = X
+    ;; best value for  BioMath=4.26 (10am) : X=
+    ;; IU = BM * ( fpbmc - utbmc ) + X + UT0
     
     ;;:microlapses nil
-    :fpbmc .025
-    :fpmc -.05
+    :fpbmc .028
+    :fpmc .12 ;;.13
+    :fpmc0 0
     
-    :utbmc .012  
-    :utmc -.012
+    :utbmc .01
+    :utmc  .04 ;;.02
+    :utmc0 0
     
-    :fp-dec 0.999
+    :fp-dec 0.006
     
     :egs .25
     ;:cst t
     
-    :dat .04 ;; orig .05
+    :dat .05
     :randomize-time t
     :vpft t
     
+    :motor-feature-prep-time 0 ; .05
     :max-prep-time-diff 10.0  
+    :visual-attention-latency .055 ; .035
 )
 
-(goal-focus goal)
 
+(goal-focus goal)
 
 (p wait 
     =goal>
         isa goal
         state                 wait
         - state                 none
+        state =state
     ?visual-location>
-        buffer                empty
+        buffer empty
 ==>
-        ; !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-on)
 )
 ;(spp :u 1)
 
@@ -63,6 +94,7 @@
         state free
 ==>
     !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-on)
     +visual>               
         isa	move-attention
         screen-pos =visual-location
@@ -82,6 +114,8 @@
         state free 
 ==>
     !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-on)
+    !output! (=visual)
     !output! (=val)
     +manual>
         isa press-key
@@ -93,6 +127,7 @@
 )
 ;(spp :u 1)
 
+#|
 (p press-key 
     =goal>
         isa goal
@@ -101,6 +136,7 @@
         state free 
 ==>
     !eval! (fatigue-reset-percentage)
+    !eval! (fatigue-utility-dec-off)
     !output! ("***  press Key - False Start  ***")
     +manual>
         isa press-key
@@ -108,5 +144,5 @@
     =goal>
         state wait
 )
-(spp :u 0)
-
+(spp :u -1000)
+|#
