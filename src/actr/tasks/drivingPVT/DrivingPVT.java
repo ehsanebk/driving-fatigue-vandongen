@@ -1,12 +1,9 @@
 package actr.tasks.drivingPVT;
 
-import java.util.*;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
-import actr.model.Event;
-import actr.model.Symbol;
 import actr.task.*;
 import actr.tasks.driving.Values;
 import actr.tasks.fatigue.*;

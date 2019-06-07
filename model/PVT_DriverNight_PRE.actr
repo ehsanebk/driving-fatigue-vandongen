@@ -37,8 +37,8 @@
     :v nil
     :fatigue t 
     :fatigue-partial-matching t
-    :iu 1.63
-    :ut 1.22
+    :iu 1.51
+    :ut 1.1
     ;; (IU-(fpbmc*BioMath)) - (UT-(utbmc*BioMath)) = X
     ;; BioMath(utbmc-fpbmc) + IU - UT0 = X
     ;; best value for  BioMath=4.26 (10am) : X=
@@ -94,7 +94,7 @@
         state free
 ==>
     !eval! (fatigue-reset-percentage)
-    !eval! (fatigue-utility-dec-on)
+    !eval! (fatigue-utility-dec-off)
     +visual>               
         isa	move-attention
         screen-pos =visual-location
@@ -114,7 +114,7 @@
         state free 
 ==>
     !eval! (fatigue-reset-percentage)
-    !eval! (fatigue-utility-dec-on)
+    !eval! (fatigue-utility-dec-off)
     !output! (=visual)
     !output! (=val)
     +manual>
