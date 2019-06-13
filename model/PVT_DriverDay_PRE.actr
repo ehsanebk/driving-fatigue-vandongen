@@ -1,7 +1,8 @@
 ;;
 ;; Driver PVT model : Day A Pre
 ;; 
-(set-task "actr.tasks.drivingPVT.DrivingPVT")
+;;(set-task "actr.tasks.drivingPVT.DrivingPVT")
+(set-task "actr.tasks.fatigue.PVT")
 
 (set-sleep-schedule 
     (8.0 22.0)(32.0 46.0)(56.0 70.0)(80.0 94.0)(104.0 118.0)(128.0 142.0)(152.0 166.0)
@@ -66,7 +67,6 @@
     :visual-attention-latency .055 ; .035
 )
 
-
 (goal-focus goal)
 
 (p wait 
@@ -93,7 +93,7 @@
         state free
 ==>
     !eval! (fatigue-reset-percentage)
-    !eval! (fatigue-utility-dec-on)
+    !eval! (fatigue-utility-dec-off)
     +visual>               
         isa	move-attention
         screen-pos =visual-location
@@ -113,7 +113,7 @@
         state free 
 ==>
     !eval! (fatigue-reset-percentage)
-    !eval! (fatigue-utility-dec-on)
+    !eval! (fatigue-utility-dec-off)
     !output! (=visual)
     !output! (=val)
     +manual>
