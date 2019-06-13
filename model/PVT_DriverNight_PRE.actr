@@ -1,7 +1,8 @@
 ;;
 ;; Driver PVT model : Night A
 ;; 
-(set-task "actr.tasks.drivingPVT.DrivingPVTNightPRE")
+;;(set-task "actr.tasks.drivingPVT.DrivingPVT")
+(set-task "actr.tasks.fatigue.PVT")
 
 (set-sleep-schedule 
     (8.0 22.0)(32.0 39.0)(44.0 58.0)(68.0 82.0)(92.0 106.0)(116.0 130.0)(140.0 154.0)
@@ -37,8 +38,8 @@
     :v nil
     :fatigue t 
     :fatigue-partial-matching t
-    :iu 1.51
-    :ut 1.1
+    :iu 1.56
+    :ut 1.15
     ;; (IU-(fpbmc*BioMath)) - (UT-(utbmc*BioMath)) = X
     ;; BioMath(utbmc-fpbmc) + IU - UT0 = X
     ;; best value for  BioMath=4.26 (10am) : X=
@@ -66,7 +67,6 @@
     :max-prep-time-diff 10.0  
     :visual-attention-latency .055 ; .035
 )
-
 
 (goal-focus goal)
 
