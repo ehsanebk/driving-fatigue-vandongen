@@ -116,4 +116,13 @@ public class Utilities {
 		return sum / array.length;
 
 	}
+	// finding the average in range for an array
+	public static double arrayAverage(double[] array, int a, int b) {
+		double sum = 0;
+		for(int i = a ; i < b ; i++)
+			sum = sum + array[i];
+		//calculate average value
+		return sum / (b - a);
+
+	}
 }

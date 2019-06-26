@@ -84,10 +84,8 @@ public class DrivingDayA_10segments extends Task {
 
 	@Override
 	public void start() {
-//		out = new File("./result-10seg/Results_Model_TimePoints_Day_Cumulative.csv");
-		outPara = new File("./result-10seg/Results_Fatigue_Parameters(Day).csv");
-		out = new File("/Users/Ehsan/OneDrive - Drexel University/Driving Data(Van Dongen)/Result_Model_Driving/Results_Model_TimePoints_Day_Cumulative.csv");
-//		outPara = new File("/Users/Ehsan/OneDrive - drexel.edu/Driving Data(Van Dongen)/Results_Fatigue_Parameters(Day)X.csv");
+		outPara = new File("./resultDriving/Results_Fatigue_Parameters(Day).csv");
+		out = new File("./resultDriving/Results_Model_driving(Day).csv");
 
 		if (!new File(out.getParent()).exists()){
 			getModel().output("The output file path is not valid!!");
@@ -385,16 +383,12 @@ public class DrivingDayA_10segments extends Task {
 		}
 
 		int numberOfSimulations = ((DrivingDayA_10segments)tasks[0]).results.size();
-		Values[] totalMicroLapses = new Values [numberOfSimulations];
 		Values[][] totalLatDev = new Values[numberOfSimulations][10];
-		Values[][] totalSTEX3 = new Values[numberOfSimulations][10];
 		Values[][] totalSteeringDev = new Values[numberOfSimulations][10];
 		Values[][] totalSpeedDev = new Values[numberOfSimulations][10];
 		for (int i = 0; i < numberOfSimulations; i++){
-			totalMicroLapses[i] = new Values();
 			for (int j = 0; j < 10; j++) {
 				totalLatDev[i][j] = new Values();
-				totalSTEX3[i][j] = new Values();
 				totalSteeringDev[i][j] = new Values();
 				totalSpeedDev[i][j] = new Values();
 			}
@@ -406,10 +400,8 @@ public class DrivingDayA_10segments extends Task {
 				continue;
 			for (int i = 0; i < numberOfSimulations; i++) {
 				Results results = task.results.elementAt(i);
-				totalMicroLapses[i].add((double)task.microLapses.get(i)[0]/task.microLapses.get(i)[1]);
 				for (int j = 0; j < 10; j++) {
 					totalLatDev[i][j].add(results.taskLatDev_10Segments[j]);
-					totalSTEX3[i][j].add(results.STEX3_10Segments[j]);
 					totalSteeringDev[i][j].add(results.taskSteeringDev_10Segments[j]);
 					totalSpeedDev[i][j].add(results.taskSpeedDev_10Segments[j]);
 				}
@@ -430,7 +422,6 @@ public class DrivingDayA_10segments extends Task {
 			if (counter == 20)
 				outputCSV.println(",\n");
 			outputCSV.print(",");
-			outputCSV.print("," + totalMicroLapses[counter].mean());
 			outputCSV.flush();
 			counter++;
 		}
@@ -446,21 +437,6 @@ public class DrivingDayA_10segments extends Task {
 			outputCSV.print(",");
 			for (int i = 0; i < 10; i++) {
 				outputCSV.print("," + totalLatDev[counter][i].mean());
-			}
-			outputCSV.flush();
-			counter++;
-		}
-		outputCSV.println(",");
-		outputCSV.println("******* Average STEX3 for 10 Segments **********");
-		counter = 0 ;
-		while (counter < numberOfSimulations ) {
-			if (counter % 4 ==0)
-				outputCSV.println();
-			if (counter == 20)
-				outputCSV.println(",\n");
-			outputCSV.print(",");
-			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSTEX3[counter][i].mean());
 			}
 			outputCSV.flush();
 			counter++;
@@ -679,34 +655,6 @@ public class DrivingDayA_10segments extends Task {
 			}
 			outputCSV.flush();
 
-			getModel().output("\n******* STEX3_10Segments ********** \n");
-			outputCSV.print("\n******* STEX3_10Segments ********** \n");
-			for (Task taskCast : tasks) {
-				DrivingDayA_10segments task = (DrivingDayA_10segments) taskCast;
-				numberOfSimulations = task.results.size(); // some task might not be complete
-				if (!task.completed){
-					getModel().outputInLine("*\t");
-					outputCSV.print("*,");
-				}
-				else{
-					getModel().outputInLine("\t");
-					outputCSV.print(",");
-				}
-				
-				for (int i = 0; i < numberOfSimulations; i++) {
-					Results result = task.results.elementAt(i);
-					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(df.format(result.STEX3_10Segments[j]) +" ");
-						outputCSV.print(df.format(result.STEX3_10Segments[j]) +",");
-					}
-					getModel().outputInLine("\t");
-					outputCSV.print(",,");
-				}
-				getModel().outputInLine("\n\n");
-				outputCSV.print("\n\n");
-			}
-			outputCSV.flush();
-			
 			getModel().output("\n******* taskSteeringDev_10Segments ********** \n");
 			outputCSV.print("\n******* taskSteeringDev_10Segments ********** \n");
 			for (Task taskCast : tasks) {

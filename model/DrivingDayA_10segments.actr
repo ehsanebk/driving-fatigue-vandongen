@@ -1,5 +1,5 @@
-(set-task "actr.tasks.driving.DrivingDayA_10segments")
-(set-schedule 
+(set-task "actr.tasks.driving.Driving_10segments")
+(set-sleep-schedule 
     (8.0 22.0)(32.0 46.0)(56.0 70.0)(80.0 94.0)(104.0 118.0)(128.0 142.0)(152.0 166.0)
     (176.0 190.0)(200.0 214.0)(224.0 238.0)(248.0 262.0)(272.0 286.0)(296.0 310.0)(320.0 334.0)
 )
@@ -19,7 +19,7 @@
     297.0  300.0  303.0  306.0  ;; // day13
 )
 
-(set-output-dir "./result-10seg/DayA")
+(set-output-dir "./resultDriving/DayA")
 
 (set-task-duration 1800.0) ;; the driving sessions are 30 min (30 * 60sec)
 
@@ -28,15 +28,15 @@
     :v nil
     :fatigue t 
     :fatigue-partial-matching nil
-    :iu 1.63
-    :ut 1.22
+    :iu 1.56
+    :ut 1.15
     ;; (IU-(fpbmc*BioMath)) - (UT-(utbmc*BioMath)) = X
     ;; BioMath(utbmc-fpbmc) + IU - UT0 = X
     ;; best value for  BioMath=4.26 (10am) : X=
     ;; IU = BM * ( fpbmc - utbmc ) + X + UT0
     
     ;;:microlapses nil
-    :fpbmc .028
+    :fpbmc .029
     :fpmc .12 ;;.13
     :fpmc0 0
     
@@ -235,9 +235,9 @@
         fkind2 =fkind
         fthw2 =fthw
         time2 =time
-    !ouput! (=index)
-        ;;!eval! (< =index 7)
+    !eval! (< =index 10)
 ==>
+    !output! (=index)
     !bind! =index (+ =index 1)
     !eval! (fatigue-reset-percentage)
     !eval! (fatigue-utility-dec-on)
@@ -251,8 +251,7 @@
         fd2 =fd
         fkind2 =fkind
         fthw2 =fthw
-        time2 =time
-        
+        time2 =time     
 )
 
 (p wait-done
@@ -267,7 +266,7 @@
         fkind2 =fkind
         fthw2 =fthw
         time2 =time
-        ;; !eval! (>= =index 7)
+    !eval! (>= =index 10)
 ==>
     !eval! (fatigue-reset-percentage)
     !eval! (fatigue-utility-dec-on)

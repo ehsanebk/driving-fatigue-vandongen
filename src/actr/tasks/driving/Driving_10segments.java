@@ -19,9 +19,14 @@ import actr.task.Task;
  * The main Driving task class that sets up the simulation and starts periodic
  * updates.
  * 
- * @author Dario Salvucci
+ * @author Dario Salvucci, Ehsan Khosroshahi
+ * 
+ * LPSD  : Standard deviation of lane position from the center of the lane in ft 
+ * SWASD : Standard deviation of steering wheel angle 
+ * SSD   : Standard deviation of speed in miles per hour (MPH)
+ * 
  */
-public class DrivingNightA_10segments extends Task {
+public class Driving_10segments extends Task {
 	// --- Task Code ---//
 	
 	private Simulation currentSimulation;
@@ -59,7 +64,7 @@ public class DrivingNightA_10segments extends Task {
 	
 	int c=0;
 	
-	public DrivingNightA_10segments() {
+	public Driving_10segments() {
 		super();
 		nearLabel = new JLabel(".");
 		carLabel = new JLabel("X");
@@ -334,10 +339,16 @@ public class DrivingNightA_10segments extends Task {
 	}
 
 	public static Image getImage(final String name) {
-		URL url = DrivingNightA_10segments.class.getResource("images/" + name);
+		URL url = Driving_10segments.class.getResource("images/" + name);
 		return Toolkit.getDefaultToolkit().getImage(url);
 	}
 
+	/**
+	 * 
+	 * LPSD  : Standard deviation of lane position from the center of the lane in ft 
+	 * SWASD : Standard deviation of steering wheel angle 
+	 * SSD   : Standard deviation of speed in miles per hour (MPH)
+	 */
 	@Override
 	public Result analyze(Task[] tasks, boolean output) {
 		
@@ -349,29 +360,15 @@ public class DrivingNightA_10segments extends Task {
 		if (DIR == null)
 			return result;
 		
-		PrintWriter outputPara = null;
 		PrintWriter outputCSV = null;
 		
 		
-		File outPara = new File(DIR + "/"  + "Results_Fatigue_Parameters.csv");
 		File out = new File(DIR + "/"  +"Results_Model_TimePoints_Cumulative.csv");
 
 		if (!new File(out.getParent()).exists()){
 			getModel().output("The output file path is not valid!!");
 			getModel().stop();
 		}
-		
-		// for output fatigue parameters and the data
-		try {
-			outputPara = new PrintWriter(outPara);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		outputPara.println("time,FP,FinalFP,UT");
-		
-		
-		
 		
 		// for output the data
 		try {
@@ -381,133 +378,206 @@ public class DrivingNightA_10segments extends Task {
 			return null;
 		}
 
-		int numberOfSimulations = ((DrivingNightA_10segments)tasks[0]).results.size();
-		Values[] totalMicroLapses = new Values [numberOfSimulations];
-		Values[][] totalLatDev = new Values[numberOfSimulations][10];
-		Values[][] totalSTEX3 = new Values[numberOfSimulations][10];
-		Values[][] totalSteeringDev = new Values[numberOfSimulations][10];
-		Values[][] totalSpeedDev = new Values[numberOfSimulations][10];
+		int numberOfSimulations = ((Driving_10segments)tasks[0]).results.size();
+		
+		Values[] totalLatDev = new Values[numberOfSimulations];
+		Values[] totalSteeringDev = new Values[numberOfSimulations];
+		Values[] totalSpeedDev = new Values[numberOfSimulations];
+		Values[][] totalLatDev_10seg = new Values[numberOfSimulations][10];
+		Values[][] totalSteeringDev_10seg = new Values[numberOfSimulations][10];
+		Values[][] totalSpeedDev_10seg = new Values[numberOfSimulations][10];
 		for (int i = 0; i < numberOfSimulations; i++){
-			totalMicroLapses[i] = new Values();
+			totalLatDev[i] = new Values();
+			totalSteeringDev[i] = new Values();
+			totalSpeedDev[i] = new Values();
 			for (int j = 0; j < 10; j++) {
-				totalLatDev[i][j] = new Values();
-				totalSTEX3[i][j] = new Values();
-				totalSteeringDev[i][j] = new Values();
-				totalSpeedDev[i][j] = new Values();
+				totalLatDev_10seg[i][j] = new Values();
+				totalSteeringDev_10seg[i][j] = new Values();
+				totalSpeedDev_10seg[i][j] = new Values();
 			}
 		}
 		
 		for (Task taskCast : tasks) {
-			DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+			Driving_10segments task = (Driving_10segments) taskCast;
 			if (!task.completed)
 				continue;
 			for (int i = 0; i < numberOfSimulations; i++) {
 				Results results = task.results.elementAt(i);
-				totalMicroLapses[i].add((double)task.microLapses.get(i)[0]/task.microLapses.get(i)[1]);
+				totalLatDev[i].add(Utilities.arrayAverage(results.taskLatDev_10Segments,2,10));
+				totalSteeringDev[i].add(Utilities.arrayAverage(results.taskSteeringDev_10Segments,2,10));
+				totalSpeedDev[i].add(Utilities.arrayAverage(results.taskSpeedDev_10Segments,2,10));
 				for (int j = 0; j < 10; j++) {
-					totalLatDev[i][j].add(results.taskLatDev_10Segments[j]);
-					totalSTEX3[i][j].add(results.STEX3_10Segments[j]);
-					totalSteeringDev[i][j].add(results.taskSteeringDev_10Segments[j]);
-					totalSpeedDev[i][j].add(results.taskSpeedDev_10Segments[j]);
+					totalLatDev_10seg[i][j].add(results.taskLatDev_10Segments[j]);
+					totalSteeringDev_10seg[i][j].add(results.taskSteeringDev_10Segments[j]);
+					totalSpeedDev_10seg[i][j].add(results.taskSpeedDev_10Segments[j]);
 				}
 			}
 		}
 		
-		//  Outputting the result
-		getModel().output("******** Results of Night A **********");
-		outputCSV.println("******** Results of Night A **********");
+		DecimalFormat df = new DecimalFormat("#.0000");
 		
-		int counter;
-		outputCSV.println(",");
-		outputCSV.println("******* Average Proportion of microlapses in the sessions **********");
-		counter = 0 ;
-		while (counter < numberOfSimulations ) {
-			if (counter % 4 ==0)
-				outputCSV.println();
-			if (counter == 20)
-				outputCSV.println(",\n");
-			outputCSV.print(",");
-			outputCSV.print("," + totalMicroLapses[counter].mean());
-			outputCSV.flush();
-			counter++;
+		//session #
+		getModel().outputInLine("Session #\t");
+		outputCSV.print("Session #,");			
+		for (int i = 0; i < numberOfSimulations; i++) {
+			getModel().outputInLine((i+1) +"\t");
+			outputCSV.print((i+1) +",");
 		}
+		getModel().outputInLine("\n");
+		outputCSV.print("\n");
 		
-		outputCSV.println(",");
-		outputCSV.println("******* Average LatDev for 10 Segments **********");
-		counter = 0 ;
-		while (counter < numberOfSimulations ) {
-			if (counter % 4 ==0)
-				outputCSV.println();
-			if (counter == 20)
-				outputCSV.println(",\n");
-			outputCSV.print(",");
-			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalLatDev[counter][i].mean());
-			}
-			outputCSV.flush();
-			counter++;
+		//LP_STD 
+		getModel().outputInLine("LPSD\t");
+		outputCSV.print("LPSD,");			
+		for (int i = 0; i < numberOfSimulations; i++) {
+			getModel().outputInLine(df.format( totalLatDev[i].average() ) +"\t");
+			outputCSV.print(df.format(totalLatDev[i].average())+",");
 		}
-		outputCSV.println(",");
-		outputCSV.println("******* Average STEX3 for 10 Segments **********");
-		counter = 0 ;
-		while (counter < numberOfSimulations ) {
-			if (counter % 4 ==0)
-				outputCSV.println();
-			if (counter == 20)
-				outputCSV.println(",\n");
-			outputCSV.print(",");
-			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSTEX3[counter][i].mean());
-			}
-			outputCSV.flush();
-			counter++;
+		getModel().outputInLine("\n");
+		outputCSV.print("\n");
+		
+		//Steering_STD 
+		getModel().outputInLine("SWASD\t");
+		outputCSV.print("SWASD,");			
+		for (int i = 0; i < numberOfSimulations; i++) {
+			getModel().outputInLine(df.format(totalSteeringDev[i].average()) +"\t");
+			outputCSV.print(df.format(totalSteeringDev[i].average())+",");
 		}
-		outputCSV.println(",");
-		outputCSV.println("******* Average SteeringDev for 10 Segments **********");
-		counter = 0 ;
-		while (counter < numberOfSimulations ) {
-			if (counter % 4 ==0)
-				outputCSV.println();
-			if (counter == 20)
-				outputCSV.println(",\n");
-			outputCSV.print(",");
-			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSteeringDev[counter][i].mean());
-			}
-			outputCSV.flush();
-			counter++;
-		}
-		outputCSV.println(",");
-		outputCSV.println("******* Average SpeedDev for 10 Segments **********");
-		counter = 0 ;
-		while (counter < numberOfSimulations ) {
-			if (counter % 4 ==0)
-				outputCSV.println();
-			if (counter == 20)
-				outputCSV.println(",\n");
-			outputCSV.print(",");
-			for (int i = 0; i < 10; i++) {
-				outputCSV.print("," + totalSpeedDev[counter][i].mean());
-			}
-			outputCSV.flush();
-			counter++;
+		getModel().outputInLine("\n");
+		outputCSV.print("\n");
+		
+		//MPH_STD 
+		getModel().outputInLine("SSD\t");
+		outputCSV.print("SSD,");			
+		for (int i = 0; i < numberOfSimulations; i++) {
+			getModel().outputInLine(df.format(totalSpeedDev[i].average()) +"\t");
+			outputCSV.print(df.format(totalSpeedDev[i].average()) +",");
 		}
 		getModel().outputInLine("\n");
 		outputCSV.print("\n");
 		outputCSV.flush();
 		
+		getModel().outputInLine("\n");
+		outputCSV.print(",\n");
+		outputCSV.flush();
+
+		//LP_STD SD
+		getModel().outputInLine("LPSD SD\t");
+		outputCSV.print("LPSD SD,");			
+		for (int i = 0; i < numberOfSimulations; i++) {
+			getModel().outputInLine(df.format( totalLatDev[i].stddev() ) +"\t");
+			outputCSV.print(df.format(totalLatDev[i].stddev())+",");
+		}
+		getModel().outputInLine("\n");
+		outputCSV.print("\n");
+
+		//Steering_STD SD 
+		getModel().outputInLine("SWASD SD\t");
+		outputCSV.print("SWASD SD,");			
+		for (int i = 0; i < numberOfSimulations; i++) {
+			getModel().outputInLine(df.format(totalSteeringDev[i].stddev()) +"\t");
+			outputCSV.print(df.format(totalSteeringDev[i].stddev())+",");
+		}
+		getModel().outputInLine("\n");
+		outputCSV.print("\n");
+
+		//MPH_STD SD
+		getModel().outputInLine("SSD SD\t");
+		outputCSV.print("SSD SD,");			
+		for (int i = 0; i < numberOfSimulations; i++) {
+			getModel().outputInLine(df.format(totalSpeedDev[i].stddev()) +"\t");
+			outputCSV.print(df.format(totalSpeedDev[i].stddev()) +",");
+		}
+		getModel().outputInLine("\n");
+		outputCSV.print("\n");
+		outputCSV.flush();
+
+		getModel().outputInLine("\n");
+		outputCSV.print(",\n");
+		outputCSV.flush();
+
+		outputCSV.println(",");
+		outputCSV.println("******* Average for Segments **********");
+		for (int i = 2; i < 10; i++) {
+			outputCSV.print("LPSD Seg " + i);
+			for (int j = 0; j < numberOfSimulations; j++) {
+				outputCSV.print("," + totalLatDev_10seg[j][i].mean());
+			}
+			outputCSV.print("\n");
+		}
+		outputCSV.flush();
+
+		for (int i = 2; i < 10; i++) {
+			outputCSV.print("SWASD Seg " + i);
+			for (int j = 0; j < numberOfSimulations; j++) {
+				outputCSV.print("," + totalSteeringDev_10seg[j][i].mean());
+			}
+			outputCSV.print("\n");
+		}
+		outputCSV.flush();
+		
+
+		for (int i = 2; i < 10; i++) {
+			outputCSV.print("SSD Seg " + i);
+			for (int j = 0; j < numberOfSimulations; j++) {
+				outputCSV.print("," + totalSpeedDev_10seg[j][i].mean());
+			}
+			outputCSV.print("\n");
+		}
+		outputCSV.flush();
+		
+		outputCSV.print(", \n");
+		outputCSV.flush();
+		
+		getModel().outputInLine("\n");
+		outputCSV.print(",\n");
+		outputCSV.flush();
+
+		for (int i = 2; i < 10; i++) {
+			outputCSV.print("LPSD Seg SD" + i);
+			for (int j = 0; j < numberOfSimulations; j++) {
+				outputCSV.print("," + totalLatDev_10seg[j][i].stddev());
+			}
+			outputCSV.print("\n");
+		}
+		outputCSV.flush();
+
+		for (int i = 2; i < 10; i++) {
+			outputCSV.print("SWASD Seg SD" + i);
+			for (int j = 0; j < numberOfSimulations; j++) {
+				outputCSV.print("," + totalSteeringDev_10seg[j][i].stddev());
+			}
+			outputCSV.print("\n");
+		}
+		outputCSV.flush();
+		
+
+		for (int i = 2; i < 10; i++) {
+			outputCSV.print("SSD Seg SD" + i);
+			for (int j = 0; j < numberOfSimulations; j++) {
+				outputCSV.print("," + totalSpeedDev_10seg[j][i].stddev());
+			}
+			outputCSV.print("\n");
+		}
+		outputCSV.flush();
+		
+		outputCSV.print(", \n");
+		outputCSV.flush();
+		
+		
+		
+		getModel().outputInLine("\n ****************** \n");
 		try {
-			DecimalFormat df = new DecimalFormat("#.000000");
 			int count = 1;
 			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				Driving_10segments task = (Driving_10segments) taskCast;
 				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
-					getModel().output("* Night " + count + "\n");
+					getModel().outputInLine("* Night " + count + "\n");
 					outputCSV.print("* Night " + count + "\n");
 				}
 				else{
-					getModel().output("Night " + count + "\n");
+					getModel().outputInLine("Night " + count + "\n");
 					outputCSV.print("Night " + count + "\n");
 				}
 				
@@ -522,40 +592,37 @@ public class DrivingNightA_10segments extends Task {
 				outputCSV.print("\n");
 				
 				//LP_STD 
-				getModel().outputInLine("LP_STD\t");
-				outputCSV.print("LP_STD,");			
+				getModel().outputInLine("LPSD\t");
+				outputCSV.print("LPSD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results results = task.results.elementAt(i);
 					
 					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(results.taskLatDev_10Segments)) +"\t"));
 					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(results.taskLatDev_10Segments)) +","));
-					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n");
 				outputCSV.print("\n");
 				
 				//Steering_STD 
-				getModel().outputInLine("Steering_STD\t");
-				outputCSV.print("Steering_STD,");			
+				getModel().outputInLine("SWASD\t");
+				outputCSV.print("SWATD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results results = task.results.elementAt(i);
 					
 					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(results.taskSteeringDev_10Segments)) +"\t"));
 					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(results.taskSteeringDev_10Segments)) +","));
-					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n");
 				outputCSV.print("\n");
 				
 				//MPH_STD 
-				getModel().outputInLine("MPH_STD\t");
-				outputCSV.print("MPH_STD,");			
+				getModel().outputInLine("SSD\t");
+				outputCSV.print("SSD,");			
 				for (int i = 0; i < numberOfSimulations; i++) {
 					Results results = task.results.elementAt(i);
 					
 					getModel().outputInLine(String.valueOf(df.format(Utilities.arrayAverage(results.taskSpeedDev_10Segments)) +"\t"));
 					outputCSV.print(String.valueOf(df.format(Utilities.arrayAverage(results.taskSpeedDev_10Segments)) +","));
-					outputCSV.print(",");
 				}
 				getModel().outputInLine("\n");
 				outputCSV.print("\n");
@@ -567,10 +634,11 @@ public class DrivingNightA_10segments extends Task {
 			
 			getModel().outputInLine("\n");
 			outputCSV.print("\n");
-			getModel().output("\n******* Task Time ********** \n");
-			outputCSV.print("\n******* Task Time ********** \n");
+			
+			getModel().output("\n ******* Task Time ********** \n");
+			outputCSV.print("\n ******* Task Time ********** \n");
 			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				Driving_10segments task = (Driving_10segments) taskCast;
 				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
@@ -593,65 +661,11 @@ public class DrivingNightA_10segments extends Task {
 			}
 			outputCSV.flush();
 			
-			getModel().output("\n******* Number of MicroLapses ********** \n");
-			outputCSV.print("\n******* Number of MicroLapses ********** \n");
-			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
-				numberOfSimulations = task.results.size(); // some task might not be complete
-				if (!task.completed){
-					getModel().outputInLine("*\t");
-					outputCSV.print("*,");
-				}
-				else{
-					getModel().outputInLine("\t");
-					outputCSV.print(",");
-				}
-				
-				for (int i = 0; i < numberOfSimulations; i++) {
-					getModel().outputInLine(task.microLapses.get(i)[0]+"/"+ task.microLapses.get(i)[1]+"\t");
-					getModel().outputInLine("\t");
-					outputCSV.print(task.microLapses.get(i)[0]+"/"+ task.microLapses.get(i)[1] +",");
-					outputCSV.print(",");
-				}
-				getModel().outputInLine("\n\n");
-				outputCSV.print("\n\n");
-			}
-			outputCSV.flush();
 			
-			getModel().output("\n******* Index_10Segments ********** \n");
-			outputCSV.print("\n******* Index_10Segments ********** \n");
+			getModel().output("\n******* taskLPSD_10Segments ********** \n");
+			outputCSV.print("\n******* taskLPSD_10Segments ********** \n");
 			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
-				numberOfSimulations = task.results.size(); // some task might not be complete
-				if (!task.completed){
-					getModel().outputInLine("*\t");
-					outputCSV.print("*,");
-				}
-				else{
-					getModel().outputInLine("\t");
-					outputCSV.print(",");
-				}
-				
-				for (int i = 0; i < numberOfSimulations; i++) {
-					Results results = task.results.elementAt(i);
-					for (int j = 0; j < 10; j++) {
-						getModel().outputInLine(results.startIndex_10Segments[j]
-								+"-" + results.endIndex_10Segments[j] +" ");
-						outputCSV.print(results.startIndex_10Segments[j]
-								+"-" + results.endIndex_10Segments[j] +",");
-					}
-					getModel().outputInLine("\t");
-					outputCSV.print(",,");
-				}
-				getModel().outputInLine("\n\n");
-				outputCSV.print("\n\n");
-			}
-			outputCSV.flush();
-
-			getModel().output("\n******* taskLatDev_10Segments ********** \n");
-			outputCSV.print("\n******* taskLatDev_10Segments ********** \n");
-			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				Driving_10segments task = (Driving_10segments) taskCast;
 				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
@@ -679,7 +693,7 @@ public class DrivingNightA_10segments extends Task {
 			getModel().output("\n******* STEX3_10Segments ********** \n");
 			outputCSV.print("\n******* STEX3_10Segments ********** \n");
 			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				Driving_10segments task = (Driving_10segments) taskCast;
 				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
@@ -704,10 +718,10 @@ public class DrivingNightA_10segments extends Task {
 			}
 			outputCSV.flush();
 			
-			getModel().output("\n******* taskSteeringDev_10Segments ********** \n");
-			outputCSV.print("\n******* taskSteeringDev_10Segments ********** \n");
+			getModel().output("\n******* taskSWASD_10Segments ********** \n");
+			outputCSV.print("\n******* taskSWASD_10Segments ********** \n");
 			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				Driving_10segments task = (Driving_10segments) taskCast;
 				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
@@ -732,10 +746,10 @@ public class DrivingNightA_10segments extends Task {
 			}
 			outputCSV.flush();
 			
-			getModel().output("\n******* taskSpeedDev_10Segments ********** \n");
-			outputCSV.print("\n******* taskSpeedDev_10Segments ********** \n");
+			getModel().output("\n******* taskSSD_10Segments ********** \n");
+			outputCSV.print("\n******* taskSSD_10Segments ********** \n");
 			for (Task taskCast : tasks) {
-				DrivingNightA_10segments task = (DrivingNightA_10segments) taskCast;
+				Driving_10segments task = (Driving_10segments) taskCast;
 				numberOfSimulations = task.results.size(); // some task might not be complete
 				if (!task.completed){
 					getModel().outputInLine("*\t");
@@ -761,7 +775,6 @@ public class DrivingNightA_10segments extends Task {
 			outputCSV.flush();
 			outputCSV.close();
 			
-			outputPara.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();

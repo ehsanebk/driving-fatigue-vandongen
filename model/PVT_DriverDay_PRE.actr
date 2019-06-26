@@ -26,7 +26,7 @@
 
 (set-task-duration 600.0) ;;2100
 
-(set-output-dir "./result/DayA/PVT_Pre")
+(set-output-dir "./resultPVT/DayA/PVT_Pre")
 
 (add-dm
     (goal isa goal state wait)
@@ -45,7 +45,7 @@
     ;; IU = BM * ( fpbmc - utbmc ) + X + UT0
     
     ;;:microlapses nil
-    :fpbmc .028
+    :fpbmc .0285
     :fpmc .12 ;;.13
     :fpmc0 0
     
