@@ -46,7 +46,7 @@
     :utmc  .04 ;;.02
     :utmc0 0
     
-    :fp-dec 0.006
+    :fp-dec 0.005
     
     :egs .25
     ;:cst t

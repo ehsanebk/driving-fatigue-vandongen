@@ -45,7 +45,7 @@
     ;; IU = BM * ( fpbmc - utbmc ) + X + UT0
     
     ;;:microlapses nil
-    :fpbmc .0285
+    :fpbmc .029
     :fpmc .12 ;;.13
     :fpmc0 0
     
@@ -53,7 +53,7 @@
     :utmc  .04 ;;.02
     :utmc0 0
     
-    :fp-dec 0.006
+    :fp-dec 0.005
     
     :egs .25
     ;:cst t
