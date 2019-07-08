@@ -528,10 +528,7 @@ public class Driving_10segments extends Task {
 		
 		outputCSV.print(", \n");
 		outputCSV.flush();
-		
-		getModel().outputInLine("\n");
-		outputCSV.print(",\n");
-		outputCSV.flush();
+
 
 		for (int i = 2; i < 10; i++) {
 			outputCSV.print("LPSD Seg SD" + i);

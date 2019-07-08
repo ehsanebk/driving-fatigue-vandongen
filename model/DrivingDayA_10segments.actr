@@ -235,7 +235,7 @@
         fkind2 =fkind
         fthw2 =fthw
         time2 =time
-    !eval! (< =index 10)
+    !eval! (< =index 9)
 ==>
     !output! (=index)
     !bind! =index (+ =index 1)
@@ -266,7 +266,7 @@
         fkind2 =fkind
         fthw2 =fthw
         time2 =time
-    !eval! (>= =index 10)
+    !eval! (>= =index 9)
 ==>
     !eval! (fatigue-reset-percentage)
     !eval! (fatigue-utility-dec-on)
